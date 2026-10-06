@@ -340,7 +340,8 @@ lint-strict:
 
 # Run all tests
 test:
-    bun run test
+    # Keep the full DOM suite repeatable on memory-constrained desktop hosts.
+    bun run test --maxWorkers=2
 
 # Run tests in watch mode
 test-watch:
