@@ -1,0 +1,480 @@
+{
+  "schemaVersion": 2,
+  "generatedAtUtc": "2026-10-06T15:26:01.097882+00:00",
+  "kind": "local_desktop_qa",
+  "sourceCommit": "0d35b57032cb719f6d2c9a86b606166257358d08",
+  "backendSourceCommit": "1e690924a4fd7953afcc1c019a22833a4ba3a0fa",
+  "rustTreeUnchanged": "d5850744ec35956b469c4345b76052e89ca55c29",
+  "artifact": {
+    "path": "/path/to/speed-workbench/AionUi/out/closeout-r2/mac-arm64/AionUi.app",
+    "displayName": "Speed Workbench",
+    "bundleId": "com.speedworkbench.app",
+    "electronVersion": "37.10.3",
+    "electronBuilderVersion": "26.15.2",
+    "architecture": "darwin-arm64",
+    "manifest": {
+      "platform": "darwin",
+      "arch": "arm64",
+      "version": "v0.2.2",
+      "sourceType": "local-bundle",
+      "source": {
+        "branch": "feat/product-factory-frontend"
+      },
+      "sha256": "64e862e81b2723ba48b3356c04f351ad48ad7caae0d1da3e11f0d855d389841f",
+      "files": [
+        "aioncore",
+        "managed-resources/"
+      ],
+      "revision": "20261006-L2-P1-QA",
+      "codeCommit": "0d35b57032cb719f6d2c9a86b606166257358d08",
+      "generatedAt": "2026-10-06T14:49:05.303017+00:00",
+      "sourceRevision": "20261006-L2-P1-QA",
+      "backendSourceCommit": "1e690924a4fd7953afcc1c019a22833a4ba3a0fa",
+      "rustTree": "d5850744ec35956b469c4345b76052e89ca55c29"
+    },
+    "oldAppPreserved": true
+  },
+  "build": {
+    "frontend": {
+      "command": "env UV_THREADPOOL_SIZE=2 GOMAXPROCS=2 SENTRY_AUTH_TOKEN= bun run package",
+      "exitCode": 0
+    },
+    "mcp": {
+      "command": "env UV_THREADPOOL_SIZE=2 GOMAXPROCS=2 node scripts/build-mcp-servers.js",
+      "exitCode": 0
+    },
+    "packaging": {
+      "command": "CSC_IDENTITY_AUTO_DISCOVERY=false node node_modules/electron-builder/cli.js --config packages/desktop/electron-builder.yml --mac --arm64 --dir --publish never --config.electronDist=node_modules/electron/dist --config.directories.output=out/closeout-r2",
+      "exitCode": 0,
+      "electronDownloaded": false,
+      "published": false
+    }
+  },
+  "resources": {
+    "backendMatchesManifest": true,
+    "managedFileCount": 4908,
+    "managedFilesMatchOriginalBaseline": true,
+    "nodeDeclaredVersion": "24.11.0",
+    "licenseNoticeMcp": {
+      "NOTICE": {
+        "sha256": "2f118ba7a12b33438c88bef9b59040e0be959b9aca49daae41a61ff0bf8c065f",
+        "bytes": 1277,
+        "matchesSource": true
+      },
+      "licenses/workbench-LICENSE": {
+        "sha256": "a515d5a76da6c082f0d3d33a597bf82e32ecdac8841ed1783ac081ebd6d62ebf",
+        "bytes": 10939,
+        "matchesSource": true
+      },
+      "licenses/AionCore-LICENSE": {
+        "sha256": "a515d5a76da6c082f0d3d33a597bf82e32ecdac8841ed1783ac081ebd6d62ebf",
+        "bytes": 10939,
+        "matchesSource": true
+      },
+      "licenses/AionUi-LICENSE": {
+        "sha256": "a515d5a76da6c082f0d3d33a597bf82e32ecdac8841ed1783ac081ebd6d62ebf",
+        "bytes": 10939,
+        "matchesSource": true
+      },
+      "app.asar.unpacked/out/main/builtin-mcp-browser.js": {
+        "sha256": "9de71434098d6386b5fae4bf1dff6a635317a9949f93205137028ac39752c35e",
+        "bytes": 2684,
+        "matchesSource": true
+      },
+      "app.asar.unpacked/out/main/builtin-mcp-image-gen.js": {
+        "sha256": "87963a89145ccd442c92565affa611d43d72ffad43eb288e087223b1cc4e7078",
+        "bytes": 2727362,
+        "matchesSource": true
+      }
+    }
+  },
+  "signature": {
+    "identity": "ad-hoc",
+    "topLevelResealExitCode": 0,
+    "deepStrictVerificationExitCode": 0,
+    "developerId": false,
+    "notarized": false
+  },
+  "nativeDirectPathCases": {
+    "empty": {
+      "profile": "/private/tmp/sw-r2-desktop-direct-empty-qa",
+      "mainPid": 22149,
+      "corePid": 22220,
+      "coreExecutable": "/path/to/speed-workbench/AionUi/out/closeout-r2/mac-arm64/AionUi.app/Contents/Resources/bundled-aioncore/darwin-arm64/aioncore",
+      "coreFlags": {
+        "--data-dir": "/private/tmp/sw-r2-desktop-direct-empty-qa/aionui",
+        "--log-dir": "/private/tmp/sw-r2-desktop-direct-empty-qa/logs",
+        "--parent-pid": "22149"
+      },
+      "runtimeVerifiedAtUtc": "2026-10-06T15:01:51.986458+00:00",
+      "aliasMetadataBefore": {
+        ".aionui": {
+          "device": 16777233,
+          "inode": 11286240,
+          "target": "$HOME/Library/Application Support/Speed Workbench/aionui",
+          "symlink": true
+        },
+        ".aionui-config": {
+          "device": 16777233,
+          "inode": 11286241,
+          "target": "$HOME/Library/Application Support/Speed Workbench/config",
+          "symlink": true
+        }
+      },
+      "aliasMetadataAfter": {
+        ".aionui": {
+          "device": 16777233,
+          "inode": 11286240,
+          "target": "$HOME/Library/Application Support/Speed Workbench/aionui",
+          "symlink": true
+        },
+        ".aionui-config": {
+          "device": 16777233,
+          "inode": 11286241,
+          "target": "$HOME/Library/Application Support/Speed Workbench/config",
+          "symlink": true
+        }
+      },
+      "aliasTargetsDevicesAndInodesUnchanged": true,
+      "databaseCountsBefore": {
+        "product_factory_runs": 0,
+        "product_factory_planning": 0,
+        "product_factory_execution": 0,
+        "product_factory_products": 0,
+        "product_factory_versions": 0,
+        "product_factory_version_operations": 0,
+        "team_tasks": 0,
+        "agent_usage": 0
+      },
+      "databaseCountsAfter": {
+        "product_factory_runs": 0,
+        "product_factory_planning": 0,
+        "product_factory_execution": 0,
+        "product_factory_products": 0,
+        "product_factory_versions": 0,
+        "product_factory_version_operations": 0,
+        "team_tasks": 0,
+        "agent_usage": 0
+      },
+      "quitRequestedAtUtc": "2026-10-06T15:03:21.921Z",
+      "quitVerifiedAtUtc": "2026-10-06T15:03:41.288555+00:00",
+      "terminalExitCode": 0,
+      "ownedQaProcessesRemaining": 0,
+      "modelOrDevelopmentActionsInitiatedByQa": false
+    },
+    "p1": {
+      "profile": "/private/tmp/sw-r2-desktop-direct-p1-qa",
+      "mainPid": 23018,
+      "corePid": 23028,
+      "coreExecutable": "/path/to/speed-workbench/AionUi/out/closeout-r2/mac-arm64/AionUi.app/Contents/Resources/bundled-aioncore/darwin-arm64/aioncore",
+      "coreFlags": {
+        "--data-dir": "/private/tmp/sw-r2-desktop-direct-p1-qa/aionui",
+        "--log-dir": "/private/tmp/sw-r2-desktop-direct-p1-qa/logs",
+        "--parent-pid": "23018"
+      },
+      "runtimeVerifiedAtUtc": "2026-10-06T15:04:50.156212+00:00",
+      "aliasMetadataBefore": {
+        ".aionui": {
+          "device": 16777233,
+          "inode": 11286240,
+          "target": "$HOME/Library/Application Support/Speed Workbench/aionui",
+          "symlink": true
+        },
+        ".aionui-config": {
+          "device": 16777233,
+          "inode": 11286241,
+          "target": "$HOME/Library/Application Support/Speed Workbench/config",
+          "symlink": true
+        }
+      },
+      "aliasMetadataAfter": {
+        ".aionui": {
+          "device": 16777233,
+          "inode": 11286240,
+          "target": "$HOME/Library/Application Support/Speed Workbench/aionui",
+          "symlink": true
+        },
+        ".aionui-config": {
+          "device": 16777233,
+          "inode": 11286241,
+          "target": "$HOME/Library/Application Support/Speed Workbench/config",
+          "symlink": true
+        }
+      },
+      "aliasTargetsDevicesAndInodesUnchanged": true,
+      "databaseCountsBefore": {
+        "product_factory_runs": 2,
+        "product_factory_planning": 4,
+        "product_factory_execution": 0,
+        "product_factory_products": 0,
+        "product_factory_versions": 0,
+        "product_factory_version_operations": 0,
+        "team_tasks": 9,
+        "agent_usage": 4
+      },
+      "databaseCountsAfter": {
+        "product_factory_runs": 2,
+        "product_factory_planning": 4,
+        "product_factory_execution": 0,
+        "product_factory_products": 0,
+        "product_factory_versions": 0,
+        "product_factory_version_operations": 0,
+        "team_tasks": 9,
+        "agent_usage": 4
+      },
+      "quitRequestedAtUtc": "2026-10-06T15:08:47.507Z",
+      "quitVerifiedAtUtc": "2026-10-06T15:09:10.230865+00:00",
+      "terminalExitCode": 0,
+      "ownedQaProcessesRemaining": 0,
+      "modelOrDevelopmentActionsInitiatedByQa": false
+    },
+    "version": {
+      "profile": "/private/tmp/sw-r2-desktop-direct-version-qa",
+      "mainPid": 23885,
+      "corePid": 23898,
+      "coreExecutable": "/path/to/speed-workbench/AionUi/out/closeout-r2/mac-arm64/AionUi.app/Contents/Resources/bundled-aioncore/darwin-arm64/aioncore",
+      "coreFlags": {
+        "--data-dir": "/private/tmp/sw-r2-desktop-direct-version-qa/aionui",
+        "--log-dir": "/private/tmp/sw-r2-desktop-direct-version-qa/logs",
+        "--parent-pid": "23885"
+      },
+      "runtimeVerifiedAtUtc": "2026-10-06T15:20:53.504377+00:00",
+      "aliasMetadataBefore": {
+        ".aionui": {
+          "device": 16777233,
+          "inode": 11286240,
+          "target": "$HOME/Library/Application Support/Speed Workbench/aionui",
+          "symlink": true
+        },
+        ".aionui-config": {
+          "device": 16777233,
+          "inode": 11286241,
+          "target": "$HOME/Library/Application Support/Speed Workbench/config",
+          "symlink": true
+        }
+      },
+      "aliasMetadataAfter": {
+        ".aionui": {
+          "device": 16777233,
+          "inode": 11286240,
+          "target": "$HOME/Library/Application Support/Speed Workbench/aionui",
+          "symlink": true
+        },
+        ".aionui-config": {
+          "device": 16777233,
+          "inode": 11286241,
+          "target": "$HOME/Library/Application Support/Speed Workbench/config",
+          "symlink": true
+        }
+      },
+      "aliasTargetsDevicesAndInodesUnchanged": true,
+      "databaseCountsBefore": {
+        "product_factory_runs": 4,
+        "product_factory_planning": 0,
+        "product_factory_execution": 3,
+        "product_factory_products": 2,
+        "product_factory_versions": 3,
+        "product_factory_version_operations": 3,
+        "team_tasks": 12,
+        "agent_usage": 13
+      },
+      "databaseCountsAfter": {
+        "product_factory_runs": 4,
+        "product_factory_planning": 0,
+        "product_factory_execution": 3,
+        "product_factory_products": 2,
+        "product_factory_versions": 3,
+        "product_factory_version_operations": 3,
+        "team_tasks": 12,
+        "agent_usage": 13
+      },
+      "quitRequestedAtUtc": "2026-10-06T15:21:59.345Z",
+      "quitVerifiedAtUtc": "2026-10-06T15:22:19.399721+00:00",
+      "terminalExitCode": 0,
+      "ownedQaProcessesRemaining": 0,
+      "modelOrDevelopmentActionsInitiatedByQa": false
+    }
+  },
+  "nativeObservations": {
+    "empty": {
+      "routes": [
+        "/guid",
+        "/product-factory",
+        "/product-factory/new"
+      ],
+      "createdFormOnly": true,
+      "draftSaved": false
+    },
+    "p1": {
+      "webCandidateState": "candidate_ready",
+      "questionCount": 5,
+      "candidateApplied": false,
+      "inputPlanRevision": 1,
+      "unknownFeeNotZeroHintVisible": true,
+      "costs": [
+        [
+          null,
+          "model_price_missing"
+        ],
+        [
+          null,
+          "model_price_missing"
+        ],
+        [
+          null,
+          "model_price_missing"
+        ],
+        [
+          null,
+          "model_price_missing"
+        ]
+      ],
+      "taskStates": [
+        [
+          "pending",
+          9
+        ]
+      ],
+      "planningStates": [
+        [
+          "blueprint",
+          "applied",
+          1
+        ],
+        [
+          "interview",
+          "applied",
+          1
+        ],
+        [
+          "interview",
+          "candidate_ready",
+          1
+        ],
+        [
+          "task_graph",
+          "applied",
+          1
+        ]
+      ],
+      "persistedTaskV2": {
+        "version": 2,
+        "generatedBy": "model",
+        "confirmed": true,
+        "taskCount": 9,
+        "selectedScopes": {
+          "t6": "task_workspace",
+          "t7": "task_workspace",
+          "t9": "project_integration"
+        },
+        "integrationDependencies": [
+          "t6",
+          "t7",
+          "t8"
+        ]
+      },
+      "cliStatus": "handed_off",
+      "startClicked": false,
+      "teamInitializedByQa": false,
+      "taskEditorRenderedForHandedOffPhase": false
+    },
+    "version": {
+      "independentEvidence": "docs/evidence/L2-closeout-2026-10-06/desktop-version-verification.json",
+      "readOnlyComplete": true,
+      "historicalUsageCount": 13,
+      "allBusinessTableDigestsMatchStaticFixture": true
+    }
+  },
+  "normalNativeQuit": {
+    "verifiedSuccessfulDirectPathCases": 3,
+    "explicitNativeMenuUsed": true,
+    "forcedSignalsUsed": false,
+    "onlyRecordedAppChildPidsChecked": true,
+    "conclusion": "All three direct-path QA Apps and their Core children exited normally."
+  },
+  "aliasIncident": {
+    "recoveryEvidence": "docs/evidence/L2-closeout-2026-10-06/desktop-path-alias-recovery.json",
+    "priorBehavior": "The older E2E implementation retargeted shared CLI-safe aliases to disposable profiles. Alias text in argv alone did not establish use of a daily database.",
+    "recoveryLimit": "Initial pre-QA alias targets were not captured. Primary restored verified production-default targets using guarded comparison.",
+    "supersededOldIsolationClaims": true,
+    "fixedSourceCommit": "0d35b57032cb719f6d2c9a86b606166257358d08",
+    "allThreeRerunsAliasMetadataUnchanged": true
+  },
+  "screenshots": [
+    {
+      "path": "docs/evidence/L2-closeout-2026-10-06/desktop-empty-create.png",
+      "format": "PNG",
+      "width": 2352,
+      "height": 1606,
+      "sha256": "646a0301cca0e01e7690691cd43ef2e5b49cba7e7a7061a2ef18c33d1ad4ede5"
+    },
+    {
+      "path": "docs/evidence/L2-closeout-2026-10-06/desktop-home.png",
+      "format": "PNG",
+      "width": 2352,
+      "height": 1606,
+      "sha256": "5f2daeeefab1f493785dd1b6709c0a65754b4093907834038adc50b3df5c124c"
+    },
+    {
+      "path": "docs/evidence/L2-closeout-2026-10-06/desktop-p1-candidate-cost.png",
+      "format": "PNG",
+      "width": 2352,
+      "height": 1606,
+      "sha256": "9ece225ec4abf4322290ce1e234ba74ea5e5f09f9debbca6800a5f6d979c30c0"
+    },
+    {
+      "path": "docs/evidence/L2-closeout-2026-10-06/desktop-p1-candidate-preview.png",
+      "format": "PNG",
+      "width": 2352,
+      "height": 1606,
+      "sha256": "a19e955ec1bb45e861fa524f1ad059ac97ad4fca1bd45b760861662da06d062f"
+    },
+    {
+      "path": "docs/evidence/L2-closeout-2026-10-06/desktop-p1-cli-handoff.png",
+      "format": "PNG",
+      "width": 2352,
+      "height": 1606,
+      "sha256": "e6285c758446e3e8ea394379242b721339db578fecbe7090328cd63341365c95"
+    },
+    {
+      "path": "docs/evidence/L2-closeout-2026-10-06/desktop-version-history.png",
+      "format": "PNG",
+      "width": 2352,
+      "height": 1606,
+      "sha256": "1694b06f8a385589902792c71aeced65ffdb1f35d3ae7960d6885118cc81b26b"
+    },
+    {
+      "path": "docs/evidence/L2-closeout-2026-10-06/desktop-version-iteration-hint.png",
+      "format": "PNG",
+      "width": 2352,
+      "height": 1606,
+      "sha256": "dd6358dbc45ad56d93d6d276a7218519d9ebd736a4d6a1170200e436ce24785c"
+    },
+    {
+      "path": "docs/evidence/L2-closeout-2026-10-06/desktop-version-saved-manifest.png",
+      "format": "PNG",
+      "width": 2352,
+      "height": 1606,
+      "sha256": "ab1c91cdb21caa2062d4159a2bc74f425ce846527c968ad19e53322704af3f61"
+    },
+    {
+      "path": "docs/evidence/L2-closeout-2026-10-06/desktop-version-source-manifest.png",
+      "format": "PNG",
+      "width": 2352,
+      "height": 1606,
+      "sha256": "432bf90fb3064249201c918419f23767678ab69bb671b6bc3c3e4f432a087dae"
+    }
+  ],
+  "screenshotEncoding": "CUA JPEG pixels encoded as PNG without cropping, resizing or annotation.",
+  "finalState": {
+    "qaAppsRunning": false,
+    "ownedQaCoreProcessesRunning": false
+  },
+  "limits": [
+    "No model or development action was initiated. Actual disposable data-directory ledgers remained unchanged; provider network traffic was not independently captured.",
+    "Task v2 fields were checked in persisted data. The handed_off UI intentionally omits the preparation editor; no historical state was changed to produce an editor screenshot.",
+    "Older existing product routes were opened through the native QA console because Home exposes the newest run; no history ordering was modified.",
+    "Ad-hoc local signing verified; Developer ID signing, notarization and fresh-machine installation were not tested.",
+    "No cookies, session secrets, personal authentication, user database files or personal logs are embedded in this evidence."
+  ]
+}

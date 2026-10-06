@@ -1,0 +1,44 @@
+{
+  "scope": "L2 supervised single-leader local prototype workflow",
+  "frontend_full": {
+    "files_passed": 536,
+    "files_skipped": 1,
+    "tests_passed": 5107,
+    "tests_skipped": 5
+  },
+  "frontend_final_scope": {
+    "tests_passed": 81
+  },
+  "factory_backend": {
+    "tests_passed": 49
+  },
+  "application_scope": {
+    "tests_passed": 10
+  },
+  "generated_product": {
+    "http_and_restart_tests_passed": 14,
+    "ui_logic_tests_passed": 7,
+    "real_browser": true,
+    "real_process_restart": true
+  },
+  "real_run": {
+    "tasks_completed": 4,
+    "tasks_total": 4,
+    "status": "completed",
+    "delivery_ready": false,
+    "remaining_check": "cost_known",
+    "task_template": "historical title-tool draft resumed",
+    "budget_limit_usd": null
+  },
+  "cost_status": "unknown",
+  "app": "/path/to/speed-workbench/AionUi/out/mac-arm64/Speed Workbench-L2-20261006.app",
+  "signature": "ad-hoc deep strict verified",
+  "published": false,
+  "workspace_test_gate": {
+    "single_invocation": "interrupted by Office port timeout",
+    "office_serial_passed": 104,
+    "remaining_group_passed": 1515,
+    "remaining_group_skipped": 3
+  },
+  "release_status": "local validation build; formal cost and release acceptance incomplete"
+}

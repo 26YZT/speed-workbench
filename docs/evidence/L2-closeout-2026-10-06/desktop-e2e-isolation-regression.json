@@ -1,0 +1,30 @@
+{
+  "kind": "desktop_e2e_isolation_regression",
+  "sourceCommit": "0d35b57032cb719f6d2c9a86b606166257358d08",
+  "tests": {
+    "passed": 21,
+    "failed": 0,
+    "files": 3,
+    "new_isolation_cases": 16,
+    "existing_storage_cases": 5
+  },
+  "typescript": "passed",
+  "format": "passed",
+  "lint": {
+    "errors": 0,
+    "existing_warnings": 14,
+    "new_warnings": 0,
+    "baseline_warning_messages_match": true
+  },
+  "rustTreeUnchanged": {
+    "commit1e69092": "d5850744ec35956b469c4345b76052e89ca55c29",
+    "commit0d35b57": "d5850744ec35956b469c4345b76052e89ca55c29"
+  },
+  "nativeDirectPathRetest": "passed; empty/planning/versions with strict process data/log paths and unchanged global aliases",
+  "aliasRecoveryEvidence": "desktop-path-alias-recovery.json",
+  "realModelCallsInRegression": 0,
+  "nativeEvidence": [
+    "desktop-package-verification.json",
+    "desktop-version-verification.json"
+  ]
+}

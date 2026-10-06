@@ -1,0 +1,509 @@
+{
+  "schema_version": 2,
+  "updated_on": "2026-10-06",
+  "phase": "core_development_and_internal_verification_complete",
+  "formal_release": false,
+  "source": {
+    "worktree": "/path/to/speed-workbench",
+    "branch": "feat/product-factory-frontend",
+    "latest_features": "locally_committed_and_internally_verified",
+    "latest_backend_sha256": "64e862e81b2723ba48b3356c04f351ad48ad7caae0d1da3e11f0d855d389841f",
+    "package_source_status": "manifest 0d35b57; backend source 1e69092; unchanged Core64e862; direct native QA passed",
+    "source_commit": "0d35b57032cb719f6d2c9a86b606166257358d08",
+    "identity_note": "Implementation source commit; subsequent documentation HEAD is separate and does not change accepted binary/source identity.",
+    "backend_source_commit": "1e690924a4fd7953afcc1c019a22833a4ba3a0fa",
+    "rust_source_tree": "d5850744ec35956b469c4345b76052e89ca55c29",
+    "rust_tree_unchanged_between_source_commits": true
+  },
+  "latest_scoped_gates": {
+    "conversation": {
+      "passed": 495,
+      "log": "/private/tmp/sw-conversation-final-budget-all.log"
+    },
+    "team": {
+      "passed": 512,
+      "log": "/private/tmp/sw-team-admission-all.log"
+    },
+    "session": {
+      "passed": 611,
+      "log": "/private/tmp/sw-i1-agent-session-final.log"
+    },
+    "ai_agent": {
+      "passed": 1027,
+      "log": "/private/tmp/sw-i5-agent-full-tests.log"
+    },
+    "factory": {
+      "passed": 77,
+      "planning_subset": 9,
+      "versions_subset": 15,
+      "log": "/private/tmp/sw-i6-factory-final-tests.log"
+    },
+    "db_factory": {
+      "passed": 15,
+      "log": "/private/tmp/sw-i3-db-tests.log"
+    },
+    "app": {
+      "lib_passed": 53,
+      "planning_passed": 14,
+      "versions_passed": 4,
+      "log": "/private/tmp/sw-final-app-version-gates.log"
+    },
+    "product_factory_ui": {
+      "passed": 136,
+      "typescript": "passed",
+      "i18n": "passed",
+      "log": "/private/tmp/sw-final-product-ui-regression.log"
+    },
+    "fmt": {
+      "state": "passed",
+      "log": "/private/tmp/sw-final-format-check.log"
+    },
+    "all_targets_clippy": {
+      "state": "passed",
+      "affected_crates": 5,
+      "log": "/private/tmp/sw-final-all-affected-clippy.log"
+    },
+    "workspace": {
+      "state": "passed",
+      "passed": 9571,
+      "failed": 0,
+      "ignored": 53,
+      "targets_including_doctests": 264,
+      "terminal_exit_code": 0,
+      "all_green": true,
+      "all_green_scope": "executed tests only; 53 ignored remain unverified",
+      "completed_at_utc": "2026-10-06T15:26:43.436970+00:00",
+      "receipt": "workspace-final-verification.json",
+      "persistent_summary": "workspace-final-summary.txt",
+      "log": "/private/tmp/sw-final-workspace-recovered.log",
+      "previous_attempt": {
+        "state": "environment_link_failure",
+        "failure": "aionui-app test health link errno=28 No space left on device",
+        "log": "/private/tmp/sw-final-workspace-tests.log"
+      }
+    },
+    "cumulative_regression": {
+      "passed": 7,
+      "overlaps_full_suite": true,
+      "log": "/private/tmp/sw-i5-cumulative-final.log"
+    },
+    "db_usage_regression": {
+      "passed": 9,
+      "log": "/private/tmp/sw-i5-db-final-tests.log"
+    },
+    "desktop_isolation_storage": {
+      "passed": 21,
+      "new_isolation": 16,
+      "storage": 5,
+      "failed": 0,
+      "typescript": "passed",
+      "format": "passed",
+      "lint_errors": 0,
+      "inherited_warnings": 14,
+      "new_warnings": 0,
+      "baseline_multiset_matches": true,
+      "receipt": "desktop-e2e-isolation-regression.json"
+    }
+  },
+  "earlier_source_broad_gate": {
+    "passed": 1000,
+    "live_ignored": 32,
+    "log": "/private/tmp/sw-p0-final-app-factory.log",
+    "valid_for_latest_source": false
+  },
+  "fresh_runs": {
+    "crud": {
+      "id": "01a110a2-c8d5-77a3-a2ac-bfe3ed667916",
+      "team_id": "factory-01a110a2-c8d5-77a3-a2ac-bfe3ed667916-r1",
+      "revision": 1,
+      "workspace": "/private/tmp/sw-fresh-validation/data/product-factory-workspaces/01a110a2-c8d5-77a3-a2ac-bfe3ed667916",
+      "name": "本地事项簿"
+    },
+    "cli": {
+      "id": "01a110a2-c908-7282-bbe2-625e164719a2",
+      "team_id": "factory-01a110a2-c908-7282-bbe2-625e164719a2-r1",
+      "revision": 1,
+      "workspace": "/private/tmp/sw-fresh-validation/data/product-factory-workspaces/01a110a2-c908-7282-bbe2-625e164719a2",
+      "name": "CSV账目汇总器"
+    },
+    "ai": {
+      "id": "01a110a2-c934-7583-bdaf-266f9645908b",
+      "team_id": "factory-01a110a2-c934-7583-bdaf-266f9645908b-r1",
+      "revision": 1,
+      "workspace": "/private/tmp/sw-fresh-validation/data/product-factory-workspaces/01a110a2-c934-7583-bdaf-266f9645908b",
+      "name": "AI需求摘要服务"
+    }
+  },
+  "true_acceptance": {
+    "crud": {
+      "tasks_completed": 4,
+      "tasks_total": 4,
+      "root_tests_passed": 48,
+      "independent_processes": 3,
+      "real_browser_crud": "passed",
+      "receipts": [
+        "crud-final-delivery.json",
+        "crud-independent-root-smoke.json"
+      ],
+      "delivery_ready": false
+    },
+    "cli": {
+      "tasks_completed": 4,
+      "tasks_total": 4,
+      "root_tests_passed": 81,
+      "independent_processes": 16,
+      "receipts": [
+        "cli-final-delivery.json",
+        "cli-independent-root-smoke.json"
+      ],
+      "delivery_ready": false
+    },
+    "ai": {
+      "backend_tests_passed": 59,
+      "frontend_logic_passed": 10,
+      "frontend_http_passed": 5,
+      "fixture_browser_checks_passed": 8,
+      "root_integration": "internal_technical_acceptance_passed",
+      "actual_business_model_calls": 1,
+      "real_business_model_acceptance": "existing_unique_HTTP201_verified; no_second_real_POST",
+      "provenance": "api-delivery-ai-independent.json and root browser receipt",
+      "actual_model": "gpt-6-astra",
+      "metadata_calls": 2,
+      "model_exec_calls": 1,
+      "disabled_mcp_count": 6,
+      "output_differs_from_fixture": true,
+      "restart_persistence": {
+        "state": "script_reported_readback_in_new_process_same_real_sqlite3",
+        "independent_reread": "unavailable; temporary real database deleted"
+      },
+      "tasks_completed": 4,
+      "tasks_total": 4,
+      "run_status": "completed",
+      "delivery_ready": false,
+      "internal_review": "approve",
+      "independent_fixture_http": "failure_recovery_and_cross_process_persistence_passed",
+      "root_fixture_browser": "passed",
+      "receipt": "api-delivery-ai-independent.json",
+      "root_browser_receipts": [
+        "ai-independent-root-browser.json",
+        "ai-independent-root-browser.png"
+      ],
+      "customer_sign_off": false
+    },
+    "persistent_product_copies": "/path/to/workbench/Speed-Workbench-验收产物-2026-10-06",
+    "overall": {
+      "completed_runs": 3,
+      "completed_tasks": 12,
+      "original_usage_records": 13,
+      "usage_fields_unchanged_after_upgrade": true,
+      "all_delivery_ready": false,
+      "customer_sign_off": false,
+      "receipt": "api-delivery-final-cost.json"
+    }
+  },
+  "real_model_planning": {
+    "core_port_at_acceptance": 26990,
+    "cli": {
+      "run_id": "01a1114e-3705-7741-ad2a-44acaa2235f6",
+      "interview_questions": 5,
+      "blueprint_requirements": 18,
+      "task_cards": 9,
+      "middle_test_scope": "task_workspace",
+      "middle_test_count": 2,
+      "final_integration_count": 1,
+      "explicitly_applied_confirmed_handed_off": true,
+      "pending_tasks": 9,
+      "execution_started": false,
+      "receipts": [
+        "model-cli-interview.json",
+        "model-cli-blueprint.json",
+        "model-cli-task-graph.json",
+        "model-planning-cost-report.json"
+      ]
+    },
+    "web": {
+      "run_id": "01a1115b-19c7-74e3-a99c-fb53d77e70a9",
+      "interview_questions": 5,
+      "state": "candidate_ready",
+      "applied": false,
+      "receipt": "model-web-interview.json"
+    },
+    "model_identity": "Use frozen actual usage receipt, not requested picker model. CLI blueprint requested gpt-6-astra but usage reports gpt-6.1-sol.",
+    "fees": "unknown",
+    "budget_usd": null
+  },
+  "cost": {
+    "actual_price_source": "missing; user information requested",
+    "real_run_cost": "unknown",
+    "fixture_prices_are_invoice": false,
+    "report_scope": [
+      "planning",
+      "development_execution"
+    ],
+    "generated_product_business_api_cost": "separate reconciliation required",
+    "budget_enforcement": "each new actual Send; not a hard cap for an already started provider call",
+    "delivery_ready": false,
+    "historical_missing_buckets_backfilled_on_startup": false
+  },
+  "code_versions": {
+    "implemented": "code_only_snapshot_clone_active_CAS_owner_idempotency_no_follow",
+    "starts_or_restarts_services": false,
+    "migrates_or_rolls_back_business_data": false,
+    "windows_snapshot": "unsupported",
+    "embedded_data_requires_manifest_review": true,
+    "native_ui_acceptance": "passed_read_only; no snapshot/activation/iteration/reprice submitted",
+    "internal_api_acceptance": {
+      "checks": 33,
+      "http_requests": 38,
+      "sealed_versions": 2,
+      "working_versions": 1,
+      "model_calls": 0,
+      "customer_sign_off": false,
+      "receipt": "api-delivery-versions.json",
+      "scope": "code_only",
+      "original_code_and_ledger_unchanged": true,
+      "not_exercised_live_this_round": [
+        "copying interruption",
+        "platform negative",
+        "cross-user auth negative"
+      ]
+    },
+    "new_draft": {
+      "run_id": "01a1119b-25b5-7553-a76d-c36bb03ffde4",
+      "budget_usd": 7.5,
+      "budget_source": "internal API test only; not price or spend",
+      "team_id": null,
+      "planning_attempts": 0,
+      "usage_added": 0
+    },
+    "completed_fixture_receipt": "api-delivery-completed-fixture.json",
+    "native_receipt": "desktop-version-verification.json",
+    "native_state": {
+      "all_versions": {
+        "sealed": 2,
+        "working": 1
+      },
+      "crud_version_1": "sealed",
+      "crud_version_2": "working",
+      "saved_manifest_files": 21,
+      "source_manifest_files": 21,
+      "source_excluded_files": 3,
+      "all_eight_business_table_row_hashes_unchanged": true
+    }
+  },
+  "native_qa": {
+    "path": "/path/to/speed-workbench/AionUi/out/closeout-r2/mac-arm64/AionUi.app",
+    "display_name": "Speed Workbench",
+    "electron": "37.10.3",
+    "builder": "26.15.2",
+    "codesign": "ad_hoc_deep_strict_exit0; not_Developer_ID_or_notarized",
+    "old_app_preserved": true,
+    "mcp_license_notice_preserved": true,
+    "managed_backend_sha": "unchanged",
+    "empty_profile_route": "#/product-factory/new",
+    "automatic_model_calls": 0,
+    "latest_binary_and_p1_fixture": "verified_final_direct_path_package",
+    "planning_versions_native_ui": "passed_read_only",
+    "cmd_q_shutdown_observation": {
+      "normal_native_menu_quit_cases": 3,
+      "exit_codes": [
+        0,
+        0,
+        0
+      ],
+      "owned_QA_processes_remaining": [
+        0,
+        0,
+        0
+      ],
+      "forced_signals": false
+    },
+    "formal_distribution": false,
+    "provenance": "final desktop-package-verification.json and desktop-version-verification.json",
+    "package_backend_sha256": "64e862e81b2723ba48b3356c04f351ad48ad7caae0d1da3e11f0d855d389841f",
+    "package_source_commit": "0d35b57032cb719f6d2c9a86b606166257358d08",
+    "preserved_components": [
+      "managed binary",
+      "MCP",
+      "three LICENSE files",
+      "NOTICE"
+    ],
+    "backend_source_commit": "1e690924a4fd7953afcc1c019a22833a4ba3a0fa",
+    "receipt": "desktop-package-verification.json",
+    "managed_file_count": 4908,
+    "direct_paths": "actual /private/tmp data/log flags and recorded parent ownership",
+    "global_alias_target_device_inode_unchanged_all_three_cases": true,
+    "task_v2_editor": "unit/API and persisted fields verified; handed_off UI omits editor; full native edit not performed",
+    "model_or_development_actions_initiated_by_native_QA": false,
+    "provider_network_independently_captured": false,
+    "empty_business_table_counts": 0,
+    "p1_retained": {
+      "runs": 2,
+      "planning_attempts": 4,
+      "pending_tasks": 9,
+      "execution": 0,
+      "unknown_usage_rows": 4
+    },
+    "version_retained": {
+      "runs": 4,
+      "execution": 3,
+      "products": 2,
+      "versions": 3,
+      "operations": 3,
+      "completed_tasks": 12,
+      "unknown_usage_rows": 13,
+      "eight_table_row_hashes_unchanged": true
+    }
+  },
+  "remaining": [
+    "Actual user service pricing/amount reconciliation and final customer sign-off",
+    "Fresh-machine installation/upgrade, Developer ID signing/notarization and nontechnical user acceptance",
+    "Complete native translations for other languages",
+    "53 ignored test paths remain unverified",
+    "Full native Task v2 editor interaction acceptance (handed_off editor hidden)"
+  ],
+  "historical_snapshot_54864c4": {
+    "code_commit": "54864c4",
+    "scope": "L2 cost, messaging, deterministic port checks and fresh cross-type validation",
+    "backend": {
+      "factory": {
+        "passed": 51,
+        "ignored": 0,
+        "log": "sw-factory-status-final.log"
+      },
+      "team": {
+        "passed": 786,
+        "ignored": 6,
+        "log": "sw-closeout-domains-final.log"
+      },
+      "session_and_ai_agent": {
+        "passed": 1622,
+        "ignored": 0,
+        "log": "sw-billing-regression-final.log"
+      },
+      "app": {
+        "passed": 66,
+        "ignored": 0,
+        "log": "sw-closeout-app-final.log"
+      },
+      "office": {
+        "passed": 104,
+        "ignored": 0,
+        "log": "sw-office-deterministic.log"
+      },
+      "pricing_and_usage_db": {
+        "passed": 12,
+        "ignored": 0,
+        "log": "sw-pricing-db-final.log"
+      }
+    },
+    "frontend": {
+      "factory_tests_passed": 81,
+      "typescript": "passed",
+      "changed_file_lint_errors": 0,
+      "changed_file_lint_warnings": 0,
+      "i18n": "passed"
+    },
+    "cost": {
+      "actual_price_source": "missing, user information requested",
+      "real_run_cost": "unknown",
+      "historical_backfill_on_startup": false,
+      "billing_tokens": "native cumulative delta; restart observed"
+    },
+    "fresh_runs": {
+      "crud": {
+        "id": "01a110a2-c8d5-77a3-a2ac-bfe3ed667916",
+        "team_id": "factory-01a110a2-c8d5-77a3-a2ac-bfe3ed667916-r1",
+        "revision": 1,
+        "workspace": "/private/tmp/sw-fresh-validation/data/product-factory-workspaces/01a110a2-c8d5-77a3-a2ac-bfe3ed667916",
+        "name": "本地事项簿"
+      },
+      "cli": {
+        "id": "01a110a2-c908-7282-bbe2-625e164719a2",
+        "team_id": "factory-01a110a2-c908-7282-bbe2-625e164719a2-r1",
+        "revision": 1,
+        "workspace": "/private/tmp/sw-fresh-validation/data/product-factory-workspaces/01a110a2-c908-7282-bbe2-625e164719a2",
+        "name": "CSV账目汇总器"
+      },
+      "ai": {
+        "id": "01a110a2-c934-7583-bdaf-266f9645908b",
+        "team_id": "factory-01a110a2-c934-7583-bdaf-266f9645908b-r1",
+        "revision": 1,
+        "workspace": "/private/tmp/sw-fresh-validation/data/product-factory-workspaces/01a110a2-c934-7583-bdaf-266f9645908b",
+        "name": "AI需求摘要服务"
+      }
+    },
+    "cross_type_status": "CRUD data task independently passed; CRUD backend task running; CLI and AI prepared",
+    "formal_release": false
+  },
+  "checkpoint_history": [
+    {
+      "stage": "before_local_implementation_commit_and_live_business_call",
+      "source_head": "54864c4",
+      "latest_features": "uncommitted_working_tree",
+      "workspace": {
+        "state": "incomplete_environment_failure",
+        "failure": "aionui-app test health link: errno=28 No space left on device",
+        "log": "/private/tmp/sw-final-workspace-tests.log",
+        "all_green": false
+      },
+      "actual_business_model_calls": 0,
+      "native_shutdown_observation": "in_progress; root cause not determined"
+    },
+    {
+      "stage": "before_final_workspace_and_direct_native_path_verification",
+      "workspace": {
+        "state": "running_tests_after_disk_space_recovery",
+        "log": "/private/tmp/sw-final-workspace-recovered.log",
+        "session_id_at_checkpoint": 30942,
+        "jobs": 1,
+        "all_green": false,
+        "previous_attempt": {
+          "state": "environment_link_failure",
+          "failure": "aionui-app test health link errno=28 No space left on device",
+          "log": "/private/tmp/sw-final-workspace-tests.log"
+        },
+        "passed_at_least_at_checkpoint": 2255
+      },
+      "source_commit": "1e690924a4fd7953afcc1c019a22833a4ba3a0fa",
+      "native_qa_status": "read_only_UI_pending_at_old_checkpoint"
+    }
+  ],
+  "panorama_browser_qa": {
+    "search": "passed",
+    "status_filter": "passed",
+    "horizontal_overflow": "none_observed",
+    "provenance": "root actual browser verification"
+  },
+  "core_upgrade": {
+    "receipt": "api-delivery-core-upgrade.json",
+    "binary_path": "/path/to/speed-workbench/AionUi/out/closeout-r2/mac-arm64/AionUi.app/Contents/Resources/bundled-aioncore/darwin-arm64/aioncore",
+    "source_commit": "1e690924a4fd7953afcc1c019a22833a4ba3a0fa",
+    "sha256": "64e862e81b2723ba48b3356c04f351ad48ad7caae0d1da3e11f0d855d389841f",
+    "schema_before": 49,
+    "schema_after": 52,
+    "preserved_runs": 3,
+    "preserved_tasks": 12,
+    "preserved_usage_rows": 13,
+    "all_existing_fields_unchanged": true,
+    "model_calls": 0
+  },
+  "alias_correction": {
+    "recovery_receipt": "desktop-path-alias-recovery.json",
+    "regression_receipt": "desktop-e2e-isolation-regression.json",
+    "old_isolation_claims_superseded": true,
+    "prior_aliases_pointed_to_tmp": true,
+    "argv_alias_text_proves_daily_db_access": false,
+    "initial_pre_QA_targets_captured": false,
+    "guarded_recovery_basis": "existing production-default Speed Workbench directories; not an exact initial-target restoration claim",
+    "daily_db_or_credentials_read_by_recovery": false,
+    "final_three_direct_reruns_alias_metadata_unchanged": true
+  },
+  "owned_runtime_final_state": {
+    "self_created_api_26980": "stopped",
+    "self_created_planning_26990": "stopped_after_exact_argv_owner_verification; session_exit0",
+    "native_QA_apps_and_cores": "normal_exit; none_running",
+    "active_model_tasks": false,
+    "user_daily_process": "not_operated"
+  }
+}

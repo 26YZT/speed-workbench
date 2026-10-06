@@ -1,0 +1,64 @@
+{
+  "source": "/private/tmp/sw-fresh-validation/data/aionui-backend.db",
+  "backup": "/private/tmp/sw-r2-completed-fixture.db",
+  "sqlite_backup_api": true,
+  "quick_check": "ok",
+  "migration": 52,
+  "size_bytes": 4820992,
+  "sha256": "8e5f309c11f456a4346c7375f1f13e6862af0e76d7f052a8d8d68195cfae53b2",
+  "runs": [
+    {
+      "id": "01a110a2-c8d5-77a3-a2ac-bfe3ed667916",
+      "status": "completed",
+      "team_id": "factory-01a110a2-c8d5-77a3-a2ac-bfe3ed667916-r1",
+      "budget_usd": null,
+      "plan_revision": 1
+    },
+    {
+      "id": "01a110a2-c908-7282-bbe2-625e164719a2",
+      "status": "completed",
+      "team_id": "factory-01a110a2-c908-7282-bbe2-625e164719a2-r1",
+      "budget_usd": null,
+      "plan_revision": 1
+    },
+    {
+      "id": "01a110a2-c934-7583-bdaf-266f9645908b",
+      "status": "completed",
+      "team_id": "factory-01a110a2-c934-7583-bdaf-266f9645908b-r1",
+      "budget_usd": null,
+      "plan_revision": 1
+    },
+    {
+      "id": "01a1119b-25b5-7553-a76d-c36bb03ffde4",
+      "status": "draft",
+      "team_id": null,
+      "budget_usd": 7.5,
+      "plan_revision": 1
+    }
+  ],
+  "task_status_counts": {
+    "completed": 12
+  },
+  "usage_records": 13,
+  "all_historical_costs_null_unknown": true,
+  "model_calls_during_version_and_backup": 0,
+  "product_factory_table_counts": {
+    "product_factory_runs": 4,
+    "product_factory_execution": 3,
+    "product_factory_planning": 0,
+    "product_factory_products": 2,
+    "product_factory_versions": 3,
+    "product_factory_version_operations": 3
+  },
+  "new_draft_run_id": "01a1119b-25b5-7553-a76d-c36bb03ffde4",
+  "new_draft_budget": {
+    "usd": 7.5,
+    "source": "internal API test configuration; independent new-run limit, not model price",
+    "planning_attempts": 0,
+    "team": null,
+    "usage_added": 0,
+    "cost_added": 0
+  },
+  "native_usage": "Copy this static fixture into a new isolated data directory before opening; do not execute any models or mutate source fixture.",
+  "validation_note": "Initial post-backup verifier compared sqlite3.Row directly with tuple and asserted; corrected readonly tuple comparison passed. Backup was not repeated or overwritten."
+}

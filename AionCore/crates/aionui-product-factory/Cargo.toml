@@ -1,0 +1,28 @@
+[package]
+name = "aionui-product-factory"
+version.workspace = true
+edition.workspace = true
+
+[dependencies]
+aionui-api-types.workspace = true
+aionui-common.workspace = true
+aionui-db.workspace = true
+aionui-auth.workspace = true
+axum.workspace = true
+async-trait.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+thiserror.workspace = true
+tracing.workspace = true
+tokio.workspace = true
+sha2.workspace = true
+futures-util.workspace = true
+
+[dev-dependencies]
+tempfile.workspace = true
+sqlx.workspace = true
+tower = { workspace = true, features = ["util"] }
+http-body-util.workspace = true
+
+[target.'cfg(any(target_os = "macos", target_os = "linux"))'.dependencies]
+libc.workspace = true

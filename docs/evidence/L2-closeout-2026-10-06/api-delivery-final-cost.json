@@ -1,0 +1,1563 @@
+{
+  "existing_samples": {
+    "crud": {
+      "run_id": "01a110a2-c8d5-77a3-a2ac-bfe3ed667916",
+      "status": "completed",
+      "delivery": {
+        "run": {
+          "id": "01a110a2-c8d5-77a3-a2ac-bfe3ed667916",
+          "plan_revision": 1,
+          "name": "本地事项簿",
+          "idea": "开发一个真正可增删改查的事项簿，字段 id、title、done、created_at。Web 页面新增、列出、编辑标题、切换完成状态、删除事项；API 提供相同行为。标题长度1到80字，空标题/不存在ID有明确错误。",
+          "target_user": "需要管理个人事项的普通用户",
+          "problem": "需要可靠持久化，刷新和停止服务后重新启动不丢记录。只在本地运行，不安装新依赖、不建云资源。",
+          "expected_output": "Python3 标准库 HTTP + SQLite，原生 HTML/CSS/JS 响应式页面。自包含项目根目录，独立启动；提供 API 契约、START.md、ACCEPTANCE.md、单元与真实 HTTP 和独立进程重启测试。不得包含标题生成业务或固定示例结果。",
+          "workspace_path": "/private/tmp/sw-fresh-validation/data/product-factory-workspaces/01a110a2-c8d5-77a3-a2ac-bfe3ed667916",
+          "budget_usd": null,
+          "status": "completed",
+          "interview": {
+            "version": 1,
+            "summary": "开发一个真正可增删改查的事项簿，字段 id、title、done、created_at。Web 页面新增、列出、编辑标题、切换完成状态、删除事项；API 提供相同行为。标题长度1到80字，空标题/不存在ID有明确错误。\nPython3 标准库 HTTP + SQLite，原生 HTML/CSS/JS 响应式页面。自包含项目根目录，独立启动；提供 API 契约、START.md、ACCEPTANCE.md、单元与真实 HTTP 和独立进程重启测试。不得包含标题生成业务或固定示例结果。",
+            "answers": [
+              {
+                "question": "目标用户",
+                "answer": "需要管理个人事项的普通用户"
+              },
+              {
+                "question": "问题与边界",
+                "answer": "需要可靠持久化，刷新和停止服务后重新启动不丢记录。只在本地运行，不安装新依赖、不建云资源。"
+              },
+              {
+                "question": "交付",
+                "answer": "Python3 标准库 HTTP + SQLite，原生 HTML/CSS/JS 响应式页面。自包含项目根目录，独立启动；提供 API 契约、START.md、ACCEPTANCE.md、单元与真实 HTTP 和独立进程重启测试。不得包含标题生成业务或固定示例结果。"
+              }
+            ]
+          },
+          "blueprint": {
+            "version": 1,
+            "sections": [
+              {
+                "id": "goals",
+                "title": "Goals",
+                "content": "开发一个真正可增删改查的事项簿，字段 id、title、done、created_at。Web 页面新增、列出、编辑标题、切换完成状态、删除事项；API 提供相同行为。标题长度1到80字，空标题/不存在ID有明确错误。\nPython3 标准库 HTTP + SQLite，原生 HTML/CSS/JS 响应式页面。自包含项目根目录，独立启动；提供 API 契约、START.md、ACCEPTANCE.md、单元与真实 HTTP 和独立进程重启测试。不得包含标题生成业务或固定示例结果。",
+                "confirmed": false
+              },
+              {
+                "id": "users",
+                "title": "Users",
+                "content": "需要管理个人事项的普通用户",
+                "confirmed": false
+              },
+              {
+                "id": "core_loop",
+                "title": "Core loop",
+                "content": "开发一个真正可增删改查的事项簿，字段 id、title、done、created_at。Web 页面新增、列出、编辑标题、切换完成状态、删除事项；API 提供相同行为。标题长度1到80字，空标题/不存在ID有明确错误。",
+                "confirmed": false
+              },
+              {
+                "id": "modules",
+                "title": "Modules",
+                "content": "Python3 标准库 HTTP + SQLite，原生 HTML/CSS/JS 响应式页面。自包含项目根目录，独立启动；提供 API 契约、START.md、ACCEPTANCE.md、单元与真实 HTTP 和独立进程重启测试。不得包含标题生成业务或固定示例结果。",
+                "confirmed": false
+              },
+              {
+                "id": "risks",
+                "title": "Risks",
+                "content": "需要可靠持久化，刷新和停止服务后重新启动不丢记录。只在本地运行，不安装新依赖、不建云资源。",
+                "confirmed": false
+              }
+            ],
+            "risks": [],
+            "open_questions": [],
+            "generated_by": "draft",
+            "confirmed": true,
+            "updated_at": 1791280466138
+          },
+          "task_draft": {
+            "version": 1,
+            "generated_by": "draft",
+            "confirmed": true,
+            "revision": 1,
+            "updated_at": 1791280466143,
+            "tasks": [
+              {
+                "id": "data-1",
+                "title": "定义数据契约与存储",
+                "description": "围绕以下已确认需求，定义实际领域的数据契约、校验规则与必要的持久化；不要添加需求之外的实体或功能。\n\nGoals: 开发一个真正可增删改查的事项簿，字段 id、title、done、created_at。Web 页面新增、列出、编辑标题、切换完成状态、删除事项；API 提供相同行为。标题长度1到80字，空标题/不存在ID有明确错误。\nPython3 标准库 HTTP + SQLite，原生 HTML/CSS/JS 响应式页面。自包含项目根目录，独立启动；提供 API 契约、START.md、ACCEPTANCE.md、单元与真实 HTTP 和独立进程重启测试。不得包含标题生成业务或固定示例结果。\nUsers: 需要管理个人事项的普通用户\nCore loop: 开发一个真正可增删改查的事项簿，字段 id、title、done、created_at。Web 页面新增、列出、编辑标题、切换完成状态、删除事项；API 提供相同行为。标题长度1到80字，空标题/不存在ID有明确错误。\nModules: Python3 标准库 HTTP + SQLite，原生 HTML/CSS/JS 响应式页面。自包含项目根目录，独立启动；提供 API 契约、START.md、ACCEPTANCE.md、单元与真实 HTTP 和独立进程重启测试。不得包含标题生成业务或固定示例结果。\nRisks: 需要可靠持久化，刷新和停止服务后重新启动不丢记录。只在本地运行，不安装新依赖、不建云资源。",
+                "type": "data",
+                "blocked_by": [],
+                "acceptance_criteria": [
+                  "数据结构可持久化并可被后续接口读取"
+                ],
+                "suggested_role": "backend",
+                "effort": "medium"
+              },
+              {
+                "id": "backend-1",
+                "title": "实现后端接口",
+                "description": "读取已批准的数据任务产物，根据以下需求实现核心业务逻辑、所需接口和错误处理；接口名称与行为由实际产品决定。若需求包含 AI 调用，应明确真实模型接入与未配置时的降级，不把模板输出冒充模型结果。\n\nGoals: 开发一个真正可增删改查的事项簿，字段 id、title、done、created_at。Web 页面新增、列出、编辑标题、切换完成状态、删除事项；API 提供相同行为。标题长度1到80字，空标题/不存在ID有明确错误。\nPython3 标准库 HTTP + SQLite，原生 HTML/CSS/JS 响应式页面。自包含项目根目录，独立启动；提供 API 契约、START.md、ACCEPTANCE.md、单元与真实 HTTP 和独立进程重启测试。不得包含标题生成业务或固定示例结果。\nUsers: 需要管理个人事项的普通用户\nCore loop: 开发一个真正可增删改查的事项簿，字段 id、title、done、created_at。Web 页面新增、列出、编辑标题、切换完成状态、删除事项；API 提供相同行为。标题长度1到80字，空标题/不存在ID有明确错误。\nModules: Python3 标准库 HTTP + SQLite，原生 HTML/CSS/JS 响应式页面。自包含项目根目录，独立启动；提供 API 契约、START.md、ACCEPTANCE.md、单元与真实 HTTP 和独立进程重启测试。不得包含标题生成业务或固定示例结果。\nRisks: 需要可靠持久化，刷新和停止服务后重新启动不丢记录。只在本地运行，不安装新依赖、不建云资源。",
+                "type": "backend",
+                "blocked_by": [
+                  "data-1"
+                ],
+                "acceptance_criteria": [
+                  "接口可完成核心流程并返回稳定数据契约"
+                ],
+                "suggested_role": "backend",
+                "effort": "medium"
+              },
+              {
+                "id": "frontend-1",
+                "title": "实现前端核心流程",
+                "description": "读取已批准的数据与业务任务产物，按照以下已确认需求及交付形态实现用户操作入口，连接实际业务接口，展示加载、成功、失败和必要的历史数据；不要套用其他产品的输入、输出数量或接口。\n\nGoals: 开发一个真正可增删改查的事项簿，字段 id、title、done、created_at。Web 页面新增、列出、编辑标题、切换完成状态、删除事项；API 提供相同行为。标题长度1到80字，空标题/不存在ID有明确错误。\nPython3 标准库 HTTP + SQLite，原生 HTML/CSS/JS 响应式页面。自包含项目根目录，独立启动；提供 API 契约、START.md、ACCEPTANCE.md、单元与真实 HTTP 和独立进程重启测试。不得包含标题生成业务或固定示例结果。\nUsers: 需要管理个人事项的普通用户\nCore loop: 开发一个真正可增删改查的事项簿，字段 id、title、done、created_at。Web 页面新增、列出、编辑标题、切换完成状态、删除事项；API 提供相同行为。标题长度1到80字，空标题/不存在ID有明确错误。\nModules: Python3 标准库 HTTP + SQLite，原生 HTML/CSS/JS 响应式页面。自包含项目根目录，独立启动；提供 API 契约、START.md、ACCEPTANCE.md、单元与真实 HTTP 和独立进程重启测试。不得包含标题生成业务或固定示例结果。\nRisks: 需要可靠持久化，刷新和停止服务后重新启动不丢记录。只在本地运行，不安装新依赖、不建云资源。",
+                "type": "frontend",
+                "blocked_by": [
+                  "backend-1"
+                ],
+                "acceptance_criteria": [
+                  "用户可通过已确认的交付形态完成核心需求，操作入口调用实际业务实现",
+                  "结果与已确认需求的数据契约一致，必要的持久化数据在重新打开后可读取",
+                  "无效输入和调用失败有明确反馈，执行期间防止重复提交"
+                ],
+                "suggested_role": "frontend",
+                "effort": "high"
+              },
+              {
+                "id": "test-1",
+                "title": "完成最终集成与交付验收",
+                "description": "执行最终集成：检查已批准任务的真实产物，将它们组装到项目根目录；生成可运行产品、START.md 和 ACCEPTANCE.md，实际验证核心流程、错误恢复与服务停止重启后的持久化。验收文档逐项区分已通过、失败和未验证，不预先声明完成。\n\nGoals: 开发一个真正可增删改查的事项簿，字段 id、title、done、created_at。Web 页面新增、列出、编辑标题、切换完成状态、删除事项；API 提供相同行为。标题长度1到80字，空标题/不存在ID有明确错误。\nPython3 标准库 HTTP + SQLite，原生 HTML/CSS/JS 响应式页面。自包含项目根目录，独立启动；提供 API 契约、START.md、ACCEPTANCE.md、单元与真实 HTTP 和独立进程重启测试。不得包含标题生成业务或固定示例结果。\nUsers: 需要管理个人事项的普通用户\nCore loop: 开发一个真正可增删改查的事项簿，字段 id、title、done、created_at。Web 页面新增、列出、编辑标题、切换完成状态、删除事项；API 提供相同行为。标题长度1到80字，空标题/不存在ID有明确错误。\nModules: Python3 标准库 HTTP + SQLite，原生 HTML/CSS/JS 响应式页面。自包含项目根目录，独立启动；提供 API 契约、START.md、ACCEPTANCE.md、单元与真实 HTTP 和独立进程重启测试。不得包含标题生成业务或固定示例结果。\nRisks: 需要可靠持久化，刷新和停止服务后重新启动不丢记录。只在本地运行，不安装新依赖、不建云资源。",
+                "type": "test",
+                "blocked_by": [
+                  "backend-1",
+                  "frontend-1"
+                ],
+                "acceptance_criteria": [
+                  "项目根目录存在可运行产品和 START.md 启动说明",
+                  "ACCEPTANCE.md 记录关键流程、错误恢复和人工验收证据",
+                  "停止并重启产品后，核心数据仍可读取",
+                  "交付检查接口显示所有任务完成、工作区可用且成本状态明确"
+                ],
+                "suggested_role": "qa",
+                "effort": "medium"
+              }
+            ]
+          },
+          "team_id": "factory-01a110a2-c8d5-77a3-a2ac-bfe3ed667916-r1",
+          "created_at": 1791280466133,
+          "updated_at": 1791286956923
+        },
+        "ready": false,
+        "workspace_path": "/private/tmp/sw-fresh-validation/data/product-factory-workspaces/01a110a2-c8d5-77a3-a2ac-bfe3ed667916",
+        "task_counts": {
+          "total": 4,
+          "pending": 0,
+          "in_progress": 0,
+          "in_review": 0,
+          "completed": 4,
+          "failed": 0
+        },
+        "usage_summary": {
+          "team_id": "factory-01a110a2-c8d5-77a3-a2ac-bfe3ed667916-r1",
+          "unassigned_usage": [],
+          "input_tokens": 9604003,
+          "output_tokens": 79300,
+          "cost_est": null,
+          "cost_unknown": true,
+          "budget_limit_usd": null,
+          "budget_remaining_usd": null,
+          "budget_exceeded": false,
+          "tasks": [
+            {
+              "task_id": "factory-01a110a2-c8d5-77a3-a2ac-bfe3ed667916-r1-data-1",
+              "input_tokens": 556170,
+              "output_tokens": 13316,
+              "cost_est": null,
+              "turn_count": 1
+            },
+            {
+              "task_id": "factory-01a110a2-c8d5-77a3-a2ac-bfe3ed667916-r1-backend-1",
+              "input_tokens": 1140921,
+              "output_tokens": 19713,
+              "cost_est": null,
+              "turn_count": 1
+            },
+            {
+              "task_id": "factory-01a110a2-c8d5-77a3-a2ac-bfe3ed667916-r1-frontend-1",
+              "input_tokens": 4400859,
+              "output_tokens": 28555,
+              "cost_est": null,
+              "turn_count": 1
+            },
+            {
+              "task_id": "factory-01a110a2-c8d5-77a3-a2ac-bfe3ed667916-r1-test-1",
+              "input_tokens": 3506053,
+              "output_tokens": 17716,
+              "cost_est": null,
+              "turn_count": 1
+            }
+          ]
+        },
+        "checks": [
+          {
+            "code": "run_completed",
+            "passed": true,
+            "detail": "Product Factory run is completed"
+          },
+          {
+            "code": "all_tasks_completed",
+            "passed": true,
+            "detail": "All planned tasks are completed"
+          },
+          {
+            "code": "workspace_available",
+            "passed": true,
+            "detail": "Workspace path is available"
+          },
+          {
+            "code": "start_guide_exists",
+            "passed": true,
+            "detail": "START.md exists in the project workspace"
+          },
+          {
+            "code": "acceptance_evidence_exists",
+            "passed": true,
+            "detail": "ACCEPTANCE.md exists in the project workspace"
+          },
+          {
+            "code": "usage_recorded",
+            "passed": true,
+            "detail": "Task usage records are present"
+          },
+          {
+            "code": "cost_known",
+            "passed": false,
+            "detail": "Recorded task costs are known or configured estimates"
+          },
+          {
+            "code": "budget_within_limit",
+            "passed": true,
+            "detail": "If a budget is configured, recorded costs must remain below its limit"
+          }
+        ]
+      },
+      "cost_report": {
+        "run": {
+          "id": "01a110a2-c8d5-77a3-a2ac-bfe3ed667916",
+          "plan_revision": 1,
+          "name": "本地事项簿",
+          "idea": "开发一个真正可增删改查的事项簿，字段 id、title、done、created_at。Web 页面新增、列出、编辑标题、切换完成状态、删除事项；API 提供相同行为。标题长度1到80字，空标题/不存在ID有明确错误。",
+          "target_user": "需要管理个人事项的普通用户",
+          "problem": "需要可靠持久化，刷新和停止服务后重新启动不丢记录。只在本地运行，不安装新依赖、不建云资源。",
+          "expected_output": "Python3 标准库 HTTP + SQLite，原生 HTML/CSS/JS 响应式页面。自包含项目根目录，独立启动；提供 API 契约、START.md、ACCEPTANCE.md、单元与真实 HTTP 和独立进程重启测试。不得包含标题生成业务或固定示例结果。",
+          "workspace_path": "/private/tmp/sw-fresh-validation/data/product-factory-workspaces/01a110a2-c8d5-77a3-a2ac-bfe3ed667916",
+          "budget_usd": null,
+          "status": "completed",
+          "interview": {
+            "version": 1,
+            "summary": "开发一个真正可增删改查的事项簿，字段 id、title、done、created_at。Web 页面新增、列出、编辑标题、切换完成状态、删除事项；API 提供相同行为。标题长度1到80字，空标题/不存在ID有明确错误。\nPython3 标准库 HTTP + SQLite，原生 HTML/CSS/JS 响应式页面。自包含项目根目录，独立启动；提供 API 契约、START.md、ACCEPTANCE.md、单元与真实 HTTP 和独立进程重启测试。不得包含标题生成业务或固定示例结果。",
+            "answers": [
+              {
+                "question": "目标用户",
+                "answer": "需要管理个人事项的普通用户"
+              },
+              {
+                "question": "问题与边界",
+                "answer": "需要可靠持久化，刷新和停止服务后重新启动不丢记录。只在本地运行，不安装新依赖、不建云资源。"
+              },
+              {
+                "question": "交付",
+                "answer": "Python3 标准库 HTTP + SQLite，原生 HTML/CSS/JS 响应式页面。自包含项目根目录，独立启动；提供 API 契约、START.md、ACCEPTANCE.md、单元与真实 HTTP 和独立进程重启测试。不得包含标题生成业务或固定示例结果。"
+              }
+            ]
+          },
+          "blueprint": {
+            "version": 1,
+            "sections": [
+              {
+                "id": "goals",
+                "title": "Goals",
+                "content": "开发一个真正可增删改查的事项簿，字段 id、title、done、created_at。Web 页面新增、列出、编辑标题、切换完成状态、删除事项；API 提供相同行为。标题长度1到80字，空标题/不存在ID有明确错误。\nPython3 标准库 HTTP + SQLite，原生 HTML/CSS/JS 响应式页面。自包含项目根目录，独立启动；提供 API 契约、START.md、ACCEPTANCE.md、单元与真实 HTTP 和独立进程重启测试。不得包含标题生成业务或固定示例结果。",
+                "confirmed": false
+              },
+              {
+                "id": "users",
+                "title": "Users",
+                "content": "需要管理个人事项的普通用户",
+                "confirmed": false
+              },
+              {
+                "id": "core_loop",
+                "title": "Core loop",
+                "content": "开发一个真正可增删改查的事项簿，字段 id、title、done、created_at。Web 页面新增、列出、编辑标题、切换完成状态、删除事项；API 提供相同行为。标题长度1到80字，空标题/不存在ID有明确错误。",
+                "confirmed": false
+              },
+              {
+                "id": "modules",
+                "title": "Modules",
+                "content": "Python3 标准库 HTTP + SQLite，原生 HTML/CSS/JS 响应式页面。自包含项目根目录，独立启动；提供 API 契约、START.md、ACCEPTANCE.md、单元与真实 HTTP 和独立进程重启测试。不得包含标题生成业务或固定示例结果。",
+                "confirmed": false
+              },
+              {
+                "id": "risks",
+                "title": "Risks",
+                "content": "需要可靠持久化，刷新和停止服务后重新启动不丢记录。只在本地运行，不安装新依赖、不建云资源。",
+                "confirmed": false
+              }
+            ],
+            "risks": [],
+            "open_questions": [],
+            "generated_by": "draft",
+            "confirmed": true,
+            "updated_at": 1791280466138
+          },
+          "task_draft": {
+            "version": 1,
+            "generated_by": "draft",
+            "confirmed": true,
+            "revision": 1,
+            "updated_at": 1791280466143,
+            "tasks": [
+              {
+                "id": "data-1",
+                "title": "定义数据契约与存储",
+                "description": "围绕以下已确认需求，定义实际领域的数据契约、校验规则与必要的持久化；不要添加需求之外的实体或功能。\n\nGoals: 开发一个真正可增删改查的事项簿，字段 id、title、done、created_at。Web 页面新增、列出、编辑标题、切换完成状态、删除事项；API 提供相同行为。标题长度1到80字，空标题/不存在ID有明确错误。\nPython3 标准库 HTTP + SQLite，原生 HTML/CSS/JS 响应式页面。自包含项目根目录，独立启动；提供 API 契约、START.md、ACCEPTANCE.md、单元与真实 HTTP 和独立进程重启测试。不得包含标题生成业务或固定示例结果。\nUsers: 需要管理个人事项的普通用户\nCore loop: 开发一个真正可增删改查的事项簿，字段 id、title、done、created_at。Web 页面新增、列出、编辑标题、切换完成状态、删除事项；API 提供相同行为。标题长度1到80字，空标题/不存在ID有明确错误。\nModules: Python3 标准库 HTTP + SQLite，原生 HTML/CSS/JS 响应式页面。自包含项目根目录，独立启动；提供 API 契约、START.md、ACCEPTANCE.md、单元与真实 HTTP 和独立进程重启测试。不得包含标题生成业务或固定示例结果。\nRisks: 需要可靠持久化，刷新和停止服务后重新启动不丢记录。只在本地运行，不安装新依赖、不建云资源。",
+                "type": "data",
+                "blocked_by": [],
+                "acceptance_criteria": [
+                  "数据结构可持久化并可被后续接口读取"
+                ],
+                "suggested_role": "backend",
+                "effort": "medium"
+              },
+              {
+                "id": "backend-1",
+                "title": "实现后端接口",
+                "description": "读取已批准的数据任务产物，根据以下需求实现核心业务逻辑、所需接口和错误处理；接口名称与行为由实际产品决定。若需求包含 AI 调用，应明确真实模型接入与未配置时的降级，不把模板输出冒充模型结果。\n\nGoals: 开发一个真正可增删改查的事项簿，字段 id、title、done、created_at。Web 页面新增、列出、编辑标题、切换完成状态、删除事项；API 提供相同行为。标题长度1到80字，空标题/不存在ID有明确错误。\nPython3 标准库 HTTP + SQLite，原生 HTML/CSS/JS 响应式页面。自包含项目根目录，独立启动；提供 API 契约、START.md、ACCEPTANCE.md、单元与真实 HTTP 和独立进程重启测试。不得包含标题生成业务或固定示例结果。\nUsers: 需要管理个人事项的普通用户\nCore loop: 开发一个真正可增删改查的事项簿，字段 id、title、done、created_at。Web 页面新增、列出、编辑标题、切换完成状态、删除事项；API 提供相同行为。标题长度1到80字，空标题/不存在ID有明确错误。\nModules: Python3 标准库 HTTP + SQLite，原生 HTML/CSS/JS 响应式页面。自包含项目根目录，独立启动；提供 API 契约、START.md、ACCEPTANCE.md、单元与真实 HTTP 和独立进程重启测试。不得包含标题生成业务或固定示例结果。\nRisks: 需要可靠持久化，刷新和停止服务后重新启动不丢记录。只在本地运行，不安装新依赖、不建云资源。",
+                "type": "backend",
+                "blocked_by": [
+                  "data-1"
+                ],
+                "acceptance_criteria": [
+                  "接口可完成核心流程并返回稳定数据契约"
+                ],
+                "suggested_role": "backend",
+                "effort": "medium"
+              },
+              {
+                "id": "frontend-1",
+                "title": "实现前端核心流程",
+                "description": "读取已批准的数据与业务任务产物，按照以下已确认需求及交付形态实现用户操作入口，连接实际业务接口，展示加载、成功、失败和必要的历史数据；不要套用其他产品的输入、输出数量或接口。\n\nGoals: 开发一个真正可增删改查的事项簿，字段 id、title、done、created_at。Web 页面新增、列出、编辑标题、切换完成状态、删除事项；API 提供相同行为。标题长度1到80字，空标题/不存在ID有明确错误。\nPython3 标准库 HTTP + SQLite，原生 HTML/CSS/JS 响应式页面。自包含项目根目录，独立启动；提供 API 契约、START.md、ACCEPTANCE.md、单元与真实 HTTP 和独立进程重启测试。不得包含标题生成业务或固定示例结果。\nUsers: 需要管理个人事项的普通用户\nCore loop: 开发一个真正可增删改查的事项簿，字段 id、title、done、created_at。Web 页面新增、列出、编辑标题、切换完成状态、删除事项；API 提供相同行为。标题长度1到80字，空标题/不存在ID有明确错误。\nModules: Python3 标准库 HTTP + SQLite，原生 HTML/CSS/JS 响应式页面。自包含项目根目录，独立启动；提供 API 契约、START.md、ACCEPTANCE.md、单元与真实 HTTP 和独立进程重启测试。不得包含标题生成业务或固定示例结果。\nRisks: 需要可靠持久化，刷新和停止服务后重新启动不丢记录。只在本地运行，不安装新依赖、不建云资源。",
+                "type": "frontend",
+                "blocked_by": [
+                  "backend-1"
+                ],
+                "acceptance_criteria": [
+                  "用户可通过已确认的交付形态完成核心需求，操作入口调用实际业务实现",
+                  "结果与已确认需求的数据契约一致，必要的持久化数据在重新打开后可读取",
+                  "无效输入和调用失败有明确反馈，执行期间防止重复提交"
+                ],
+                "suggested_role": "frontend",
+                "effort": "high"
+              },
+              {
+                "id": "test-1",
+                "title": "完成最终集成与交付验收",
+                "description": "执行最终集成：检查已批准任务的真实产物，将它们组装到项目根目录；生成可运行产品、START.md 和 ACCEPTANCE.md，实际验证核心流程、错误恢复与服务停止重启后的持久化。验收文档逐项区分已通过、失败和未验证，不预先声明完成。\n\nGoals: 开发一个真正可增删改查的事项簿，字段 id、title、done、created_at。Web 页面新增、列出、编辑标题、切换完成状态、删除事项；API 提供相同行为。标题长度1到80字，空标题/不存在ID有明确错误。\nPython3 标准库 HTTP + SQLite，原生 HTML/CSS/JS 响应式页面。自包含项目根目录，独立启动；提供 API 契约、START.md、ACCEPTANCE.md、单元与真实 HTTP 和独立进程重启测试。不得包含标题生成业务或固定示例结果。\nUsers: 需要管理个人事项的普通用户\nCore loop: 开发一个真正可增删改查的事项簿，字段 id、title、done、created_at。Web 页面新增、列出、编辑标题、切换完成状态、删除事项；API 提供相同行为。标题长度1到80字，空标题/不存在ID有明确错误。\nModules: Python3 标准库 HTTP + SQLite，原生 HTML/CSS/JS 响应式页面。自包含项目根目录，独立启动；提供 API 契约、START.md、ACCEPTANCE.md、单元与真实 HTTP 和独立进程重启测试。不得包含标题生成业务或固定示例结果。\nRisks: 需要可靠持久化，刷新和停止服务后重新启动不丢记录。只在本地运行，不安装新依赖、不建云资源。",
+                "type": "test",
+                "blocked_by": [
+                  "backend-1",
+                  "frontend-1"
+                ],
+                "acceptance_criteria": [
+                  "项目根目录存在可运行产品和 START.md 启动说明",
+                  "ACCEPTANCE.md 记录关键流程、错误恢复和人工验收证据",
+                  "停止并重启产品后，核心数据仍可读取",
+                  "交付检查接口显示所有任务完成、工作区可用且成本状态明确"
+                ],
+                "suggested_role": "qa",
+                "effort": "medium"
+              }
+            ]
+          },
+          "team_id": "factory-01a110a2-c8d5-77a3-a2ac-bfe3ed667916-r1",
+          "created_at": 1791280466133,
+          "updated_at": 1791286956923
+        },
+        "usage": [
+          {
+            "id": "01a110a4-db93-7690-a076-01b3ea16b6dd",
+            "task_id": "factory-01a110a2-c8d5-77a3-a2ac-bfe3ed667916-r1-data-1",
+            "agent_id": "8e1acf31",
+            "model": "gpt-6-astra",
+            "input_tokens": 556170,
+            "output_tokens": 13316,
+            "cost_est": null,
+            "cached_read_tokens": 505728,
+            "cached_write_tokens": 0,
+            "cost_source": null,
+            "pricing_snapshot": null,
+            "cost_unknown_reason": "model_price_missing",
+            "conversation_id": "6fb8140e",
+            "turn_id": "turn_aaf9d7eb",
+            "attempt_id": "legacy",
+            "created_at": 1791280837047
+          },
+          {
+            "id": "01a110af-0377-7a80-9c6a-59f8e67807ac",
+            "task_id": "factory-01a110a2-c8d5-77a3-a2ac-bfe3ed667916-r1-backend-1",
+            "agent_id": "8e1acf31",
+            "model": "gpt-6-astra",
+            "input_tokens": 1140921,
+            "output_tokens": 19713,
+            "cost_est": null,
+            "cached_read_tokens": 1097600,
+            "cached_write_tokens": 0,
+            "cost_source": null,
+            "pricing_snapshot": null,
+            "cost_unknown_reason": "model_price_missing",
+            "conversation_id": "6fb8140e",
+            "turn_id": "turn_066f9760",
+            "attempt_id": "legacy",
+            "created_at": 1791281617865
+          },
+          {
+            "id": "01a110ce-dd3a-70a3-843b-8ebcb2acadf4",
+            "task_id": "factory-01a110a2-c8d5-77a3-a2ac-bfe3ed667916-r1-frontend-1",
+            "agent_id": "8e1acf31",
+            "model": "gpt-6-astra",
+            "input_tokens": 4400859,
+            "output_tokens": 28555,
+            "cost_est": null,
+            "cached_read_tokens": 4320384,
+            "cached_write_tokens": 0,
+            "cost_source": null,
+            "pricing_snapshot": null,
+            "cost_unknown_reason": "model_price_missing",
+            "conversation_id": "6fb8140e",
+            "turn_id": "turn_c283cee2",
+            "attempt_id": "legacy",
+            "created_at": 1791284097653
+          },
+          {
+            "id": "01a110f8-1712-7ee1-a817-e09a2cad8a53",
+            "task_id": "factory-01a110a2-c8d5-77a3-a2ac-bfe3ed667916-r1-test-1",
+            "agent_id": "8e1acf31",
+            "model": "gpt-6-astra",
+            "input_tokens": 3506053,
+            "output_tokens": 17716,
+            "cost_est": null,
+            "cached_read_tokens": 3460736,
+            "cached_write_tokens": 0,
+            "cost_source": null,
+            "pricing_snapshot": null,
+            "cost_unknown_reason": "model_price_missing",
+            "conversation_id": "6fb8140e",
+            "turn_id": "turn_d22c9026",
+            "attempt_id": "legacy",
+            "created_at": 1791286487629
+          }
+        ],
+        "usage_summary": {
+          "team_id": "factory-01a110a2-c8d5-77a3-a2ac-bfe3ed667916-r1",
+          "unassigned_usage": [],
+          "input_tokens": 9604003,
+          "output_tokens": 79300,
+          "cost_est": null,
+          "cost_unknown": true,
+          "budget_limit_usd": null,
+          "budget_remaining_usd": null,
+          "budget_exceeded": false,
+          "tasks": [
+            {
+              "task_id": "factory-01a110a2-c8d5-77a3-a2ac-bfe3ed667916-r1-data-1",
+              "input_tokens": 556170,
+              "output_tokens": 13316,
+              "cost_est": null,
+              "turn_count": 1
+            },
+            {
+              "task_id": "factory-01a110a2-c8d5-77a3-a2ac-bfe3ed667916-r1-backend-1",
+              "input_tokens": 1140921,
+              "output_tokens": 19713,
+              "cost_est": null,
+              "turn_count": 1
+            },
+            {
+              "task_id": "factory-01a110a2-c8d5-77a3-a2ac-bfe3ed667916-r1-frontend-1",
+              "input_tokens": 4400859,
+              "output_tokens": 28555,
+              "cost_est": null,
+              "turn_count": 1
+            },
+            {
+              "task_id": "factory-01a110a2-c8d5-77a3-a2ac-bfe3ed667916-r1-test-1",
+              "input_tokens": 3506053,
+              "output_tokens": 17716,
+              "cost_est": null,
+              "turn_count": 1
+            }
+          ]
+        },
+        "task_counts": {
+          "total": 4,
+          "pending": 0,
+          "in_progress": 0,
+          "in_review": 0,
+          "completed": 4,
+          "failed": 0
+        },
+        "generated_at": 1791296827033,
+        "planning_usage": []
+      }
+    },
+    "cli": {
+      "run_id": "01a110a2-c908-7282-bbe2-625e164719a2",
+      "status": "completed",
+      "delivery": {
+        "run": {
+          "id": "01a110a2-c908-7282-bbe2-625e164719a2",
+          "plan_revision": 1,
+          "name": "CSV账目汇总器",
+          "idea": "开发本地命令行 CSV 账目工具。导入CSV字段date、category、amount，校验日期、非空分类与有限正数金额；按分类汇总并导出JSON。把有效导入记录保存在SQLite，可再次运行查询历史。重复导入同一文件不得增加重复记录；坏行返回行号和错误，整批失败不部分保存。",
+          "target_user": "整理个人账目的用户",
+          "problem": "交付形态是CLI，不需要Web页面或HTTP服务。只用Python3标准库、不安装依赖、不建云资源，不读取其他个人文件。",
+          "expected_output": "Python3 CLI：import、summary、history；可选数据库路径和--help。持久化、去重、错误退出码、CSV/JSON示例、独立进程重新运行测试和START.md、ACCEPTANCE.md。入口任务按CLI交付形态实现，无需浏览器。",
+          "workspace_path": "/private/tmp/sw-fresh-validation/data/product-factory-workspaces/01a110a2-c908-7282-bbe2-625e164719a2",
+          "budget_usd": null,
+          "status": "completed",
+          "interview": {
+            "version": 1,
+            "summary": "开发本地命令行 CSV 账目工具。导入CSV字段date、category、amount，校验日期、非空分类与有限正数金额；按分类汇总并导出JSON。把有效导入记录保存在SQLite，可再次运行查询历史。重复导入同一文件不得增加重复记录；坏行返回行号和错误，整批失败不部分保存。\nPython3 CLI：import、summary、history；可选数据库路径和--help。持久化、去重、错误退出码、CSV/JSON示例、独立进程重新运行测试和START.md、ACCEPTANCE.md。入口任务按CLI交付形态实现，无需浏览器。",
+            "answers": [
+              {
+                "question": "目标用户",
+                "answer": "整理个人账目的用户"
+              },
+              {
+                "question": "问题与边界",
+                "answer": "交付形态是CLI，不需要Web页面或HTTP服务。只用Python3标准库、不安装依赖、不建云资源，不读取其他个人文件。"
+              },
+              {
+                "question": "交付",
+                "answer": "Python3 CLI：import、summary、history；可选数据库路径和--help。持久化、去重、错误退出码、CSV/JSON示例、独立进程重新运行测试和START.md、ACCEPTANCE.md。入口任务按CLI交付形态实现，无需浏览器。"
+              }
+            ]
+          },
+          "blueprint": {
+            "version": 1,
+            "sections": [
+              {
+                "id": "goals",
+                "title": "Goals",
+                "content": "开发本地命令行 CSV 账目工具。导入CSV字段date、category、amount，校验日期、非空分类与有限正数金额；按分类汇总并导出JSON。把有效导入记录保存在SQLite，可再次运行查询历史。重复导入同一文件不得增加重复记录；坏行返回行号和错误，整批失败不部分保存。\nPython3 CLI：import、summary、history；可选数据库路径和--help。持久化、去重、错误退出码、CSV/JSON示例、独立进程重新运行测试和START.md、ACCEPTANCE.md。入口任务按CLI交付形态实现，无需浏览器。",
+                "confirmed": false
+              },
+              {
+                "id": "users",
+                "title": "Users",
+                "content": "整理个人账目的用户",
+                "confirmed": false
+              },
+              {
+                "id": "core_loop",
+                "title": "Core loop",
+                "content": "开发本地命令行 CSV 账目工具。导入CSV字段date、category、amount，校验日期、非空分类与有限正数金额；按分类汇总并导出JSON。把有效导入记录保存在SQLite，可再次运行查询历史。重复导入同一文件不得增加重复记录；坏行返回行号和错误，整批失败不部分保存。",
+                "confirmed": false
+              },
+              {
+                "id": "modules",
+                "title": "Modules",
+                "content": "Python3 CLI：import、summary、history；可选数据库路径和--help。持久化、去重、错误退出码、CSV/JSON示例、独立进程重新运行测试和START.md、ACCEPTANCE.md。入口任务按CLI交付形态实现，无需浏览器。",
+                "confirmed": false
+              },
+              {
+                "id": "risks",
+                "title": "Risks",
+                "content": "交付形态是CLI，不需要Web页面或HTTP服务。只用Python3标准库、不安装依赖、不建云资源，不读取其他个人文件。",
+                "confirmed": false
+              }
+            ],
+            "risks": [],
+            "open_questions": [],
+            "generated_by": "draft",
+            "confirmed": true,
+            "updated_at": 1791280466187
+          },
+          "task_draft": {
+            "version": 1,
+            "generated_by": "draft",
+            "confirmed": true,
+            "revision": 1,
+            "updated_at": 1791280466192,
+            "tasks": [
+              {
+                "id": "data-1",
+                "title": "定义数据契约与存储",
+                "description": "围绕以下已确认需求，定义实际领域的数据契约、校验规则与必要的持久化；不要添加需求之外的实体或功能。\n\nGoals: 开发本地命令行 CSV 账目工具。导入CSV字段date、category、amount，校验日期、非空分类与有限正数金额；按分类汇总并导出JSON。把有效导入记录保存在SQLite，可再次运行查询历史。重复导入同一文件不得增加重复记录；坏行返回行号和错误，整批失败不部分保存。\nPython3 CLI：import、summary、history；可选数据库路径和--help。持久化、去重、错误退出码、CSV/JSON示例、独立进程重新运行测试和START.md、ACCEPTANCE.md。入口任务按CLI交付形态实现，无需浏览器。\nUsers: 整理个人账目的用户\nCore loop: 开发本地命令行 CSV 账目工具。导入CSV字段date、category、amount，校验日期、非空分类与有限正数金额；按分类汇总并导出JSON。把有效导入记录保存在SQLite，可再次运行查询历史。重复导入同一文件不得增加重复记录；坏行返回行号和错误，整批失败不部分保存。\nModules: Python3 CLI：import、summary、history；可选数据库路径和--help。持久化、去重、错误退出码、CSV/JSON示例、独立进程重新运行测试和START.md、ACCEPTANCE.md。入口任务按CLI交付形态实现，无需浏览器。\nRisks: 交付形态是CLI，不需要Web页面或HTTP服务。只用Python3标准库、不安装依赖、不建云资源，不读取其他个人文件。",
+                "type": "data",
+                "blocked_by": [],
+                "acceptance_criteria": [
+                  "数据结构可持久化并可被后续接口读取"
+                ],
+                "suggested_role": "backend",
+                "effort": "medium"
+              },
+              {
+                "id": "backend-1",
+                "title": "实现后端接口",
+                "description": "读取已批准的数据任务产物，根据以下需求实现核心业务逻辑、所需接口和错误处理；接口名称与行为由实际产品决定。若需求包含 AI 调用，应明确真实模型接入与未配置时的降级，不把模板输出冒充模型结果。\n\nGoals: 开发本地命令行 CSV 账目工具。导入CSV字段date、category、amount，校验日期、非空分类与有限正数金额；按分类汇总并导出JSON。把有效导入记录保存在SQLite，可再次运行查询历史。重复导入同一文件不得增加重复记录；坏行返回行号和错误，整批失败不部分保存。\nPython3 CLI：import、summary、history；可选数据库路径和--help。持久化、去重、错误退出码、CSV/JSON示例、独立进程重新运行测试和START.md、ACCEPTANCE.md。入口任务按CLI交付形态实现，无需浏览器。\nUsers: 整理个人账目的用户\nCore loop: 开发本地命令行 CSV 账目工具。导入CSV字段date、category、amount，校验日期、非空分类与有限正数金额；按分类汇总并导出JSON。把有效导入记录保存在SQLite，可再次运行查询历史。重复导入同一文件不得增加重复记录；坏行返回行号和错误，整批失败不部分保存。\nModules: Python3 CLI：import、summary、history；可选数据库路径和--help。持久化、去重、错误退出码、CSV/JSON示例、独立进程重新运行测试和START.md、ACCEPTANCE.md。入口任务按CLI交付形态实现，无需浏览器。\nRisks: 交付形态是CLI，不需要Web页面或HTTP服务。只用Python3标准库、不安装依赖、不建云资源，不读取其他个人文件。",
+                "type": "backend",
+                "blocked_by": [
+                  "data-1"
+                ],
+                "acceptance_criteria": [
+                  "接口可完成核心流程并返回稳定数据契约"
+                ],
+                "suggested_role": "backend",
+                "effort": "medium"
+              },
+              {
+                "id": "frontend-1",
+                "title": "实现前端核心流程",
+                "description": "读取已批准的数据与业务任务产物，按照以下已确认需求及交付形态实现用户操作入口，连接实际业务接口，展示加载、成功、失败和必要的历史数据；不要套用其他产品的输入、输出数量或接口。\n\nGoals: 开发本地命令行 CSV 账目工具。导入CSV字段date、category、amount，校验日期、非空分类与有限正数金额；按分类汇总并导出JSON。把有效导入记录保存在SQLite，可再次运行查询历史。重复导入同一文件不得增加重复记录；坏行返回行号和错误，整批失败不部分保存。\nPython3 CLI：import、summary、history；可选数据库路径和--help。持久化、去重、错误退出码、CSV/JSON示例、独立进程重新运行测试和START.md、ACCEPTANCE.md。入口任务按CLI交付形态实现，无需浏览器。\nUsers: 整理个人账目的用户\nCore loop: 开发本地命令行 CSV 账目工具。导入CSV字段date、category、amount，校验日期、非空分类与有限正数金额；按分类汇总并导出JSON。把有效导入记录保存在SQLite，可再次运行查询历史。重复导入同一文件不得增加重复记录；坏行返回行号和错误，整批失败不部分保存。\nModules: Python3 CLI：import、summary、history；可选数据库路径和--help。持久化、去重、错误退出码、CSV/JSON示例、独立进程重新运行测试和START.md、ACCEPTANCE.md。入口任务按CLI交付形态实现，无需浏览器。\nRisks: 交付形态是CLI，不需要Web页面或HTTP服务。只用Python3标准库、不安装依赖、不建云资源，不读取其他个人文件。",
+                "type": "frontend",
+                "blocked_by": [
+                  "backend-1"
+                ],
+                "acceptance_criteria": [
+                  "用户可通过已确认的交付形态完成核心需求，操作入口调用实际业务实现",
+                  "结果与已确认需求的数据契约一致，必要的持久化数据在重新打开后可读取",
+                  "无效输入和调用失败有明确反馈，执行期间防止重复提交"
+                ],
+                "suggested_role": "frontend",
+                "effort": "high"
+              },
+              {
+                "id": "test-1",
+                "title": "完成最终集成与交付验收",
+                "description": "执行最终集成：检查已批准任务的真实产物，将它们组装到项目根目录；生成可运行产品、START.md 和 ACCEPTANCE.md，实际验证核心流程、错误恢复与服务停止重启后的持久化。验收文档逐项区分已通过、失败和未验证，不预先声明完成。\n\nGoals: 开发本地命令行 CSV 账目工具。导入CSV字段date、category、amount，校验日期、非空分类与有限正数金额；按分类汇总并导出JSON。把有效导入记录保存在SQLite，可再次运行查询历史。重复导入同一文件不得增加重复记录；坏行返回行号和错误，整批失败不部分保存。\nPython3 CLI：import、summary、history；可选数据库路径和--help。持久化、去重、错误退出码、CSV/JSON示例、独立进程重新运行测试和START.md、ACCEPTANCE.md。入口任务按CLI交付形态实现，无需浏览器。\nUsers: 整理个人账目的用户\nCore loop: 开发本地命令行 CSV 账目工具。导入CSV字段date、category、amount，校验日期、非空分类与有限正数金额；按分类汇总并导出JSON。把有效导入记录保存在SQLite，可再次运行查询历史。重复导入同一文件不得增加重复记录；坏行返回行号和错误，整批失败不部分保存。\nModules: Python3 CLI：import、summary、history；可选数据库路径和--help。持久化、去重、错误退出码、CSV/JSON示例、独立进程重新运行测试和START.md、ACCEPTANCE.md。入口任务按CLI交付形态实现，无需浏览器。\nRisks: 交付形态是CLI，不需要Web页面或HTTP服务。只用Python3标准库、不安装依赖、不建云资源，不读取其他个人文件。",
+                "type": "test",
+                "blocked_by": [
+                  "backend-1",
+                  "frontend-1"
+                ],
+                "acceptance_criteria": [
+                  "项目根目录存在可运行产品和 START.md 启动说明",
+                  "ACCEPTANCE.md 记录关键流程、错误恢复和人工验收证据",
+                  "停止并重启产品后，核心数据仍可读取",
+                  "交付检查接口显示所有任务完成、工作区可用且成本状态明确"
+                ],
+                "suggested_role": "qa",
+                "effort": "medium"
+              }
+            ]
+          },
+          "team_id": "factory-01a110a2-c908-7282-bbe2-625e164719a2-r1",
+          "created_at": 1791280466184,
+          "updated_at": 1791287795184
+        },
+        "ready": false,
+        "workspace_path": "/private/tmp/sw-fresh-validation/data/product-factory-workspaces/01a110a2-c908-7282-bbe2-625e164719a2",
+        "task_counts": {
+          "total": 4,
+          "pending": 0,
+          "in_progress": 0,
+          "in_review": 0,
+          "completed": 4,
+          "failed": 0
+        },
+        "usage_summary": {
+          "team_id": "factory-01a110a2-c908-7282-bbe2-625e164719a2-r1",
+          "unassigned_usage": [],
+          "input_tokens": 5800794,
+          "output_tokens": 81467,
+          "cost_est": null,
+          "cost_unknown": true,
+          "budget_limit_usd": null,
+          "budget_remaining_usd": null,
+          "budget_exceeded": false,
+          "tasks": [
+            {
+              "task_id": "factory-01a110a2-c908-7282-bbe2-625e164719a2-r1-data-1",
+              "input_tokens": 768699,
+              "output_tokens": 20953,
+              "cost_est": null,
+              "turn_count": 1
+            },
+            {
+              "task_id": "factory-01a110a2-c908-7282-bbe2-625e164719a2-r1-backend-1",
+              "input_tokens": 1232179,
+              "output_tokens": 21312,
+              "cost_est": null,
+              "turn_count": 1
+            },
+            {
+              "task_id": "factory-01a110a2-c908-7282-bbe2-625e164719a2-r1-frontend-1",
+              "input_tokens": 1657347,
+              "output_tokens": 20639,
+              "cost_est": null,
+              "turn_count": 1
+            },
+            {
+              "task_id": "factory-01a110a2-c908-7282-bbe2-625e164719a2-r1-test-1",
+              "input_tokens": 2142569,
+              "output_tokens": 18563,
+              "cost_est": null,
+              "turn_count": 1
+            }
+          ]
+        },
+        "checks": [
+          {
+            "code": "run_completed",
+            "passed": true,
+            "detail": "Product Factory run is completed"
+          },
+          {
+            "code": "all_tasks_completed",
+            "passed": true,
+            "detail": "All planned tasks are completed"
+          },
+          {
+            "code": "workspace_available",
+            "passed": true,
+            "detail": "Workspace path is available"
+          },
+          {
+            "code": "start_guide_exists",
+            "passed": true,
+            "detail": "START.md exists in the project workspace"
+          },
+          {
+            "code": "acceptance_evidence_exists",
+            "passed": true,
+            "detail": "ACCEPTANCE.md exists in the project workspace"
+          },
+          {
+            "code": "usage_recorded",
+            "passed": true,
+            "detail": "Task usage records are present"
+          },
+          {
+            "code": "cost_known",
+            "passed": false,
+            "detail": "Recorded task costs are known or configured estimates"
+          },
+          {
+            "code": "budget_within_limit",
+            "passed": true,
+            "detail": "If a budget is configured, recorded costs must remain below its limit"
+          }
+        ]
+      },
+      "cost_report": {
+        "run": {
+          "id": "01a110a2-c908-7282-bbe2-625e164719a2",
+          "plan_revision": 1,
+          "name": "CSV账目汇总器",
+          "idea": "开发本地命令行 CSV 账目工具。导入CSV字段date、category、amount，校验日期、非空分类与有限正数金额；按分类汇总并导出JSON。把有效导入记录保存在SQLite，可再次运行查询历史。重复导入同一文件不得增加重复记录；坏行返回行号和错误，整批失败不部分保存。",
+          "target_user": "整理个人账目的用户",
+          "problem": "交付形态是CLI，不需要Web页面或HTTP服务。只用Python3标准库、不安装依赖、不建云资源，不读取其他个人文件。",
+          "expected_output": "Python3 CLI：import、summary、history；可选数据库路径和--help。持久化、去重、错误退出码、CSV/JSON示例、独立进程重新运行测试和START.md、ACCEPTANCE.md。入口任务按CLI交付形态实现，无需浏览器。",
+          "workspace_path": "/private/tmp/sw-fresh-validation/data/product-factory-workspaces/01a110a2-c908-7282-bbe2-625e164719a2",
+          "budget_usd": null,
+          "status": "completed",
+          "interview": {
+            "version": 1,
+            "summary": "开发本地命令行 CSV 账目工具。导入CSV字段date、category、amount，校验日期、非空分类与有限正数金额；按分类汇总并导出JSON。把有效导入记录保存在SQLite，可再次运行查询历史。重复导入同一文件不得增加重复记录；坏行返回行号和错误，整批失败不部分保存。\nPython3 CLI：import、summary、history；可选数据库路径和--help。持久化、去重、错误退出码、CSV/JSON示例、独立进程重新运行测试和START.md、ACCEPTANCE.md。入口任务按CLI交付形态实现，无需浏览器。",
+            "answers": [
+              {
+                "question": "目标用户",
+                "answer": "整理个人账目的用户"
+              },
+              {
+                "question": "问题与边界",
+                "answer": "交付形态是CLI，不需要Web页面或HTTP服务。只用Python3标准库、不安装依赖、不建云资源，不读取其他个人文件。"
+              },
+              {
+                "question": "交付",
+                "answer": "Python3 CLI：import、summary、history；可选数据库路径和--help。持久化、去重、错误退出码、CSV/JSON示例、独立进程重新运行测试和START.md、ACCEPTANCE.md。入口任务按CLI交付形态实现，无需浏览器。"
+              }
+            ]
+          },
+          "blueprint": {
+            "version": 1,
+            "sections": [
+              {
+                "id": "goals",
+                "title": "Goals",
+                "content": "开发本地命令行 CSV 账目工具。导入CSV字段date、category、amount，校验日期、非空分类与有限正数金额；按分类汇总并导出JSON。把有效导入记录保存在SQLite，可再次运行查询历史。重复导入同一文件不得增加重复记录；坏行返回行号和错误，整批失败不部分保存。\nPython3 CLI：import、summary、history；可选数据库路径和--help。持久化、去重、错误退出码、CSV/JSON示例、独立进程重新运行测试和START.md、ACCEPTANCE.md。入口任务按CLI交付形态实现，无需浏览器。",
+                "confirmed": false
+              },
+              {
+                "id": "users",
+                "title": "Users",
+                "content": "整理个人账目的用户",
+                "confirmed": false
+              },
+              {
+                "id": "core_loop",
+                "title": "Core loop",
+                "content": "开发本地命令行 CSV 账目工具。导入CSV字段date、category、amount，校验日期、非空分类与有限正数金额；按分类汇总并导出JSON。把有效导入记录保存在SQLite，可再次运行查询历史。重复导入同一文件不得增加重复记录；坏行返回行号和错误，整批失败不部分保存。",
+                "confirmed": false
+              },
+              {
+                "id": "modules",
+                "title": "Modules",
+                "content": "Python3 CLI：import、summary、history；可选数据库路径和--help。持久化、去重、错误退出码、CSV/JSON示例、独立进程重新运行测试和START.md、ACCEPTANCE.md。入口任务按CLI交付形态实现，无需浏览器。",
+                "confirmed": false
+              },
+              {
+                "id": "risks",
+                "title": "Risks",
+                "content": "交付形态是CLI，不需要Web页面或HTTP服务。只用Python3标准库、不安装依赖、不建云资源，不读取其他个人文件。",
+                "confirmed": false
+              }
+            ],
+            "risks": [],
+            "open_questions": [],
+            "generated_by": "draft",
+            "confirmed": true,
+            "updated_at": 1791280466187
+          },
+          "task_draft": {
+            "version": 1,
+            "generated_by": "draft",
+            "confirmed": true,
+            "revision": 1,
+            "updated_at": 1791280466192,
+            "tasks": [
+              {
+                "id": "data-1",
+                "title": "定义数据契约与存储",
+                "description": "围绕以下已确认需求，定义实际领域的数据契约、校验规则与必要的持久化；不要添加需求之外的实体或功能。\n\nGoals: 开发本地命令行 CSV 账目工具。导入CSV字段date、category、amount，校验日期、非空分类与有限正数金额；按分类汇总并导出JSON。把有效导入记录保存在SQLite，可再次运行查询历史。重复导入同一文件不得增加重复记录；坏行返回行号和错误，整批失败不部分保存。\nPython3 CLI：import、summary、history；可选数据库路径和--help。持久化、去重、错误退出码、CSV/JSON示例、独立进程重新运行测试和START.md、ACCEPTANCE.md。入口任务按CLI交付形态实现，无需浏览器。\nUsers: 整理个人账目的用户\nCore loop: 开发本地命令行 CSV 账目工具。导入CSV字段date、category、amount，校验日期、非空分类与有限正数金额；按分类汇总并导出JSON。把有效导入记录保存在SQLite，可再次运行查询历史。重复导入同一文件不得增加重复记录；坏行返回行号和错误，整批失败不部分保存。\nModules: Python3 CLI：import、summary、history；可选数据库路径和--help。持久化、去重、错误退出码、CSV/JSON示例、独立进程重新运行测试和START.md、ACCEPTANCE.md。入口任务按CLI交付形态实现，无需浏览器。\nRisks: 交付形态是CLI，不需要Web页面或HTTP服务。只用Python3标准库、不安装依赖、不建云资源，不读取其他个人文件。",
+                "type": "data",
+                "blocked_by": [],
+                "acceptance_criteria": [
+                  "数据结构可持久化并可被后续接口读取"
+                ],
+                "suggested_role": "backend",
+                "effort": "medium"
+              },
+              {
+                "id": "backend-1",
+                "title": "实现后端接口",
+                "description": "读取已批准的数据任务产物，根据以下需求实现核心业务逻辑、所需接口和错误处理；接口名称与行为由实际产品决定。若需求包含 AI 调用，应明确真实模型接入与未配置时的降级，不把模板输出冒充模型结果。\n\nGoals: 开发本地命令行 CSV 账目工具。导入CSV字段date、category、amount，校验日期、非空分类与有限正数金额；按分类汇总并导出JSON。把有效导入记录保存在SQLite，可再次运行查询历史。重复导入同一文件不得增加重复记录；坏行返回行号和错误，整批失败不部分保存。\nPython3 CLI：import、summary、history；可选数据库路径和--help。持久化、去重、错误退出码、CSV/JSON示例、独立进程重新运行测试和START.md、ACCEPTANCE.md。入口任务按CLI交付形态实现，无需浏览器。\nUsers: 整理个人账目的用户\nCore loop: 开发本地命令行 CSV 账目工具。导入CSV字段date、category、amount，校验日期、非空分类与有限正数金额；按分类汇总并导出JSON。把有效导入记录保存在SQLite，可再次运行查询历史。重复导入同一文件不得增加重复记录；坏行返回行号和错误，整批失败不部分保存。\nModules: Python3 CLI：import、summary、history；可选数据库路径和--help。持久化、去重、错误退出码、CSV/JSON示例、独立进程重新运行测试和START.md、ACCEPTANCE.md。入口任务按CLI交付形态实现，无需浏览器。\nRisks: 交付形态是CLI，不需要Web页面或HTTP服务。只用Python3标准库、不安装依赖、不建云资源，不读取其他个人文件。",
+                "type": "backend",
+                "blocked_by": [
+                  "data-1"
+                ],
+                "acceptance_criteria": [
+                  "接口可完成核心流程并返回稳定数据契约"
+                ],
+                "suggested_role": "backend",
+                "effort": "medium"
+              },
+              {
+                "id": "frontend-1",
+                "title": "实现前端核心流程",
+                "description": "读取已批准的数据与业务任务产物，按照以下已确认需求及交付形态实现用户操作入口，连接实际业务接口，展示加载、成功、失败和必要的历史数据；不要套用其他产品的输入、输出数量或接口。\n\nGoals: 开发本地命令行 CSV 账目工具。导入CSV字段date、category、amount，校验日期、非空分类与有限正数金额；按分类汇总并导出JSON。把有效导入记录保存在SQLite，可再次运行查询历史。重复导入同一文件不得增加重复记录；坏行返回行号和错误，整批失败不部分保存。\nPython3 CLI：import、summary、history；可选数据库路径和--help。持久化、去重、错误退出码、CSV/JSON示例、独立进程重新运行测试和START.md、ACCEPTANCE.md。入口任务按CLI交付形态实现，无需浏览器。\nUsers: 整理个人账目的用户\nCore loop: 开发本地命令行 CSV 账目工具。导入CSV字段date、category、amount，校验日期、非空分类与有限正数金额；按分类汇总并导出JSON。把有效导入记录保存在SQLite，可再次运行查询历史。重复导入同一文件不得增加重复记录；坏行返回行号和错误，整批失败不部分保存。\nModules: Python3 CLI：import、summary、history；可选数据库路径和--help。持久化、去重、错误退出码、CSV/JSON示例、独立进程重新运行测试和START.md、ACCEPTANCE.md。入口任务按CLI交付形态实现，无需浏览器。\nRisks: 交付形态是CLI，不需要Web页面或HTTP服务。只用Python3标准库、不安装依赖、不建云资源，不读取其他个人文件。",
+                "type": "frontend",
+                "blocked_by": [
+                  "backend-1"
+                ],
+                "acceptance_criteria": [
+                  "用户可通过已确认的交付形态完成核心需求，操作入口调用实际业务实现",
+                  "结果与已确认需求的数据契约一致，必要的持久化数据在重新打开后可读取",
+                  "无效输入和调用失败有明确反馈，执行期间防止重复提交"
+                ],
+                "suggested_role": "frontend",
+                "effort": "high"
+              },
+              {
+                "id": "test-1",
+                "title": "完成最终集成与交付验收",
+                "description": "执行最终集成：检查已批准任务的真实产物，将它们组装到项目根目录；生成可运行产品、START.md 和 ACCEPTANCE.md，实际验证核心流程、错误恢复与服务停止重启后的持久化。验收文档逐项区分已通过、失败和未验证，不预先声明完成。\n\nGoals: 开发本地命令行 CSV 账目工具。导入CSV字段date、category、amount，校验日期、非空分类与有限正数金额；按分类汇总并导出JSON。把有效导入记录保存在SQLite，可再次运行查询历史。重复导入同一文件不得增加重复记录；坏行返回行号和错误，整批失败不部分保存。\nPython3 CLI：import、summary、history；可选数据库路径和--help。持久化、去重、错误退出码、CSV/JSON示例、独立进程重新运行测试和START.md、ACCEPTANCE.md。入口任务按CLI交付形态实现，无需浏览器。\nUsers: 整理个人账目的用户\nCore loop: 开发本地命令行 CSV 账目工具。导入CSV字段date、category、amount，校验日期、非空分类与有限正数金额；按分类汇总并导出JSON。把有效导入记录保存在SQLite，可再次运行查询历史。重复导入同一文件不得增加重复记录；坏行返回行号和错误，整批失败不部分保存。\nModules: Python3 CLI：import、summary、history；可选数据库路径和--help。持久化、去重、错误退出码、CSV/JSON示例、独立进程重新运行测试和START.md、ACCEPTANCE.md。入口任务按CLI交付形态实现，无需浏览器。\nRisks: 交付形态是CLI，不需要Web页面或HTTP服务。只用Python3标准库、不安装依赖、不建云资源，不读取其他个人文件。",
+                "type": "test",
+                "blocked_by": [
+                  "backend-1",
+                  "frontend-1"
+                ],
+                "acceptance_criteria": [
+                  "项目根目录存在可运行产品和 START.md 启动说明",
+                  "ACCEPTANCE.md 记录关键流程、错误恢复和人工验收证据",
+                  "停止并重启产品后，核心数据仍可读取",
+                  "交付检查接口显示所有任务完成、工作区可用且成本状态明确"
+                ],
+                "suggested_role": "qa",
+                "effort": "medium"
+              }
+            ]
+          },
+          "team_id": "factory-01a110a2-c908-7282-bbe2-625e164719a2-r1",
+          "created_at": 1791280466184,
+          "updated_at": 1791287795184
+        },
+        "usage": [
+          {
+            "id": "01a110b8-73c6-7ef1-aa73-f0ddcdacc725",
+            "task_id": "factory-01a110a2-c908-7282-bbe2-625e164719a2-r1-data-1",
+            "agent_id": "8e1acf31",
+            "model": "gpt-6-astra",
+            "input_tokens": 768699,
+            "output_tokens": 20953,
+            "cost_est": null,
+            "cached_read_tokens": 708864,
+            "cached_write_tokens": 0,
+            "cost_source": null,
+            "pricing_snapshot": null,
+            "cost_unknown_reason": "model_price_missing",
+            "conversation_id": "c3abc323",
+            "turn_id": "turn_cb65f9d5",
+            "attempt_id": "legacy",
+            "created_at": 1791282257408
+          },
+          {
+            "id": "01a110ce-dbf4-7192-90b0-7cc0ad6bd315",
+            "task_id": "factory-01a110a2-c908-7282-bbe2-625e164719a2-r1-backend-1",
+            "agent_id": "8e1acf31",
+            "model": "gpt-6-astra",
+            "input_tokens": 1232179,
+            "output_tokens": 21312,
+            "cost_est": null,
+            "cached_read_tokens": 1187712,
+            "cached_write_tokens": 0,
+            "cost_source": null,
+            "pricing_snapshot": null,
+            "cost_unknown_reason": "model_price_missing",
+            "conversation_id": "c3abc323",
+            "turn_id": "turn_f10aeb3b",
+            "attempt_id": "legacy",
+            "created_at": 1791283778581
+          },
+          {
+            "id": "01a110f7-fecb-7ec2-9f56-f23791659cc0",
+            "task_id": "factory-01a110a2-c908-7282-bbe2-625e164719a2-r1-frontend-1",
+            "agent_id": "8e1acf31",
+            "model": "gpt-6-astra",
+            "input_tokens": 1657347,
+            "output_tokens": 20639,
+            "cost_est": null,
+            "cached_read_tokens": 1613440,
+            "cached_write_tokens": 0,
+            "cost_source": null,
+            "pricing_snapshot": null,
+            "cost_unknown_reason": "model_price_missing",
+            "conversation_id": "c3abc323",
+            "turn_id": "turn_7c7adc76",
+            "attempt_id": "legacy",
+            "created_at": 1791286469750
+          },
+          {
+            "id": "01a11107-f48f-75b2-926d-1ce73ca3f00b",
+            "task_id": "factory-01a110a2-c908-7282-bbe2-625e164719a2-r1-test-1",
+            "agent_id": "8e1acf31",
+            "model": "gpt-6-astra",
+            "input_tokens": 2142569,
+            "output_tokens": 18563,
+            "cost_est": null,
+            "cached_read_tokens": 2100608,
+            "cached_write_tokens": 0,
+            "cost_source": null,
+            "pricing_snapshot": null,
+            "cost_unknown_reason": "model_price_missing",
+            "conversation_id": "c3abc323",
+            "turn_id": "turn_fd45f9eb",
+            "attempt_id": "legacy",
+            "created_at": 1791287511806
+          }
+        ],
+        "usage_summary": {
+          "team_id": "factory-01a110a2-c908-7282-bbe2-625e164719a2-r1",
+          "unassigned_usage": [],
+          "input_tokens": 5800794,
+          "output_tokens": 81467,
+          "cost_est": null,
+          "cost_unknown": true,
+          "budget_limit_usd": null,
+          "budget_remaining_usd": null,
+          "budget_exceeded": false,
+          "tasks": [
+            {
+              "task_id": "factory-01a110a2-c908-7282-bbe2-625e164719a2-r1-data-1",
+              "input_tokens": 768699,
+              "output_tokens": 20953,
+              "cost_est": null,
+              "turn_count": 1
+            },
+            {
+              "task_id": "factory-01a110a2-c908-7282-bbe2-625e164719a2-r1-backend-1",
+              "input_tokens": 1232179,
+              "output_tokens": 21312,
+              "cost_est": null,
+              "turn_count": 1
+            },
+            {
+              "task_id": "factory-01a110a2-c908-7282-bbe2-625e164719a2-r1-frontend-1",
+              "input_tokens": 1657347,
+              "output_tokens": 20639,
+              "cost_est": null,
+              "turn_count": 1
+            },
+            {
+              "task_id": "factory-01a110a2-c908-7282-bbe2-625e164719a2-r1-test-1",
+              "input_tokens": 2142569,
+              "output_tokens": 18563,
+              "cost_est": null,
+              "turn_count": 1
+            }
+          ]
+        },
+        "task_counts": {
+          "total": 4,
+          "pending": 0,
+          "in_progress": 0,
+          "in_review": 0,
+          "completed": 4,
+          "failed": 0
+        },
+        "generated_at": 1791296827106,
+        "planning_usage": []
+      }
+    },
+    "ai": {
+      "run_id": "01a110a2-c934-7583-bdaf-266f9645908b",
+      "status": "completed",
+      "delivery": {
+        "run": {
+          "id": "01a110a2-c934-7583-bdaf-266f9645908b",
+          "plan_revision": 1,
+          "name": "AI需求摘要服务",
+          "idea": "开发本地HTTP需求摘要服务。POST /api/brief 输入1到1200字需求，返回摘要、行动列表和实际模型标识，保存在SQLite并提供GET历史。业务必须真正调用本机已配置的Codex CLI模型，可用经--help核验的只读exec接口；模型名称通过WORKBENCH_MODEL配置。未配置、超时、CLI失败有明确错误，不以模板或固定文本冒充模型响应。",
+          "target_user": "整理需求材料的产品人员",
+          "problem": "只用Python3标准库。本机已有Codex CLI，沿用其配置认证；不得读取、打印、复制个人密钥/认证文件。每个业务请求最多调用模型一次，业务子进程使用只读模式，有严格超时与输入校验。验收中只做一次真实业务模型调用。",
+          "expected_output": "本地Python HTTP API、简单HTML/JS输入与历史页面、SQLite；真实模型调用的来源说明、负面测试（未配置/超时/失败）、独立进程重启持久化、START.md、ACCEPTANCE.md。部署和日常用户数据库不在范围内。",
+          "workspace_path": "/private/tmp/sw-fresh-validation/data/product-factory-workspaces/01a110a2-c934-7583-bdaf-266f9645908b",
+          "budget_usd": null,
+          "status": "completed",
+          "interview": {
+            "version": 1,
+            "summary": "开发本地HTTP需求摘要服务。POST /api/brief 输入1到1200字需求，返回摘要、行动列表和实际模型标识，保存在SQLite并提供GET历史。业务必须真正调用本机已配置的Codex CLI模型，可用经--help核验的只读exec接口；模型名称通过WORKBENCH_MODEL配置。未配置、超时、CLI失败有明确错误，不以模板或固定文本冒充模型响应。\n本地Python HTTP API、简单HTML/JS输入与历史页面、SQLite；真实模型调用的来源说明、负面测试（未配置/超时/失败）、独立进程重启持久化、START.md、ACCEPTANCE.md。部署和日常用户数据库不在范围内。",
+            "answers": [
+              {
+                "question": "目标用户",
+                "answer": "整理需求材料的产品人员"
+              },
+              {
+                "question": "问题与边界",
+                "answer": "只用Python3标准库。本机已有Codex CLI，沿用其配置认证；不得读取、打印、复制个人密钥/认证文件。每个业务请求最多调用模型一次，业务子进程使用只读模式，有严格超时与输入校验。验收中只做一次真实业务模型调用。"
+              },
+              {
+                "question": "交付",
+                "answer": "本地Python HTTP API、简单HTML/JS输入与历史页面、SQLite；真实模型调用的来源说明、负面测试（未配置/超时/失败）、独立进程重启持久化、START.md、ACCEPTANCE.md。部署和日常用户数据库不在范围内。"
+              }
+            ]
+          },
+          "blueprint": {
+            "version": 1,
+            "sections": [
+              {
+                "id": "goals",
+                "title": "Goals",
+                "content": "开发本地HTTP需求摘要服务。POST /api/brief 输入1到1200字需求，返回摘要、行动列表和实际模型标识，保存在SQLite并提供GET历史。业务必须真正调用本机已配置的Codex CLI模型，可用经--help核验的只读exec接口；模型名称通过WORKBENCH_MODEL配置。未配置、超时、CLI失败有明确错误，不以模板或固定文本冒充模型响应。\n本地Python HTTP API、简单HTML/JS输入与历史页面、SQLite；真实模型调用的来源说明、负面测试（未配置/超时/失败）、独立进程重启持久化、START.md、ACCEPTANCE.md。部署和日常用户数据库不在范围内。",
+                "confirmed": false
+              },
+              {
+                "id": "users",
+                "title": "Users",
+                "content": "整理需求材料的产品人员",
+                "confirmed": false
+              },
+              {
+                "id": "core_loop",
+                "title": "Core loop",
+                "content": "开发本地HTTP需求摘要服务。POST /api/brief 输入1到1200字需求，返回摘要、行动列表和实际模型标识，保存在SQLite并提供GET历史。业务必须真正调用本机已配置的Codex CLI模型，可用经--help核验的只读exec接口；模型名称通过WORKBENCH_MODEL配置。未配置、超时、CLI失败有明确错误，不以模板或固定文本冒充模型响应。",
+                "confirmed": false
+              },
+              {
+                "id": "modules",
+                "title": "Modules",
+                "content": "本地Python HTTP API、简单HTML/JS输入与历史页面、SQLite；真实模型调用的来源说明、负面测试（未配置/超时/失败）、独立进程重启持久化、START.md、ACCEPTANCE.md。部署和日常用户数据库不在范围内。",
+                "confirmed": false
+              },
+              {
+                "id": "risks",
+                "title": "Risks",
+                "content": "只用Python3标准库。本机已有Codex CLI，沿用其配置认证；不得读取、打印、复制个人密钥/认证文件。每个业务请求最多调用模型一次，业务子进程使用只读模式，有严格超时与输入校验。验收中只做一次真实业务模型调用。",
+                "confirmed": false
+              }
+            ],
+            "risks": [],
+            "open_questions": [],
+            "generated_by": "draft",
+            "confirmed": true,
+            "updated_at": 1791280466232
+          },
+          "task_draft": {
+            "version": 1,
+            "generated_by": "draft",
+            "confirmed": true,
+            "revision": 1,
+            "updated_at": 1791280466236,
+            "tasks": [
+              {
+                "id": "data-1",
+                "title": "定义数据契约与存储",
+                "description": "围绕以下已确认需求，定义实际领域的数据契约、校验规则与必要的持久化；不要添加需求之外的实体或功能。\n\nGoals: 开发本地HTTP需求摘要服务。POST /api/brief 输入1到1200字需求，返回摘要、行动列表和实际模型标识，保存在SQLite并提供GET历史。业务必须真正调用本机已配置的Codex CLI模型，可用经--help核验的只读exec接口；模型名称通过WORKBENCH_MODEL配置。未配置、超时、CLI失败有明确错误，不以模板或固定文本冒充模型响应。\n本地Python HTTP API、简单HTML/JS输入与历史页面、SQLite；真实模型调用的来源说明、负面测试（未配置/超时/失败）、独立进程重启持久化、START.md、ACCEPTANCE.md。部署和日常用户数据库不在范围内。\nUsers: 整理需求材料的产品人员\nCore loop: 开发本地HTTP需求摘要服务。POST /api/brief 输入1到1200字需求，返回摘要、行动列表和实际模型标识，保存在SQLite并提供GET历史。业务必须真正调用本机已配置的Codex CLI模型，可用经--help核验的只读exec接口；模型名称通过WORKBENCH_MODEL配置。未配置、超时、CLI失败有明确错误，不以模板或固定文本冒充模型响应。\nModules: 本地Python HTTP API、简单HTML/JS输入与历史页面、SQLite；真实模型调用的来源说明、负面测试（未配置/超时/失败）、独立进程重启持久化、START.md、ACCEPTANCE.md。部署和日常用户数据库不在范围内。\nRisks: 只用Python3标准库。本机已有Codex CLI，沿用其配置认证；不得读取、打印、复制个人密钥/认证文件。每个业务请求最多调用模型一次，业务子进程使用只读模式，有严格超时与输入校验。验收中只做一次真实业务模型调用。",
+                "type": "data",
+                "blocked_by": [],
+                "acceptance_criteria": [
+                  "数据结构可持久化并可被后续接口读取"
+                ],
+                "suggested_role": "backend",
+                "effort": "medium"
+              },
+              {
+                "id": "backend-1",
+                "title": "实现后端接口",
+                "description": "读取已批准的数据任务产物，根据以下需求实现核心业务逻辑、所需接口和错误处理；接口名称与行为由实际产品决定。若需求包含 AI 调用，应明确真实模型接入与未配置时的降级，不把模板输出冒充模型结果。\n\nGoals: 开发本地HTTP需求摘要服务。POST /api/brief 输入1到1200字需求，返回摘要、行动列表和实际模型标识，保存在SQLite并提供GET历史。业务必须真正调用本机已配置的Codex CLI模型，可用经--help核验的只读exec接口；模型名称通过WORKBENCH_MODEL配置。未配置、超时、CLI失败有明确错误，不以模板或固定文本冒充模型响应。\n本地Python HTTP API、简单HTML/JS输入与历史页面、SQLite；真实模型调用的来源说明、负面测试（未配置/超时/失败）、独立进程重启持久化、START.md、ACCEPTANCE.md。部署和日常用户数据库不在范围内。\nUsers: 整理需求材料的产品人员\nCore loop: 开发本地HTTP需求摘要服务。POST /api/brief 输入1到1200字需求，返回摘要、行动列表和实际模型标识，保存在SQLite并提供GET历史。业务必须真正调用本机已配置的Codex CLI模型，可用经--help核验的只读exec接口；模型名称通过WORKBENCH_MODEL配置。未配置、超时、CLI失败有明确错误，不以模板或固定文本冒充模型响应。\nModules: 本地Python HTTP API、简单HTML/JS输入与历史页面、SQLite；真实模型调用的来源说明、负面测试（未配置/超时/失败）、独立进程重启持久化、START.md、ACCEPTANCE.md。部署和日常用户数据库不在范围内。\nRisks: 只用Python3标准库。本机已有Codex CLI，沿用其配置认证；不得读取、打印、复制个人密钥/认证文件。每个业务请求最多调用模型一次，业务子进程使用只读模式，有严格超时与输入校验。验收中只做一次真实业务模型调用。",
+                "type": "backend",
+                "blocked_by": [
+                  "data-1"
+                ],
+                "acceptance_criteria": [
+                  "接口可完成核心流程并返回稳定数据契约"
+                ],
+                "suggested_role": "backend",
+                "effort": "medium"
+              },
+              {
+                "id": "frontend-1",
+                "title": "实现前端核心流程",
+                "description": "读取已批准的数据与业务任务产物，按照以下已确认需求及交付形态实现用户操作入口，连接实际业务接口，展示加载、成功、失败和必要的历史数据；不要套用其他产品的输入、输出数量或接口。\n\nGoals: 开发本地HTTP需求摘要服务。POST /api/brief 输入1到1200字需求，返回摘要、行动列表和实际模型标识，保存在SQLite并提供GET历史。业务必须真正调用本机已配置的Codex CLI模型，可用经--help核验的只读exec接口；模型名称通过WORKBENCH_MODEL配置。未配置、超时、CLI失败有明确错误，不以模板或固定文本冒充模型响应。\n本地Python HTTP API、简单HTML/JS输入与历史页面、SQLite；真实模型调用的来源说明、负面测试（未配置/超时/失败）、独立进程重启持久化、START.md、ACCEPTANCE.md。部署和日常用户数据库不在范围内。\nUsers: 整理需求材料的产品人员\nCore loop: 开发本地HTTP需求摘要服务。POST /api/brief 输入1到1200字需求，返回摘要、行动列表和实际模型标识，保存在SQLite并提供GET历史。业务必须真正调用本机已配置的Codex CLI模型，可用经--help核验的只读exec接口；模型名称通过WORKBENCH_MODEL配置。未配置、超时、CLI失败有明确错误，不以模板或固定文本冒充模型响应。\nModules: 本地Python HTTP API、简单HTML/JS输入与历史页面、SQLite；真实模型调用的来源说明、负面测试（未配置/超时/失败）、独立进程重启持久化、START.md、ACCEPTANCE.md。部署和日常用户数据库不在范围内。\nRisks: 只用Python3标准库。本机已有Codex CLI，沿用其配置认证；不得读取、打印、复制个人密钥/认证文件。每个业务请求最多调用模型一次，业务子进程使用只读模式，有严格超时与输入校验。验收中只做一次真实业务模型调用。",
+                "type": "frontend",
+                "blocked_by": [
+                  "backend-1"
+                ],
+                "acceptance_criteria": [
+                  "用户可通过已确认的交付形态完成核心需求，操作入口调用实际业务实现",
+                  "结果与已确认需求的数据契约一致，必要的持久化数据在重新打开后可读取",
+                  "无效输入和调用失败有明确反馈，执行期间防止重复提交"
+                ],
+                "suggested_role": "frontend",
+                "effort": "high"
+              },
+              {
+                "id": "test-1",
+                "title": "完成最终集成与交付验收",
+                "description": "执行最终集成：检查已批准任务的真实产物，将它们组装到项目根目录；生成可运行产品、START.md 和 ACCEPTANCE.md，实际验证核心流程、错误恢复与服务停止重启后的持久化。验收文档逐项区分已通过、失败和未验证，不预先声明完成。\n\nGoals: 开发本地HTTP需求摘要服务。POST /api/brief 输入1到1200字需求，返回摘要、行动列表和实际模型标识，保存在SQLite并提供GET历史。业务必须真正调用本机已配置的Codex CLI模型，可用经--help核验的只读exec接口；模型名称通过WORKBENCH_MODEL配置。未配置、超时、CLI失败有明确错误，不以模板或固定文本冒充模型响应。\n本地Python HTTP API、简单HTML/JS输入与历史页面、SQLite；真实模型调用的来源说明、负面测试（未配置/超时/失败）、独立进程重启持久化、START.md、ACCEPTANCE.md。部署和日常用户数据库不在范围内。\nUsers: 整理需求材料的产品人员\nCore loop: 开发本地HTTP需求摘要服务。POST /api/brief 输入1到1200字需求，返回摘要、行动列表和实际模型标识，保存在SQLite并提供GET历史。业务必须真正调用本机已配置的Codex CLI模型，可用经--help核验的只读exec接口；模型名称通过WORKBENCH_MODEL配置。未配置、超时、CLI失败有明确错误，不以模板或固定文本冒充模型响应。\nModules: 本地Python HTTP API、简单HTML/JS输入与历史页面、SQLite；真实模型调用的来源说明、负面测试（未配置/超时/失败）、独立进程重启持久化、START.md、ACCEPTANCE.md。部署和日常用户数据库不在范围内。\nRisks: 只用Python3标准库。本机已有Codex CLI，沿用其配置认证；不得读取、打印、复制个人密钥/认证文件。每个业务请求最多调用模型一次，业务子进程使用只读模式，有严格超时与输入校验。验收中只做一次真实业务模型调用。",
+                "type": "test",
+                "blocked_by": [
+                  "backend-1",
+                  "frontend-1"
+                ],
+                "acceptance_criteria": [
+                  "项目根目录存在可运行产品和 START.md 启动说明",
+                  "ACCEPTANCE.md 记录关键流程、错误恢复和人工验收证据",
+                  "停止并重启产品后，核心数据仍可读取",
+                  "交付检查接口显示所有任务完成、工作区可用且成本状态明确"
+                ],
+                "suggested_role": "qa",
+                "effort": "medium"
+              }
+            ]
+          },
+          "team_id": "factory-01a110a2-c934-7583-bdaf-266f9645908b-r1",
+          "created_at": 1791280466228,
+          "updated_at": 1791296528388
+        },
+        "ready": false,
+        "workspace_path": "/private/tmp/sw-fresh-validation/data/product-factory-workspaces/01a110a2-c934-7583-bdaf-266f9645908b",
+        "task_counts": {
+          "total": 4,
+          "pending": 0,
+          "in_progress": 0,
+          "in_review": 0,
+          "completed": 4,
+          "failed": 0
+        },
+        "usage_summary": {
+          "team_id": "factory-01a110a2-c934-7583-bdaf-266f9645908b-r1",
+          "unassigned_usage": [],
+          "input_tokens": 25612724,
+          "output_tokens": 234833,
+          "cost_est": null,
+          "cost_unknown": true,
+          "budget_limit_usd": null,
+          "budget_remaining_usd": null,
+          "budget_exceeded": false,
+          "tasks": [
+            {
+              "task_id": "factory-01a110a2-c934-7583-bdaf-266f9645908b-r1-data-1",
+              "input_tokens": 531035,
+              "output_tokens": 17231,
+              "cost_est": null,
+              "turn_count": 1
+            },
+            {
+              "task_id": "factory-01a110a2-c934-7583-bdaf-266f9645908b-r1-backend-1",
+              "input_tokens": 7219507,
+              "output_tokens": 87789,
+              "cost_est": null,
+              "turn_count": 2
+            },
+            {
+              "task_id": "factory-01a110a2-c934-7583-bdaf-266f9645908b-r1-frontend-1",
+              "input_tokens": 5110646,
+              "output_tokens": 46938,
+              "cost_est": null,
+              "turn_count": 1
+            },
+            {
+              "task_id": "factory-01a110a2-c934-7583-bdaf-266f9645908b-r1-test-1",
+              "input_tokens": 12751536,
+              "output_tokens": 82875,
+              "cost_est": null,
+              "turn_count": 1
+            }
+          ]
+        },
+        "checks": [
+          {
+            "code": "run_completed",
+            "passed": true,
+            "detail": "Product Factory run is completed"
+          },
+          {
+            "code": "all_tasks_completed",
+            "passed": true,
+            "detail": "All planned tasks are completed"
+          },
+          {
+            "code": "workspace_available",
+            "passed": true,
+            "detail": "Workspace path is available"
+          },
+          {
+            "code": "start_guide_exists",
+            "passed": true,
+            "detail": "START.md exists in the project workspace"
+          },
+          {
+            "code": "acceptance_evidence_exists",
+            "passed": true,
+            "detail": "ACCEPTANCE.md exists in the project workspace"
+          },
+          {
+            "code": "usage_recorded",
+            "passed": true,
+            "detail": "Task usage records are present"
+          },
+          {
+            "code": "cost_known",
+            "passed": false,
+            "detail": "Recorded task costs are known or configured estimates"
+          },
+          {
+            "code": "budget_within_limit",
+            "passed": true,
+            "detail": "If a budget is configured, recorded costs must remain below its limit"
+          }
+        ]
+      },
+      "cost_report": {
+        "run": {
+          "id": "01a110a2-c934-7583-bdaf-266f9645908b",
+          "plan_revision": 1,
+          "name": "AI需求摘要服务",
+          "idea": "开发本地HTTP需求摘要服务。POST /api/brief 输入1到1200字需求，返回摘要、行动列表和实际模型标识，保存在SQLite并提供GET历史。业务必须真正调用本机已配置的Codex CLI模型，可用经--help核验的只读exec接口；模型名称通过WORKBENCH_MODEL配置。未配置、超时、CLI失败有明确错误，不以模板或固定文本冒充模型响应。",
+          "target_user": "整理需求材料的产品人员",
+          "problem": "只用Python3标准库。本机已有Codex CLI，沿用其配置认证；不得读取、打印、复制个人密钥/认证文件。每个业务请求最多调用模型一次，业务子进程使用只读模式，有严格超时与输入校验。验收中只做一次真实业务模型调用。",
+          "expected_output": "本地Python HTTP API、简单HTML/JS输入与历史页面、SQLite；真实模型调用的来源说明、负面测试（未配置/超时/失败）、独立进程重启持久化、START.md、ACCEPTANCE.md。部署和日常用户数据库不在范围内。",
+          "workspace_path": "/private/tmp/sw-fresh-validation/data/product-factory-workspaces/01a110a2-c934-7583-bdaf-266f9645908b",
+          "budget_usd": null,
+          "status": "completed",
+          "interview": {
+            "version": 1,
+            "summary": "开发本地HTTP需求摘要服务。POST /api/brief 输入1到1200字需求，返回摘要、行动列表和实际模型标识，保存在SQLite并提供GET历史。业务必须真正调用本机已配置的Codex CLI模型，可用经--help核验的只读exec接口；模型名称通过WORKBENCH_MODEL配置。未配置、超时、CLI失败有明确错误，不以模板或固定文本冒充模型响应。\n本地Python HTTP API、简单HTML/JS输入与历史页面、SQLite；真实模型调用的来源说明、负面测试（未配置/超时/失败）、独立进程重启持久化、START.md、ACCEPTANCE.md。部署和日常用户数据库不在范围内。",
+            "answers": [
+              {
+                "question": "目标用户",
+                "answer": "整理需求材料的产品人员"
+              },
+              {
+                "question": "问题与边界",
+                "answer": "只用Python3标准库。本机已有Codex CLI，沿用其配置认证；不得读取、打印、复制个人密钥/认证文件。每个业务请求最多调用模型一次，业务子进程使用只读模式，有严格超时与输入校验。验收中只做一次真实业务模型调用。"
+              },
+              {
+                "question": "交付",
+                "answer": "本地Python HTTP API、简单HTML/JS输入与历史页面、SQLite；真实模型调用的来源说明、负面测试（未配置/超时/失败）、独立进程重启持久化、START.md、ACCEPTANCE.md。部署和日常用户数据库不在范围内。"
+              }
+            ]
+          },
+          "blueprint": {
+            "version": 1,
+            "sections": [
+              {
+                "id": "goals",
+                "title": "Goals",
+                "content": "开发本地HTTP需求摘要服务。POST /api/brief 输入1到1200字需求，返回摘要、行动列表和实际模型标识，保存在SQLite并提供GET历史。业务必须真正调用本机已配置的Codex CLI模型，可用经--help核验的只读exec接口；模型名称通过WORKBENCH_MODEL配置。未配置、超时、CLI失败有明确错误，不以模板或固定文本冒充模型响应。\n本地Python HTTP API、简单HTML/JS输入与历史页面、SQLite；真实模型调用的来源说明、负面测试（未配置/超时/失败）、独立进程重启持久化、START.md、ACCEPTANCE.md。部署和日常用户数据库不在范围内。",
+                "confirmed": false
+              },
+              {
+                "id": "users",
+                "title": "Users",
+                "content": "整理需求材料的产品人员",
+                "confirmed": false
+              },
+              {
+                "id": "core_loop",
+                "title": "Core loop",
+                "content": "开发本地HTTP需求摘要服务。POST /api/brief 输入1到1200字需求，返回摘要、行动列表和实际模型标识，保存在SQLite并提供GET历史。业务必须真正调用本机已配置的Codex CLI模型，可用经--help核验的只读exec接口；模型名称通过WORKBENCH_MODEL配置。未配置、超时、CLI失败有明确错误，不以模板或固定文本冒充模型响应。",
+                "confirmed": false
+              },
+              {
+                "id": "modules",
+                "title": "Modules",
+                "content": "本地Python HTTP API、简单HTML/JS输入与历史页面、SQLite；真实模型调用的来源说明、负面测试（未配置/超时/失败）、独立进程重启持久化、START.md、ACCEPTANCE.md。部署和日常用户数据库不在范围内。",
+                "confirmed": false
+              },
+              {
+                "id": "risks",
+                "title": "Risks",
+                "content": "只用Python3标准库。本机已有Codex CLI，沿用其配置认证；不得读取、打印、复制个人密钥/认证文件。每个业务请求最多调用模型一次，业务子进程使用只读模式，有严格超时与输入校验。验收中只做一次真实业务模型调用。",
+                "confirmed": false
+              }
+            ],
+            "risks": [],
+            "open_questions": [],
+            "generated_by": "draft",
+            "confirmed": true,
+            "updated_at": 1791280466232
+          },
+          "task_draft": {
+            "version": 1,
+            "generated_by": "draft",
+            "confirmed": true,
+            "revision": 1,
+            "updated_at": 1791280466236,
+            "tasks": [
+              {
+                "id": "data-1",
+                "title": "定义数据契约与存储",
+                "description": "围绕以下已确认需求，定义实际领域的数据契约、校验规则与必要的持久化；不要添加需求之外的实体或功能。\n\nGoals: 开发本地HTTP需求摘要服务。POST /api/brief 输入1到1200字需求，返回摘要、行动列表和实际模型标识，保存在SQLite并提供GET历史。业务必须真正调用本机已配置的Codex CLI模型，可用经--help核验的只读exec接口；模型名称通过WORKBENCH_MODEL配置。未配置、超时、CLI失败有明确错误，不以模板或固定文本冒充模型响应。\n本地Python HTTP API、简单HTML/JS输入与历史页面、SQLite；真实模型调用的来源说明、负面测试（未配置/超时/失败）、独立进程重启持久化、START.md、ACCEPTANCE.md。部署和日常用户数据库不在范围内。\nUsers: 整理需求材料的产品人员\nCore loop: 开发本地HTTP需求摘要服务。POST /api/brief 输入1到1200字需求，返回摘要、行动列表和实际模型标识，保存在SQLite并提供GET历史。业务必须真正调用本机已配置的Codex CLI模型，可用经--help核验的只读exec接口；模型名称通过WORKBENCH_MODEL配置。未配置、超时、CLI失败有明确错误，不以模板或固定文本冒充模型响应。\nModules: 本地Python HTTP API、简单HTML/JS输入与历史页面、SQLite；真实模型调用的来源说明、负面测试（未配置/超时/失败）、独立进程重启持久化、START.md、ACCEPTANCE.md。部署和日常用户数据库不在范围内。\nRisks: 只用Python3标准库。本机已有Codex CLI，沿用其配置认证；不得读取、打印、复制个人密钥/认证文件。每个业务请求最多调用模型一次，业务子进程使用只读模式，有严格超时与输入校验。验收中只做一次真实业务模型调用。",
+                "type": "data",
+                "blocked_by": [],
+                "acceptance_criteria": [
+                  "数据结构可持久化并可被后续接口读取"
+                ],
+                "suggested_role": "backend",
+                "effort": "medium"
+              },
+              {
+                "id": "backend-1",
+                "title": "实现后端接口",
+                "description": "读取已批准的数据任务产物，根据以下需求实现核心业务逻辑、所需接口和错误处理；接口名称与行为由实际产品决定。若需求包含 AI 调用，应明确真实模型接入与未配置时的降级，不把模板输出冒充模型结果。\n\nGoals: 开发本地HTTP需求摘要服务。POST /api/brief 输入1到1200字需求，返回摘要、行动列表和实际模型标识，保存在SQLite并提供GET历史。业务必须真正调用本机已配置的Codex CLI模型，可用经--help核验的只读exec接口；模型名称通过WORKBENCH_MODEL配置。未配置、超时、CLI失败有明确错误，不以模板或固定文本冒充模型响应。\n本地Python HTTP API、简单HTML/JS输入与历史页面、SQLite；真实模型调用的来源说明、负面测试（未配置/超时/失败）、独立进程重启持久化、START.md、ACCEPTANCE.md。部署和日常用户数据库不在范围内。\nUsers: 整理需求材料的产品人员\nCore loop: 开发本地HTTP需求摘要服务。POST /api/brief 输入1到1200字需求，返回摘要、行动列表和实际模型标识，保存在SQLite并提供GET历史。业务必须真正调用本机已配置的Codex CLI模型，可用经--help核验的只读exec接口；模型名称通过WORKBENCH_MODEL配置。未配置、超时、CLI失败有明确错误，不以模板或固定文本冒充模型响应。\nModules: 本地Python HTTP API、简单HTML/JS输入与历史页面、SQLite；真实模型调用的来源说明、负面测试（未配置/超时/失败）、独立进程重启持久化、START.md、ACCEPTANCE.md。部署和日常用户数据库不在范围内。\nRisks: 只用Python3标准库。本机已有Codex CLI，沿用其配置认证；不得读取、打印、复制个人密钥/认证文件。每个业务请求最多调用模型一次，业务子进程使用只读模式，有严格超时与输入校验。验收中只做一次真实业务模型调用。",
+                "type": "backend",
+                "blocked_by": [
+                  "data-1"
+                ],
+                "acceptance_criteria": [
+                  "接口可完成核心流程并返回稳定数据契约"
+                ],
+                "suggested_role": "backend",
+                "effort": "medium"
+              },
+              {
+                "id": "frontend-1",
+                "title": "实现前端核心流程",
+                "description": "读取已批准的数据与业务任务产物，按照以下已确认需求及交付形态实现用户操作入口，连接实际业务接口，展示加载、成功、失败和必要的历史数据；不要套用其他产品的输入、输出数量或接口。\n\nGoals: 开发本地HTTP需求摘要服务。POST /api/brief 输入1到1200字需求，返回摘要、行动列表和实际模型标识，保存在SQLite并提供GET历史。业务必须真正调用本机已配置的Codex CLI模型，可用经--help核验的只读exec接口；模型名称通过WORKBENCH_MODEL配置。未配置、超时、CLI失败有明确错误，不以模板或固定文本冒充模型响应。\n本地Python HTTP API、简单HTML/JS输入与历史页面、SQLite；真实模型调用的来源说明、负面测试（未配置/超时/失败）、独立进程重启持久化、START.md、ACCEPTANCE.md。部署和日常用户数据库不在范围内。\nUsers: 整理需求材料的产品人员\nCore loop: 开发本地HTTP需求摘要服务。POST /api/brief 输入1到1200字需求，返回摘要、行动列表和实际模型标识，保存在SQLite并提供GET历史。业务必须真正调用本机已配置的Codex CLI模型，可用经--help核验的只读exec接口；模型名称通过WORKBENCH_MODEL配置。未配置、超时、CLI失败有明确错误，不以模板或固定文本冒充模型响应。\nModules: 本地Python HTTP API、简单HTML/JS输入与历史页面、SQLite；真实模型调用的来源说明、负面测试（未配置/超时/失败）、独立进程重启持久化、START.md、ACCEPTANCE.md。部署和日常用户数据库不在范围内。\nRisks: 只用Python3标准库。本机已有Codex CLI，沿用其配置认证；不得读取、打印、复制个人密钥/认证文件。每个业务请求最多调用模型一次，业务子进程使用只读模式，有严格超时与输入校验。验收中只做一次真实业务模型调用。",
+                "type": "frontend",
+                "blocked_by": [
+                  "backend-1"
+                ],
+                "acceptance_criteria": [
+                  "用户可通过已确认的交付形态完成核心需求，操作入口调用实际业务实现",
+                  "结果与已确认需求的数据契约一致，必要的持久化数据在重新打开后可读取",
+                  "无效输入和调用失败有明确反馈，执行期间防止重复提交"
+                ],
+                "suggested_role": "frontend",
+                "effort": "high"
+              },
+              {
+                "id": "test-1",
+                "title": "完成最终集成与交付验收",
+                "description": "执行最终集成：检查已批准任务的真实产物，将它们组装到项目根目录；生成可运行产品、START.md 和 ACCEPTANCE.md，实际验证核心流程、错误恢复与服务停止重启后的持久化。验收文档逐项区分已通过、失败和未验证，不预先声明完成。\n\nGoals: 开发本地HTTP需求摘要服务。POST /api/brief 输入1到1200字需求，返回摘要、行动列表和实际模型标识，保存在SQLite并提供GET历史。业务必须真正调用本机已配置的Codex CLI模型，可用经--help核验的只读exec接口；模型名称通过WORKBENCH_MODEL配置。未配置、超时、CLI失败有明确错误，不以模板或固定文本冒充模型响应。\n本地Python HTTP API、简单HTML/JS输入与历史页面、SQLite；真实模型调用的来源说明、负面测试（未配置/超时/失败）、独立进程重启持久化、START.md、ACCEPTANCE.md。部署和日常用户数据库不在范围内。\nUsers: 整理需求材料的产品人员\nCore loop: 开发本地HTTP需求摘要服务。POST /api/brief 输入1到1200字需求，返回摘要、行动列表和实际模型标识，保存在SQLite并提供GET历史。业务必须真正调用本机已配置的Codex CLI模型，可用经--help核验的只读exec接口；模型名称通过WORKBENCH_MODEL配置。未配置、超时、CLI失败有明确错误，不以模板或固定文本冒充模型响应。\nModules: 本地Python HTTP API、简单HTML/JS输入与历史页面、SQLite；真实模型调用的来源说明、负面测试（未配置/超时/失败）、独立进程重启持久化、START.md、ACCEPTANCE.md。部署和日常用户数据库不在范围内。\nRisks: 只用Python3标准库。本机已有Codex CLI，沿用其配置认证；不得读取、打印、复制个人密钥/认证文件。每个业务请求最多调用模型一次，业务子进程使用只读模式，有严格超时与输入校验。验收中只做一次真实业务模型调用。",
+                "type": "test",
+                "blocked_by": [
+                  "backend-1",
+                  "frontend-1"
+                ],
+                "acceptance_criteria": [
+                  "项目根目录存在可运行产品和 START.md 启动说明",
+                  "ACCEPTANCE.md 记录关键流程、错误恢复和人工验收证据",
+                  "停止并重启产品后，核心数据仍可读取",
+                  "交付检查接口显示所有任务完成、工作区可用且成本状态明确"
+                ],
+                "suggested_role": "qa",
+                "effort": "medium"
+              }
+            ]
+          },
+          "team_id": "factory-01a110a2-c934-7583-bdaf-266f9645908b-r1",
+          "created_at": 1791280466228,
+          "updated_at": 1791296528388
+        },
+        "usage": [
+          {
+            "id": "01a11107-e0c7-7850-8d61-0848823cbfb9",
+            "task_id": "factory-01a110a2-c934-7583-bdaf-266f9645908b-r1-data-1",
+            "agent_id": "8e1acf31",
+            "model": "gpt-6-astra",
+            "input_tokens": 531035,
+            "output_tokens": 17231,
+            "cost_est": null,
+            "cached_read_tokens": 480512,
+            "cached_write_tokens": 0,
+            "cost_source": null,
+            "pricing_snapshot": null,
+            "cost_unknown_reason": "model_price_missing",
+            "conversation_id": "af4485fb",
+            "turn_id": "turn_0a8e09e6",
+            "attempt_id": "legacy",
+            "created_at": 1791287373216
+          },
+          {
+            "id": "01a1112b-e56a-7e22-b9fa-047b3ed976b5",
+            "task_id": "factory-01a110a2-c934-7583-bdaf-266f9645908b-r1-backend-1",
+            "agent_id": "8e1acf31",
+            "model": "gpt-6-astra",
+            "input_tokens": 5537633,
+            "output_tokens": 54491,
+            "cost_est": null,
+            "cached_read_tokens": 5443328,
+            "cached_write_tokens": 0,
+            "cost_source": null,
+            "pricing_snapshot": null,
+            "cost_unknown_reason": "model_price_missing",
+            "conversation_id": "af4485fb",
+            "turn_id": "turn_e2d48af7",
+            "attempt_id": "legacy",
+            "created_at": 1791290740691
+          },
+          {
+            "id": "01a11113-1673-7ea1-a2a0-de2c20be6d76",
+            "task_id": "factory-01a110a2-c934-7583-bdaf-266f9645908b-r1-backend-1",
+            "agent_id": "8e1acf31",
+            "model": "gpt-6-astra",
+            "input_tokens": 1681874,
+            "output_tokens": 33298,
+            "cost_est": null,
+            "cached_read_tokens": 1595008,
+            "cached_write_tokens": 0,
+            "cost_source": null,
+            "pricing_snapshot": null,
+            "cost_unknown_reason": "model_price_missing",
+            "conversation_id": "af4485fb",
+            "turn_id": "turn_43a2980e",
+            "attempt_id": "legacy",
+            "created_at": 1791288471400
+          },
+          {
+            "id": "01a1114f-32ff-7ff2-bf87-e648054998a9",
+            "task_id": "factory-01a110a2-c934-7583-bdaf-266f9645908b-r1-frontend-1",
+            "agent_id": "8e1acf31",
+            "model": "gpt-6-astra",
+            "input_tokens": 5110646,
+            "output_tokens": 46938,
+            "cost_est": null,
+            "cached_read_tokens": 5021312,
+            "cached_write_tokens": 0,
+            "cost_source": null,
+            "pricing_snapshot": null,
+            "cost_unknown_reason": "model_price_missing",
+            "conversation_id": "af4485fb",
+            "turn_id": "turn_b1ed4b96",
+            "attempt_id": "legacy",
+            "created_at": 1791292924188
+          },
+          {
+            "id": "01a1116b-67cd-72b2-ad18-43233b219bdf",
+            "task_id": "factory-01a110a2-c934-7583-bdaf-266f9645908b-r1-test-1",
+            "agent_id": "8e1acf31",
+            "model": "gpt-6-astra",
+            "input_tokens": 12751536,
+            "output_tokens": 82875,
+            "cost_est": null,
+            "cached_read_tokens": 12605824,
+            "cached_write_tokens": 0,
+            "cost_source": null,
+            "pricing_snapshot": null,
+            "cost_unknown_reason": "model_price_missing",
+            "conversation_id": "af4485fb",
+            "turn_id": "turn_c405b5cd",
+            "attempt_id": "legacy",
+            "created_at": 1791296299812
+          }
+        ],
+        "usage_summary": {
+          "team_id": "factory-01a110a2-c934-7583-bdaf-266f9645908b-r1",
+          "unassigned_usage": [],
+          "input_tokens": 25612724,
+          "output_tokens": 234833,
+          "cost_est": null,
+          "cost_unknown": true,
+          "budget_limit_usd": null,
+          "budget_remaining_usd": null,
+          "budget_exceeded": false,
+          "tasks": [
+            {
+              "task_id": "factory-01a110a2-c934-7583-bdaf-266f9645908b-r1-data-1",
+              "input_tokens": 531035,
+              "output_tokens": 17231,
+              "cost_est": null,
+              "turn_count": 1
+            },
+            {
+              "task_id": "factory-01a110a2-c934-7583-bdaf-266f9645908b-r1-backend-1",
+              "input_tokens": 7219507,
+              "output_tokens": 87789,
+              "cost_est": null,
+              "turn_count": 2
+            },
+            {
+              "task_id": "factory-01a110a2-c934-7583-bdaf-266f9645908b-r1-frontend-1",
+              "input_tokens": 5110646,
+              "output_tokens": 46938,
+              "cost_est": null,
+              "turn_count": 1
+            },
+            {
+              "task_id": "factory-01a110a2-c934-7583-bdaf-266f9645908b-r1-test-1",
+              "input_tokens": 12751536,
+              "output_tokens": 82875,
+              "cost_est": null,
+              "turn_count": 1
+            }
+          ]
+        },
+        "task_counts": {
+          "total": 4,
+          "pending": 0,
+          "in_progress": 0,
+          "in_review": 0,
+          "completed": 4,
+          "failed": 0
+        },
+        "generated_at": 1791296827158,
+        "planning_usage": []
+      }
+    }
+  },
+  "new_draft_budget_is_internal_test_configuration": {
+    "usd": 7.5,
+    "source": "internal API test configuration; independent new-run limit, not model price",
+    "planning_attempts": 0,
+    "team": null,
+    "usage_added": 0,
+    "cost_added": 0
+  },
+  "new_draft_run_id": "01a1119b-25b5-7553-a76d-c36bb03ffde4",
+  "actual_tariffs_configured": false,
+  "customer_sign_off": false
+}

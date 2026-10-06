@@ -1,0 +1,246 @@
+{
+  "id": "01a11151-9cc8-7491-a472-20173f5365ea",
+  "run_id": "01a1114e-3705-7741-ad2a-44acaa2235f6",
+  "phase": "blueprint",
+  "input_plan_revision": 5,
+  "input_hash": "4d08f9a34a81527a769f52cab651f3abdc9113532ab8cfded5a41cd2607d50b3",
+  "idempotency_key": "live-blueprint-20261006-a",
+  "assistant_id": "bare:8e1acf31",
+  "model": "gpt-6-astra",
+  "conversation_id": "3b7cb6f5",
+  "app_turn_id": "turn_8a028a9b",
+  "state": "candidate_ready",
+  "candidate": {
+    "version": 2,
+    "generated_by": "model",
+    "confirmed": false,
+    "sections": [
+      {
+        "id": "goals",
+        "title": "产品目标",
+        "content": "规划一个本地 CSV 账目 CLI，帮助个人用户导入账目、按分类精确汇总并查询持久化历史。导入必须整批成功或整批失败，通过文件内容 SHA256 防止重复导入。",
+        "confirmed": false
+      },
+      {
+        "id": "users",
+        "title": "目标用户",
+        "content": "个人整理账目的用户，需要通过命令行处理自己明确选择的 CSV 文件，并在后续独立进程中查询已保存的账目。",
+        "confirmed": false
+      },
+      {
+        "id": "scope",
+        "title": "范围与约束",
+        "content": "仅使用 Python 标准库和本地 SQLite，不安装新依赖，不提供 Web 或 HTTP 功能，不增加日期或分类筛选，不自动扫描其他文件。本次交付为供人工审批的规划。",
+        "confirmed": false
+      },
+      {
+        "id": "commands",
+        "title": "命令与使用流程",
+        "content": "提供独立 CLI 的 import、summary、history、help 命令。用户选择 CSV 后执行导入，再查询全部账目的分类汇总或逐笔历史。默认数据库为 data/ledger.sqlite，支持通过 --db 指定路径。",
+        "confirmed": false
+      },
+      {
+        "id": "input",
+        "title": "输入与校验",
+        "content": "输入为 UTF-8 CSV，表头为 date/category/amount，日期为有效的 YYYY-MM-DD。缺列、多列、空分类或不合法金额均使整批导入失败；空行忽略。金额仅允许有限正数，允许科学计数法，不接受货币符号。",
+        "confirmed": false
+      },
+      {
+        "id": "storage",
+        "title": "精度、去重与持久化",
+        "content": "使用 Decimal 精确保存金额和求和，不隐式舍入，金额以十进制字符串表达。账目及批次信息保存在 SQLite 文件中。内容 SHA256 相同的文件不重复导入；改名或移动不改变身份，内容修改后成为新批次。不同内容文件中的相同账目保留。",
+        "confirmed": false
+      },
+      {
+        "id": "output",
+        "title": "查询输出与退出码",
+        "content": "summary 按分类汇总全部记录；history 返回全部逐笔账目及批次信息，按账目 id 升序排列。成功输出为纯 JSON。成功及重复导入退出码为 0，输入或 CSV 错误为 2，文件或 SQLite 错误为 3。",
+        "confirmed": false
+      },
+      {
+        "id": "acceptance",
+        "title": "预期交付与验收",
+        "content": "后续实现交付应包含 CLI、Decimal 精度验证、退出码验证、独立进程重开后的持久化验证，以及 START.md 和 ACCEPTANCE.md。验收覆盖严格校验、失败无残留、内容去重、全部账目汇总和历史查询。",
+        "confirmed": false
+      }
+    ],
+    "requirements": [
+      {
+        "id": "r1",
+        "title": "本地运行与依赖边界（产品约束）",
+        "acceptance_criteria": [
+          "仅使用 Python 标准库与本地 SQLite，运行不需要安装额外依赖。",
+          "不提供 Web 服务或 HTTP 功能。",
+          "只读取用户明确选择的 CSV 文件，不自动扫描或批量发现其他输入文件。"
+        ]
+      },
+      {
+        "id": "r2",
+        "title": "独立 CLI 命令（交付要求）",
+        "acceptance_criteria": [
+          "提供可独立启动的 import、summary、history、help 命令。",
+          "help 能说明各命令用途、导入文件的指定方式及 --db 用法。"
+        ]
+      },
+      {
+        "id": "r3",
+        "title": "数据库路径（q5）",
+        "acceptance_criteria": [
+          "未指定 --db 时使用本地文件 data/ledger.sqlite。",
+          "指定 --db 时，导入、汇总和历史查询均使用该显式路径对应的数据库。"
+        ]
+      },
+      {
+        "id": "r4",
+        "title": "CSV 编码与表头（q1）",
+        "acceptance_criteria": [
+          "使用 UTF-8 解码 CSV，并按 date/category/amount 表头读取。",
+          "缺少所需列或存在多余列时，整批导入失败且不保存账目。",
+          "无法按 UTF-8 解码的内容作为输入错误处理。"
+        ]
+      },
+      {
+        "id": "r5",
+        "title": "日期校验（q1）",
+        "acceptance_criteria": [
+          "日期必须符合 YYYY-MM-DD 格式且为有效日历日期。",
+          "格式错误或不存在的日期使整批导入失败且不保存账目。"
+        ]
+      },
+      {
+        "id": "r6",
+        "title": "行结构、分类与空行（q1）",
+        "acceptance_criteria": [
+          "数据行缺列、多列或分类为空时判定为坏行。",
+          "空行忽略，不生成账目，也不单独导致导入失败。",
+          "有效行与坏行混合时，全部有效行也不得保存。"
+        ]
+      },
+      {
+        "id": "r7",
+        "title": "金额合法性（q2）",
+        "acceptance_criteria": [
+          "仅接受有限且严格大于零的金额，允许科学计数法。",
+          "零、负数、NaN、无穷大、货币符号及无法解析为金额的内容均判定为坏行。",
+          "任意金额坏行使整批导入失败。"
+        ]
+      },
+      {
+        "id": "r8",
+        "title": "Decimal 精确保存与求和（q2）",
+        "acceptance_criteria": [
+          "金额使用 Decimal 解析和求和，保存后重新读取仍保持原数值精度。",
+          "金额计算和保存不经过二进制浮点数转换。",
+          "不隐式舍入；金额以十进制字符串保存和输出。",
+          "科学计数法输入经保存、重开和汇总后数值不变。"
+        ]
+      },
+      {
+        "id": "r9",
+        "title": "内容 SHA256 去重（q3、q5）",
+        "acceptance_criteria": [
+          "根据所选文件内容的 SHA256 判定是否已经成功导入。",
+          "相同内容再次导入，包括改名或移动后的文件，不新增账目或成功导入批次。",
+          "重复导入退出码为 0。"
+        ]
+      },
+      {
+        "id": "r10",
+        "title": "新批次与账目保留边界（q3）",
+        "acceptance_criteria": [
+          "文件内容修改且通过校验后，按新的内容身份导入为新批次。",
+          "不同内容文件中出现相同账目时，不按账目字段跨文件删除或合并记录。",
+          "是否重复由内容 SHA256 决定，不由文件名或路径决定。"
+        ]
+      },
+      {
+        "id": "r11",
+        "title": "整批导入原子性（q1、q3、q5）",
+        "acceptance_criteria": [
+          "任意坏行导致本次导入的账目、批次及成功去重标记全部不保存。",
+          "SQLite 写入失败时，不留下本次批次的部分账目或成功去重标记。",
+          "失败后修正输入并重新导入，不会因失败尝试的残留状态而被当作已成功导入。"
+        ]
+      },
+      {
+        "id": "r12",
+        "title": "全部账目的分类汇总（q2、q4）",
+        "acceptance_criteria": [
+          "summary 按分类汇总数据库中的全部账目。",
+          "每个分类的金额等于其全部记录金额的 Decimal 精确和。",
+          "不新增日期或分类筛选功能。"
+        ]
+      },
+      {
+        "id": "r13",
+        "title": "完整历史与批次关联（q4）",
+        "acceptance_criteria": [
+          "history 返回全部逐笔账目，并包含与每笔账目关联的批次信息。",
+          "逐笔账目按 id 升序排列。",
+          "不增加筛选或条数截断，不遗漏已成功保存的记录。"
+        ]
+      },
+      {
+        "id": "r14",
+        "title": "独立进程持久化（q5、交付要求）",
+        "acceptance_criteria": [
+          "导入成功并退出后，新启动的独立进程能从同一数据库查询相同历史和汇总。",
+          "独立进程重开后仍能识别已导入文件的内容 SHA256。",
+          "默认数据库与显式 --db 数据库均支持持久化访问。"
+        ]
+      },
+      {
+        "id": "r15",
+        "title": "成功输出为纯 JSON（q4）",
+        "acceptance_criteria": [
+          "成功命令的标准输出为可解析的完整 JSON，不混入日志、提示或其他文本。",
+          "金额字段使用十进制字符串，不使用 JSON 数字表达金额。"
+        ]
+      },
+      {
+        "id": "r16",
+        "title": "退出码分类（q5）",
+        "acceptance_criteria": [
+          "成功操作和重复导入返回退出码 0。",
+          "命令输入错误或 CSV 校验错误返回退出码 2。",
+          "文件访问错误或 SQLite 错误返回退出码 3。"
+        ]
+      },
+      {
+        "id": "r17",
+        "title": "核心行为验收（q1—q5、交付要求）",
+        "acceptance_criteria": [
+          "验收覆盖有效 CSV、各类坏行及有效行与坏行混合时整批不保存。",
+          "验收覆盖有限正金额、科学计数法、精确求和及保存后重读精度。",
+          "验收覆盖重复导入、改名或移动、内容修改以及不同内容文件中的相同账目保留。",
+          "验收覆盖纯 JSON、0/2/3 退出码以及独立进程重开后的历史、汇总和去重行为。"
+        ]
+      },
+      {
+        "id": "r18",
+        "title": "使用与验收文档（交付要求）",
+        "acceptance_criteria": [
+          "START.md 说明运行方式、四个命令、CSV 格式、默认数据库路径、--db 和退出码。",
+          "ACCEPTANCE.md 按需求编号列出验收步骤及预期结果，包含精度、整批失败、去重与独立进程重开验证。",
+          "文档示例遵守本地运行、无额外依赖及仅处理明确选择文件的约束。"
+        ]
+      }
+    ],
+    "risks": [
+      "Decimal 运算若使用不足的上下文精度，长金额或大量记录求和可能发生隐式舍入，违反精确汇总要求。",
+      "若计算 SHA256 与解析 CSV 时读取的内容不一致，可能将错误的内容身份与账目批次关联。",
+      "若账目、批次及去重标记未原子保存，校验或数据库失败可能留下部分数据，导致后续重试漏记。"
+    ],
+    "open_questions": [
+      "默认路径 data/ledger.sqlite 相对于当前工作目录还是 CLI 所在目录？父目录不存在时是否自动创建？",
+      "分类是否保留首尾空白及大小写？仅含空白字符的分类是否视为空分类？",
+      "各命令成功 JSON 的字段结构是什么？history 的批次信息需包含哪些具体字段，summary 的分类顺序如何规定？",
+      "仅有合法表头但没有账目的文件是否允许成功导入？空数据库的 summary 和 history 应返回什么 JSON？",
+      "失败时的错误输出格式及输出通道是什么？是否需要包含文件位置或 CSV 行号？"
+    ],
+    "updated_at": 1791292016459
+  },
+  "error_code": null,
+  "created_at": 1791291923656,
+  "updated_at": 1791292016459
+}

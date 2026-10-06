@@ -1,0 +1,55 @@
+{
+  "id": "01a1114e-370c-7392-a49b-bd32e03c392f",
+  "run_id": "01a1114e-3705-7741-ad2a-44acaa2235f6",
+  "phase": "interview",
+  "input_plan_revision": 1,
+  "input_hash": "e975adc4c912f8eb5288d8283c9bee0f8b21f1172f764baff41497eca4222f14",
+  "idempotency_key": "live-interview-20261006-a",
+  "assistant_id": "bare:8e1acf31",
+  "model": "gpt-6-astra",
+  "conversation_id": "daa27c07",
+  "app_turn_id": "turn_ee2900b0",
+  "state": "candidate_ready",
+  "candidate": {
+    "version": 2,
+    "generated_by": "model",
+    "confirmed": false,
+    "questions": [
+      {
+        "id": "q1",
+        "question": "CSV 的日期格式、字符编码和表头规则是什么？缺列、多列、空行或空分类应如何处理？",
+        "reason": "需要明确合法输入与坏行的判定，才能验收整批失败行为。",
+        "answer": ""
+      },
+      {
+        "id": "q2",
+        "question": "amount 是否允许负数、零、科学计数法或货币符号？小数位数是否有限制，汇总输出是否需要固定小数位及舍入规则？",
+        "reason": "Decimal 精确汇总需要明确金额解析、精度和显示要求，避免隐式舍入。",
+        "answer": ""
+      },
+      {
+        "id": "q3",
+        "question": "“同文件重复导入”的身份应如何判定？文件改名、移动、修改内容，以及不同文件包含相同账目时，分别应如何处理？",
+        "reason": "需要明确去重边界，避免漏记新账目或误删合法的重复交易。",
+        "answer": ""
+      },
+      {
+        "id": "q4",
+        "question": "summary 需要哪些日期或分类筛选？history 应展示逐笔账目、导入批次还是两者，并需要哪些字段、排序和条数限制？",
+        "reason": "需要确定汇总与历史查询的具体用途和可验收输出。",
+        "answer": ""
+      },
+      {
+        "id": "q5",
+        "question": "SQLite 数据库应默认保存在哪里，是否允许显式指定路径？成功导入、重复导入、CSV 校验失败和数据库错误分别应返回什么退出码？",
+        "reason": "数据库位置决定重开后的历史访问方式，退出码决定命令行脚本如何识别各类结果。",
+        "answer": ""
+      }
+    ],
+    "summary": "",
+    "updated_at": 1791291832633
+  },
+  "error_code": null,
+  "created_at": 1791291701004,
+  "updated_at": 1791291832640
+}

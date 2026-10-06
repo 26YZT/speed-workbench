@@ -1,0 +1,854 @@
+{
+  "run": {
+    "id": "01a1114e-3705-7741-ad2a-44acaa2235f6",
+    "plan_revision": 10,
+    "name": "真实模型规划·CSV账目CLI",
+    "idea": "实现本地CSV账目CLI：导入date/category/amount，坏行整批失败，同文件重复导入不重复；按分类精确汇总，查询持久化历史。",
+    "target_user": "个人整理账目的用户",
+    "problem": "Python标准库与SQLite，无Web或HTTP，不安装新依赖；只处理明确选择的CSV文件。",
+    "expected_output": "独立CLI import/summary/history/help，Decimal精度、错误退出码、重开持久化测试、START.md和ACCEPTANCE.md。",
+    "workspace_path": "/private/tmp/sw-p1-validation/data/product-factory-workspaces/01a1114e-3705-7741-ad2a-44acaa2235f6",
+    "budget_usd": null,
+    "status": "handed_off",
+    "interview": {
+      "version": 2,
+      "generated_by": "model",
+      "confirmed": true,
+      "questions": [
+        {
+          "id": "q1",
+          "question": "CSV 的日期格式、字符编码和表头规则是什么？缺列、多列、空行或空分类应如何处理？",
+          "reason": "需要明确合法输入与坏行的判定，才能验收整批失败行为。",
+          "answer": "UTF-8 CSV，表头date/category/amount，日期YYYY-MM-DD。缺列、多列、空分类为坏行，空行忽略，任意坏行整批不保存。"
+        },
+        {
+          "id": "q2",
+          "question": "amount 是否允许负数、零、科学计数法或货币符号？小数位数是否有限制，汇总输出是否需要固定小数位及舍入规则？",
+          "reason": "Decimal 精确汇总需要明确金额解析、精度和显示要求，避免隐式舍入。",
+          "answer": "只允许有限正数，可科学计数，不接受货币符号。用Decimal精确保存与求和，不隐式舍入，金额用十进制字符串。"
+        },
+        {
+          "id": "q3",
+          "question": "“同文件重复导入”的身份应如何判定？文件改名、移动、修改内容，以及不同文件包含相同账目时，分别应如何处理？",
+          "reason": "需要明确去重边界，避免漏记新账目或误删合法的重复交易。",
+          "answer": "按文件内容SHA256去重，改名/移动仍重复，改内容成为新批次，不跨不同文件删除相同账目。"
+        },
+        {
+          "id": "q4",
+          "question": "summary 需要哪些日期或分类筛选？history 应展示逐笔账目、导入批次还是两者，并需要哪些字段、排序和条数限制？",
+          "reason": "需要确定汇总与历史查询的具体用途和可验收输出。",
+          "answer": "无筛选新功能。summary按分类汇总全部记录，history显示全部逐笔账目与批次信息，id升序；成功纯JSON。"
+        },
+        {
+          "id": "q5",
+          "question": "SQLite 数据库应默认保存在哪里，是否允许显式指定路径？成功导入、重复导入、CSV 校验失败和数据库错误分别应返回什么退出码？",
+          "reason": "数据库位置决定重开后的历史访问方式，退出码决定命令行脚本如何识别各类结果。",
+          "answer": "默认本地文件data/ledger.sqlite，可--db显式路径。成功/重复0，输入或CSV错误2，文件/SQLite错误3。"
+        }
+      ],
+      "summary": "内部验收规格：Python标准库CSV CLI，严格CSV/日期/分类/有限正金额整批校验、内容SHA256去重、Decimal精确汇总、SQLite文件持久化和独立进程重开，纯JSON和0/2/3退出码；没有Web、HTTP、筛选或额外依赖。",
+      "updated_at": 1791291832633
+    },
+    "blueprint": {
+      "version": 2,
+      "generated_by": "model",
+      "confirmed": true,
+      "sections": [
+        {
+          "id": "goals",
+          "title": "产品目标",
+          "content": "规划一个本地 CSV 账目 CLI，帮助个人用户导入账目、按分类精确汇总并查询持久化历史。导入必须整批成功或整批失败，通过文件内容 SHA256 防止重复导入。",
+          "confirmed": false
+        },
+        {
+          "id": "users",
+          "title": "目标用户",
+          "content": "个人整理账目的用户，需要通过命令行处理自己明确选择的 CSV 文件，并在后续独立进程中查询已保存的账目。",
+          "confirmed": false
+        },
+        {
+          "id": "scope",
+          "title": "范围与约束",
+          "content": "仅使用 Python 标准库和本地 SQLite，不安装新依赖，不提供 Web 或 HTTP 功能，不增加日期或分类筛选，不自动扫描其他文件。本次交付为供人工审批的规划。",
+          "confirmed": false
+        },
+        {
+          "id": "commands",
+          "title": "命令与使用流程",
+          "content": "提供独立 CLI 的 import、summary、history、help 命令。用户选择 CSV 后执行导入，再查询全部账目的分类汇总或逐笔历史。默认数据库为 data/ledger.sqlite，支持通过 --db 指定路径。",
+          "confirmed": false
+        },
+        {
+          "id": "input",
+          "title": "输入与校验",
+          "content": "输入为 UTF-8 CSV，表头为 date/category/amount，日期为有效的 YYYY-MM-DD。缺列、多列、空分类或不合法金额均使整批导入失败；空行忽略。金额仅允许有限正数，允许科学计数法，不接受货币符号。",
+          "confirmed": false
+        },
+        {
+          "id": "storage",
+          "title": "精度、去重与持久化",
+          "content": "使用 Decimal 精确保存金额和求和，不隐式舍入，金额以十进制字符串表达。账目及批次信息保存在 SQLite 文件中。内容 SHA256 相同的文件不重复导入；改名或移动不改变身份，内容修改后成为新批次。不同内容文件中的相同账目保留。",
+          "confirmed": false
+        },
+        {
+          "id": "output",
+          "title": "查询输出与退出码",
+          "content": "summary 按分类汇总全部记录；history 返回全部逐笔账目及批次信息，按账目 id 升序排列。成功输出为纯 JSON。成功及重复导入退出码为 0，输入或 CSV 错误为 2，文件或 SQLite 错误为 3。",
+          "confirmed": false
+        },
+        {
+          "id": "acceptance",
+          "title": "预期交付与验收",
+          "content": "后续实现交付应包含 CLI、Decimal 精度验证、退出码验证、独立进程重开后的持久化验证，以及 START.md 和 ACCEPTANCE.md。验收覆盖严格校验、失败无残留、内容去重、全部账目汇总和历史查询。",
+          "confirmed": false
+        },
+        {
+          "id": "resolved_boundaries",
+          "title": "内部验收补充边界",
+          "content": "默认路径锚定程序目录，自动建父目录。分类去首尾空白，区分大小写，纯空白为坏行。仅表头文件允许0条导入，保留成功内容身份。空库输出categories/records空数组。history每条含id/date/category/amount/batch_id，附批次id与hash，id升序；summary按分类Unicode顺序。成功stdout纯JSON，失败stderr错误JSON含code/message和坏行号。",
+          "confirmed": false
+        }
+      ],
+      "requirements": [
+        {
+          "id": "r1",
+          "title": "本地运行与依赖边界（产品约束）",
+          "acceptance_criteria": [
+            "仅使用 Python 标准库与本地 SQLite，运行不需要安装额外依赖。",
+            "不提供 Web 服务或 HTTP 功能。",
+            "只读取用户明确选择的 CSV 文件，不自动扫描或批量发现其他输入文件。"
+          ]
+        },
+        {
+          "id": "r2",
+          "title": "独立 CLI 命令（交付要求）",
+          "acceptance_criteria": [
+            "提供可独立启动的 import、summary、history、help 命令。",
+            "help 能说明各命令用途、导入文件的指定方式及 --db 用法。"
+          ]
+        },
+        {
+          "id": "r3",
+          "title": "数据库路径（q5）",
+          "acceptance_criteria": [
+            "未指定 --db 时使用本地文件 data/ledger.sqlite。",
+            "指定 --db 时，导入、汇总和历史查询均使用该显式路径对应的数据库。"
+          ]
+        },
+        {
+          "id": "r4",
+          "title": "CSV 编码与表头（q1）",
+          "acceptance_criteria": [
+            "使用 UTF-8 解码 CSV，并按 date/category/amount 表头读取。",
+            "缺少所需列或存在多余列时，整批导入失败且不保存账目。",
+            "无法按 UTF-8 解码的内容作为输入错误处理。"
+          ]
+        },
+        {
+          "id": "r5",
+          "title": "日期校验（q1）",
+          "acceptance_criteria": [
+            "日期必须符合 YYYY-MM-DD 格式且为有效日历日期。",
+            "格式错误或不存在的日期使整批导入失败且不保存账目。"
+          ]
+        },
+        {
+          "id": "r6",
+          "title": "行结构、分类与空行（q1）",
+          "acceptance_criteria": [
+            "数据行缺列、多列或分类为空时判定为坏行。",
+            "空行忽略，不生成账目，也不单独导致导入失败。",
+            "有效行与坏行混合时，全部有效行也不得保存。"
+          ]
+        },
+        {
+          "id": "r7",
+          "title": "金额合法性（q2）",
+          "acceptance_criteria": [
+            "仅接受有限且严格大于零的金额，允许科学计数法。",
+            "零、负数、NaN、无穷大、货币符号及无法解析为金额的内容均判定为坏行。",
+            "任意金额坏行使整批导入失败。"
+          ]
+        },
+        {
+          "id": "r8",
+          "title": "Decimal 精确保存与求和（q2）",
+          "acceptance_criteria": [
+            "金额使用 Decimal 解析和求和，保存后重新读取仍保持原数值精度。",
+            "金额计算和保存不经过二进制浮点数转换。",
+            "不隐式舍入；金额以十进制字符串保存和输出。",
+            "科学计数法输入经保存、重开和汇总后数值不变。"
+          ]
+        },
+        {
+          "id": "r9",
+          "title": "内容 SHA256 去重（q3、q5）",
+          "acceptance_criteria": [
+            "根据所选文件内容的 SHA256 判定是否已经成功导入。",
+            "相同内容再次导入，包括改名或移动后的文件，不新增账目或成功导入批次。",
+            "重复导入退出码为 0。"
+          ]
+        },
+        {
+          "id": "r10",
+          "title": "新批次与账目保留边界（q3）",
+          "acceptance_criteria": [
+            "文件内容修改且通过校验后，按新的内容身份导入为新批次。",
+            "不同内容文件中出现相同账目时，不按账目字段跨文件删除或合并记录。",
+            "是否重复由内容 SHA256 决定，不由文件名或路径决定。"
+          ]
+        },
+        {
+          "id": "r11",
+          "title": "整批导入原子性（q1、q3、q5）",
+          "acceptance_criteria": [
+            "任意坏行导致本次导入的账目、批次及成功去重标记全部不保存。",
+            "SQLite 写入失败时，不留下本次批次的部分账目或成功去重标记。",
+            "失败后修正输入并重新导入，不会因失败尝试的残留状态而被当作已成功导入。"
+          ]
+        },
+        {
+          "id": "r12",
+          "title": "全部账目的分类汇总（q2、q4）",
+          "acceptance_criteria": [
+            "summary 按分类汇总数据库中的全部账目。",
+            "每个分类的金额等于其全部记录金额的 Decimal 精确和。",
+            "不新增日期或分类筛选功能。"
+          ]
+        },
+        {
+          "id": "r13",
+          "title": "完整历史与批次关联（q4）",
+          "acceptance_criteria": [
+            "history 返回全部逐笔账目，并包含与每笔账目关联的批次信息。",
+            "逐笔账目按 id 升序排列。",
+            "不增加筛选或条数截断，不遗漏已成功保存的记录。"
+          ]
+        },
+        {
+          "id": "r14",
+          "title": "独立进程持久化（q5、交付要求）",
+          "acceptance_criteria": [
+            "导入成功并退出后，新启动的独立进程能从同一数据库查询相同历史和汇总。",
+            "独立进程重开后仍能识别已导入文件的内容 SHA256。",
+            "默认数据库与显式 --db 数据库均支持持久化访问。"
+          ]
+        },
+        {
+          "id": "r15",
+          "title": "成功输出为纯 JSON（q4）",
+          "acceptance_criteria": [
+            "成功命令的标准输出为可解析的完整 JSON，不混入日志、提示或其他文本。",
+            "金额字段使用十进制字符串，不使用 JSON 数字表达金额。"
+          ]
+        },
+        {
+          "id": "r16",
+          "title": "退出码分类（q5）",
+          "acceptance_criteria": [
+            "成功操作和重复导入返回退出码 0。",
+            "命令输入错误或 CSV 校验错误返回退出码 2。",
+            "文件访问错误或 SQLite 错误返回退出码 3。"
+          ]
+        },
+        {
+          "id": "r17",
+          "title": "核心行为验收（q1—q5、交付要求）",
+          "acceptance_criteria": [
+            "验收覆盖有效 CSV、各类坏行及有效行与坏行混合时整批不保存。",
+            "验收覆盖有限正金额、科学计数法、精确求和及保存后重读精度。",
+            "验收覆盖重复导入、改名或移动、内容修改以及不同内容文件中的相同账目保留。",
+            "验收覆盖纯 JSON、0/2/3 退出码以及独立进程重开后的历史、汇总和去重行为。"
+          ]
+        },
+        {
+          "id": "r18",
+          "title": "使用与验收文档（交付要求）",
+          "acceptance_criteria": [
+            "START.md 说明运行方式、四个命令、CSV 格式、默认数据库路径、--db 和退出码。",
+            "ACCEPTANCE.md 按需求编号列出验收步骤及预期结果，包含精度、整批失败、去重与独立进程重开验证。",
+            "文档示例遵守本地运行、无额外依赖及仅处理明确选择文件的约束。"
+          ]
+        }
+      ],
+      "risks": [
+        "Decimal 运算若使用不足的上下文精度，长金额或大量记录求和可能发生隐式舍入，违反精确汇总要求。",
+        "若计算 SHA256 与解析 CSV 时读取的内容不一致，可能将错误的内容身份与账目批次关联。",
+        "若账目、批次及去重标记未原子保存，校验或数据库失败可能留下部分数据，导致后续重试漏记。"
+      ],
+      "open_questions": [],
+      "updated_at": 1791292134220
+    },
+    "task_draft": {
+      "version": 2,
+      "generated_by": "model",
+      "confirmed": true,
+      "revision": 1,
+      "updated_at": 1791292465883,
+      "tasks": [
+        {
+          "id": "t1",
+          "title": "建立独立 CLI 入口与命令契约",
+          "description": "规划后续实现 import、summary、history、help 的命令入口、参数解析、数据库路径传递、JSON 输出和统一错误分类，供导入与查询功能接入。",
+          "type": "backend",
+          "blocked_by": [],
+          "acceptance_criteria": [
+            "CLI 可通过 Python 独立启动，仅使用标准库和本地 SQLite，无 Web、HTTP 或额外依赖。",
+            "提供 import、summary、history、help；import 必须由用户明确指定 CSV，不扫描或发现其他输入文件。",
+            "默认数据库路径为 data/ledger.sqlite，--db 可为导入、汇总和历史查询指定同一数据库。",
+            "help 说明四个命令、CSV 文件指定方式和 --db 用法，并遵守成功标准输出为完整纯 JSON 的要求。",
+            "统一约定成功与重复导入退出码为 0，参数或 CSV 输入错误为 2，文件访问或 SQLite 错误为 3；金额输出使用字符串。"
+          ],
+          "suggested_role": "Python CLI 工程师",
+          "effort": "medium",
+          "execution_scope": "task_workspace",
+          "requirement_ids": [
+            "r1",
+            "r2",
+            "r3",
+            "r15",
+            "r16"
+          ]
+        },
+        {
+          "id": "t2",
+          "title": "实现 CSV 整批校验与 Decimal 精确金额处理",
+          "description": "建立不写入数据库的输入处理模块，从同一份文件内容计算 SHA256 并解析 CSV；提供金额解析、无损序列化和精确求和能力。",
+          "type": "data",
+          "blocked_by": [
+            "t1"
+          ],
+          "acceptance_criteria": [
+            "按 UTF-8 解码 CSV，校验 date/category/amount 表头；缺列、多列、重复导致列结构不合法或解码失败均拒绝整批输入。",
+            "日期严格符合 YYYY-MM-DD 且为有效日历日期；数据行缺列、多列或分类为空均判为坏行，空行忽略。",
+            "金额仅接受有限且严格大于零的 Decimal 值，允许科学计数法；拒绝零、负数、NaN、无穷大、货币符号和不可解析内容。",
+            "完整校验通过后才返回待保存账目与内容 SHA256；任意坏行都不能产生可提交的部分结果。",
+            "SHA256 与 CSV 解析基于同一份原始字节内容，避免内容身份和实际账目不一致。",
+            "金额解析、保存表示和求和均不经过二进制浮点数；使用足够的 Decimal 运算精度避免隐式舍入，并以十进制字符串序列化。"
+          ],
+          "suggested_role": "Python 数据处理工程师",
+          "effort": "high",
+          "execution_scope": "task_workspace",
+          "requirement_ids": [
+            "r1",
+            "r4",
+            "r5",
+            "r6",
+            "r7",
+            "r8",
+            "r9",
+            "r11"
+          ]
+        },
+        {
+          "id": "t3",
+          "title": "建立 SQLite 账目、批次与事务存储",
+          "description": "设计并实现本地 SQLite 存储，保存账目、批次及唯一内容身份，为整批提交、去重和完整查询提供接口。",
+          "type": "backend",
+          "blocked_by": [
+            "t1"
+          ],
+          "acceptance_criteria": [
+            "存储接口使用命令层传入的默认或显式数据库路径，账目与批次保存在 SQLite 文件中。",
+            "账目保存日期、分类、无损金额字符串及批次关联；账目与批次具有可查询的标识。",
+            "成功批次的 SHA256 具有唯一约束；账目字段不设置会删除或合并跨文件相同账目的唯一约束。",
+            "每次导入的账目、批次和成功内容身份在同一事务中提交；写入失败时全部回滚。",
+            "读取金额不触发 SQLite 数值强制转换，汇总不依赖浮点或 SQLite 数值聚合。",
+            "关闭连接并重新连接后，账目、批次和成功内容身份仍可查询；SQLite 异常能映射为退出码 3。"
+          ],
+          "suggested_role": "SQLite 存储工程师",
+          "effort": "medium",
+          "execution_scope": "task_workspace",
+          "requirement_ids": [
+            "r1",
+            "r3",
+            "r8",
+            "r9",
+            "r10",
+            "r11",
+            "r13",
+            "r14",
+            "r16"
+          ]
+        },
+        {
+          "id": "t4",
+          "title": "贯通原子导入与文件内容去重",
+          "description": "将命令入口、CSV 校验和事务存储接通，完成成功导入、重复导入、校验失败及存储失败的完整流程。",
+          "type": "backend",
+          "blocked_by": [
+            "t2",
+            "t3"
+          ],
+          "acceptance_criteria": [
+            "有效 CSV 全量保存为一个成功批次，成功标准输出为完整纯 JSON，退出码为 0。",
+            "同内容文件再次导入，包括改名或移动后导入，不新增账目或成功批次，返回纯 JSON 和退出码 0。",
+            "修改内容且校验通过的文件生成新批次；不同内容文件中的相同账目全部保留。",
+            "CSV 任意坏行导致本次账目、批次和成功去重标记全部不保存，退出码为 2。",
+            "文件访问或 SQLite 写入失败返回退出码 3；事务失败不留下部分记录或成功标记。",
+            "失败后修正输入或恢复存储再重试，可正常导入，不被失败尝试误判为已经成功导入。"
+          ],
+          "suggested_role": "Python CLI 工程师",
+          "effort": "high",
+          "execution_scope": "task_workspace",
+          "requirement_ids": [
+            "r2",
+            "r4",
+            "r5",
+            "r6",
+            "r7",
+            "r9",
+            "r10",
+            "r11",
+            "r15",
+            "r16"
+          ]
+        },
+        {
+          "id": "t5",
+          "title": "实现全部账目分类汇总与完整历史查询",
+          "description": "接通 summary 和 history，复用精确金额处理与存储接口，输出全部账目的分类汇总和带批次关联的逐笔历史。",
+          "type": "backend",
+          "blocked_by": [
+            "t2",
+            "t3"
+          ],
+          "acceptance_criteria": [
+            "summary 读取数据库全部账目，按分类使用 Decimal 精确求和，不隐式舍入。",
+            "history 返回全部逐笔账目和关联批次信息，逐笔账目按 id 升序排列，不遗漏或截断记录。",
+            "金额字段均为十进制字符串，summary 和 history 成功标准输出均为可解析的完整 JSON。",
+            "两项查询均使用默认数据库或用户指定的 --db 数据库，成功返回 0，文件或 SQLite 错误返回 3。",
+            "不增加日期筛选、分类筛选或其他范围外查询功能；无账目时返回合法 JSON，表示无汇总项和无历史记录。"
+          ],
+          "suggested_role": "Python 查询功能工程师",
+          "effort": "medium",
+          "execution_scope": "task_workspace",
+          "requirement_ids": [
+            "r2",
+            "r3",
+            "r8",
+            "r12",
+            "r13",
+            "r15",
+            "r16"
+          ]
+        },
+        {
+          "id": "t6",
+          "title": "验证输入边界与金额精度",
+          "description": "使用标准库测试框架建立 CSV 校验和 Decimal 精度测试，覆盖普通账目、科学计数法及容易被默认 Decimal 上下文舍入的金额。",
+          "type": "test",
+          "blocked_by": [
+            "t2",
+            "t5"
+          ],
+          "acceptance_criteria": [
+            "覆盖有效 CSV、非 UTF-8、错误表头、缺列、多列、空分类、空行、格式错误日期和不存在的日历日期。",
+            "覆盖正金额、科学计数法，以及零、负数、NaN、无穷大、货币符号和非法金额拒绝行为。",
+            "使用明确预期值验证小数求和、超过默认 Decimal 精度的长金额、大幅度不同数量级金额及多条累计金额，证明无隐式舍入。",
+            "验证金额写入 SQLite、关闭并重新读取后数值不变，科学计数法输入的保存和分类汇总均精确。",
+            "校验测试使用明确指定的临时输入和数据库，仅依赖 Python 标准库，提供可重复运行的测试命令。"
+          ],
+          "suggested_role": "数据质量测试工程师",
+          "effort": "medium",
+          "execution_scope": "task_workspace",
+          "requirement_ids": [
+            "r1",
+            "r4",
+            "r5",
+            "r6",
+            "r7",
+            "r8",
+            "r12",
+            "r17"
+          ]
+        },
+        {
+          "id": "t7",
+          "title": "验证去重、事务回滚与失败重试",
+          "description": "针对导入和存储建立测试，直接核对失败前后的账目、批次及成功内容身份，验证去重边界和原子性。",
+          "type": "test",
+          "blocked_by": [
+            "t4"
+          ],
+          "acceptance_criteria": [
+            "有效行与坏行混合时，核对账目、批次和成功内容身份均无新增，原有数据保持一致。",
+            "在部分写入已发生但事务未提交时模拟 SQLite 失败，核对全部回滚；移除故障后相同内容可成功导入。",
+            "覆盖原文件重复、改名、移动，验证账目和成功批次计数均不增加，重复导入退出码为 0。",
+            "覆盖内容修改后的新批次，以及不同内容文件中的相同账目保留，证明不以路径或账目字段去重。",
+            "校验失败后修正输入再导入能够成功，不受失败尝试的残留状态影响。",
+            "测试仅使用标准库和隔离的临时文件、SQLite 数据库，可单独重复运行。"
+          ],
+          "suggested_role": "存储与可靠性测试工程师",
+          "effort": "medium",
+          "execution_scope": "task_workspace",
+          "requirement_ids": [
+            "r1",
+            "r9",
+            "r10",
+            "r11",
+            "r16",
+            "r17"
+          ]
+        },
+        {
+          "id": "t8",
+          "title": "整理可运行交付与使用验收文档",
+          "description": "整理独立 CLI 的交付入口和标准库测试运行方式，编写 START.md 与 ACCEPTANCE.md，使用户能够在本地直接运行和复核需求。",
+          "type": "backend",
+          "blocked_by": [
+            "t4",
+            "t5"
+          ],
+          "acceptance_criteria": [
+            "交付包含完整可运行的 CLI、所需本地模块和测试，无需安装第三方依赖或使用 Web、HTTP、云资源。",
+            "START.md 说明 Python 运行前提、启动命令、import/summary/history/help、CSV 编码及格式、金额规则、默认数据库路径、--db 和 0/2/3 退出码。",
+            "START.md 提供明确选择 CSV 文件后执行导入、汇总和历史查询的可复制示例，成功输出示例为纯 JSON，金额为字符串。",
+            "ACCEPTANCE.md 按 r1 至 r18 映射验收命令、步骤和预期结果，包含精度、整批失败、存储回滚、去重及独立进程重开验证。",
+            "文档提供标准库测试的运行命令，清楚说明默认与显式数据库的访问方式，不引入筛选或自动文件发现功能。"
+          ],
+          "suggested_role": "CLI 交付与文档工程师",
+          "effort": "medium",
+          "execution_scope": "task_workspace",
+          "requirement_ids": [
+            "r1",
+            "r2",
+            "r3",
+            "r8",
+            "r9",
+            "r11",
+            "r14",
+            "r15",
+            "r16",
+            "r17",
+            "r18"
+          ]
+        },
+        {
+          "id": "t9",
+          "title": "执行最终项目集成与独立进程验收",
+          "description": "汇总所有交付和测试，在隔离的本地验收目录中通过真实 CLI 子进程完成端到端验证，并核对使用文档和需求覆盖。",
+          "type": "test",
+          "blocked_by": [
+            "t6",
+            "t7",
+            "t8"
+          ],
+          "acceptance_criteria": [
+            "交付包含可直接运行的独立 CLI、START.md 和 ACCEPTANCE.md；按 START.md 在无第三方依赖的 Python 环境中能够运行四个命令。",
+            "运行全部中间测试并通过，ACCEPTANCE.md 对 r1 至 r18 均具有可执行步骤与对应验收结果。",
+            "分别使用默认 data/ledger.sqlite 和显式 --db：由一个进程导入并退出，再由新进程查询历史和汇总，验证记录、批次关联及精确金额一致。",
+            "在独立进程重开后再次导入相同内容及改名或移动后的文件，验证退出码 0，账目与成功批次均不增加。",
+            "通过真实 CLI 验证有效输入、坏行混合整批失败、内容修改成为新批次和不同内容文件中相同账目保留。",
+            "核对 summary 覆盖全部分类和账目，history 返回全部逐笔账目及批次关联并按 id 升序；长金额和科学计数法经保存、重开、汇总后仍精确。",
+            "对成功的 import、重复 import、summary、history 和 help 分别解析完整标准输出，确认只有一个完整 JSON，金额字段均为字符串。",
+            "验证成功及重复导入为 0、命令输入和 CSV 错误为 2、文件访问及 SQLite 错误为 3；失败场景不留下本次部分账目或成功标记。",
+            "核查交付仅使用标准库和本地 SQLite，仅处理明确指定的 CSV，无 Web、HTTP、额外依赖、自动扫描、筛选或历史截断功能。"
+          ],
+          "suggested_role": "项目验收测试工程师",
+          "effort": "high",
+          "execution_scope": "project_integration",
+          "requirement_ids": [
+            "r1",
+            "r2",
+            "r3",
+            "r4",
+            "r5",
+            "r6",
+            "r7",
+            "r8",
+            "r9",
+            "r10",
+            "r11",
+            "r12",
+            "r13",
+            "r14",
+            "r15",
+            "r16",
+            "r17",
+            "r18"
+          ]
+        }
+      ]
+    },
+    "team_id": "factory-01a1114e-3705-7741-ad2a-44acaa2235f6-r1",
+    "created_at": 1791291700997,
+    "updated_at": 1791292466011
+  },
+  "usage": [
+    {
+      "id": "01a11154-d38b-7953-9903-672739926b0d",
+      "task_id": null,
+      "agent_id": "8e1acf31",
+      "model": "gpt-6-astra",
+      "input_tokens": 29084,
+      "output_tokens": 4447,
+      "cost_est": null,
+      "cached_read_tokens": 13184,
+      "cached_write_tokens": 0,
+      "cost_source": null,
+      "pricing_snapshot": null,
+      "cost_unknown_reason": "model_price_missing",
+      "conversation_id": "685bd67e",
+      "turn_id": "turn_ab4a7364",
+      "attempt_id": "01a11154-d389-75e1-8d75-d5dcd9014094",
+      "created_at": 1791292322160
+    },
+    {
+      "id": "01a11151-9d92-7191-92b0-135d0e31343c",
+      "task_id": null,
+      "agent_id": "8e1acf31",
+      "model": "gpt-6.1-sol",
+      "input_tokens": 22757,
+      "output_tokens": 4312,
+      "cost_est": null,
+      "cached_read_tokens": 13184,
+      "cached_write_tokens": 0,
+      "cost_source": null,
+      "pricing_snapshot": null,
+      "cost_unknown_reason": "model_price_missing",
+      "conversation_id": "3b7cb6f5",
+      "turn_id": "turn_8a028a9b",
+      "attempt_id": "01a11151-9d8a-7e50-a78e-ffa5480b3af3",
+      "created_at": 1791292016384
+    },
+    {
+      "id": "01a1114e-3747-7b63-9eec-34dbdd633909",
+      "task_id": null,
+      "agent_id": "8e1acf31",
+      "model": "gpt-6-astra",
+      "input_tokens": 25999,
+      "output_tokens": 760,
+      "cost_est": null,
+      "cached_read_tokens": 13184,
+      "cached_write_tokens": 0,
+      "cost_source": null,
+      "pricing_snapshot": null,
+      "cost_unknown_reason": "model_price_missing",
+      "conversation_id": "daa27c07",
+      "turn_id": "turn_ee2900b0",
+      "attempt_id": "01a1114e-3745-76f1-aaf9-8f015112f939",
+      "created_at": 1791291832515
+    }
+  ],
+  "usage_summary": {
+    "team_id": "factory-01a1114e-3705-7741-ad2a-44acaa2235f6-r1",
+    "unassigned_usage": [
+      {
+        "id": "01a11154-d38b-7953-9903-672739926b0d",
+        "task_id": null,
+        "agent_id": "8e1acf31",
+        "model": "gpt-6-astra",
+        "input_tokens": 29084,
+        "output_tokens": 4447,
+        "cost_est": null,
+        "cached_read_tokens": 13184,
+        "cached_write_tokens": 0,
+        "cost_source": null,
+        "pricing_snapshot": null,
+        "cost_unknown_reason": "model_price_missing",
+        "conversation_id": "685bd67e",
+        "turn_id": "turn_ab4a7364",
+        "attempt_id": "01a11154-d389-75e1-8d75-d5dcd9014094",
+        "created_at": 1791292322160
+      },
+      {
+        "id": "01a11151-9d92-7191-92b0-135d0e31343c",
+        "task_id": null,
+        "agent_id": "8e1acf31",
+        "model": "gpt-6.1-sol",
+        "input_tokens": 22757,
+        "output_tokens": 4312,
+        "cost_est": null,
+        "cached_read_tokens": 13184,
+        "cached_write_tokens": 0,
+        "cost_source": null,
+        "pricing_snapshot": null,
+        "cost_unknown_reason": "model_price_missing",
+        "conversation_id": "3b7cb6f5",
+        "turn_id": "turn_8a028a9b",
+        "attempt_id": "01a11151-9d8a-7e50-a78e-ffa5480b3af3",
+        "created_at": 1791292016384
+      },
+      {
+        "id": "01a1114e-3747-7b63-9eec-34dbdd633909",
+        "task_id": null,
+        "agent_id": "8e1acf31",
+        "model": "gpt-6-astra",
+        "input_tokens": 25999,
+        "output_tokens": 760,
+        "cost_est": null,
+        "cached_read_tokens": 13184,
+        "cached_write_tokens": 0,
+        "cost_source": null,
+        "pricing_snapshot": null,
+        "cost_unknown_reason": "model_price_missing",
+        "conversation_id": "daa27c07",
+        "turn_id": "turn_ee2900b0",
+        "attempt_id": "01a1114e-3745-76f1-aaf9-8f015112f939",
+        "created_at": 1791291832515
+      }
+    ],
+    "input_tokens": 77840,
+    "output_tokens": 9519,
+    "cost_est": null,
+    "cost_unknown": true,
+    "budget_limit_usd": null,
+    "budget_remaining_usd": null,
+    "budget_exceeded": false,
+    "tasks": [
+      {
+        "task_id": "factory-01a1114e-3705-7741-ad2a-44acaa2235f6-r1-t1",
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "cost_est": null,
+        "turn_count": 0
+      },
+      {
+        "task_id": "factory-01a1114e-3705-7741-ad2a-44acaa2235f6-r1-t2",
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "cost_est": null,
+        "turn_count": 0
+      },
+      {
+        "task_id": "factory-01a1114e-3705-7741-ad2a-44acaa2235f6-r1-t3",
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "cost_est": null,
+        "turn_count": 0
+      },
+      {
+        "task_id": "factory-01a1114e-3705-7741-ad2a-44acaa2235f6-r1-t4",
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "cost_est": null,
+        "turn_count": 0
+      },
+      {
+        "task_id": "factory-01a1114e-3705-7741-ad2a-44acaa2235f6-r1-t5",
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "cost_est": null,
+        "turn_count": 0
+      },
+      {
+        "task_id": "factory-01a1114e-3705-7741-ad2a-44acaa2235f6-r1-t6",
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "cost_est": null,
+        "turn_count": 0
+      },
+      {
+        "task_id": "factory-01a1114e-3705-7741-ad2a-44acaa2235f6-r1-t7",
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "cost_est": null,
+        "turn_count": 0
+      },
+      {
+        "task_id": "factory-01a1114e-3705-7741-ad2a-44acaa2235f6-r1-t8",
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "cost_est": null,
+        "turn_count": 0
+      },
+      {
+        "task_id": "factory-01a1114e-3705-7741-ad2a-44acaa2235f6-r1-t9",
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "cost_est": null,
+        "turn_count": 0
+      }
+    ]
+  },
+  "task_counts": {
+    "total": 9,
+    "pending": 9,
+    "in_progress": 0,
+    "in_review": 0,
+    "completed": 0,
+    "failed": 0
+  },
+  "generated_at": 1791292466022,
+  "planning_usage": [
+    {
+      "planning_attempt_id": "01a11154-d351-75b1-8664-511d214a9365",
+      "phase": "task_graph",
+      "state": "applied",
+      "cost_unknown": true,
+      "usage": [
+        {
+          "id": "01a11154-d38b-7953-9903-672739926b0d",
+          "task_id": null,
+          "agent_id": "8e1acf31",
+          "model": "gpt-6-astra",
+          "input_tokens": 29084,
+          "output_tokens": 4447,
+          "cost_est": null,
+          "cached_read_tokens": 13184,
+          "cached_write_tokens": 0,
+          "cost_source": null,
+          "pricing_snapshot": null,
+          "cost_unknown_reason": "model_price_missing",
+          "conversation_id": "685bd67e",
+          "turn_id": "turn_ab4a7364",
+          "attempt_id": "01a11154-d389-75e1-8d75-d5dcd9014094",
+          "created_at": 1791292322160
+        }
+      ]
+    },
+    {
+      "planning_attempt_id": "01a11151-9cc8-7491-a472-20173f5365ea",
+      "phase": "blueprint",
+      "state": "applied",
+      "cost_unknown": true,
+      "usage": [
+        {
+          "id": "01a11151-9d92-7191-92b0-135d0e31343c",
+          "task_id": null,
+          "agent_id": "8e1acf31",
+          "model": "gpt-6.1-sol",
+          "input_tokens": 22757,
+          "output_tokens": 4312,
+          "cost_est": null,
+          "cached_read_tokens": 13184,
+          "cached_write_tokens": 0,
+          "cost_source": null,
+          "pricing_snapshot": null,
+          "cost_unknown_reason": "model_price_missing",
+          "conversation_id": "3b7cb6f5",
+          "turn_id": "turn_8a028a9b",
+          "attempt_id": "01a11151-9d8a-7e50-a78e-ffa5480b3af3",
+          "created_at": 1791292016384
+        }
+      ]
+    },
+    {
+      "planning_attempt_id": "01a1114e-370c-7392-a49b-bd32e03c392f",
+      "phase": "interview",
+      "state": "applied",
+      "cost_unknown": true,
+      "usage": [
+        {
+          "id": "01a1114e-3747-7b63-9eec-34dbdd633909",
+          "task_id": null,
+          "agent_id": "8e1acf31",
+          "model": "gpt-6-astra",
+          "input_tokens": 25999,
+          "output_tokens": 760,
+          "cost_est": null,
+          "cached_read_tokens": 13184,
+          "cached_write_tokens": 0,
+          "cost_source": null,
+          "pricing_snapshot": null,
+          "cost_unknown_reason": "model_price_missing",
+          "conversation_id": "daa27c07",
+          "turn_id": "turn_ee2900b0",
+          "attempt_id": "01a1114e-3745-76f1-aaf9-8f015112f939",
+          "created_at": 1791291832515
+        }
+      ]
+    }
+  ]
+}

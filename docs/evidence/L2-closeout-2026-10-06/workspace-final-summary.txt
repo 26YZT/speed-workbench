@@ -1,0 +1,531 @@
+     Running unittests src/lib.rs (target/debug/deps/aionui_ai_agent-e480aff0867e7835)
+test result: ok. 1027 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 71.30s
+     Running tests/acp_agent_integration.rs (target/debug/deps/acp_agent_integration-e777416069fe9cf0)
+test result: ok. 1 passed; 0 failed; 11 ignored; 0 measured; 0 filtered out; finished in 0.00s
+     Running tests/acp_error_public.rs (target/debug/deps/acp_error_public-7d01d4977a33e10b)
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+     Running tests/acp_module_surface.rs (target/debug/deps/acp_module_surface-963ff94c151487bc)
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+     Running tests/agent_availability_integration.rs (target/debug/deps/agent_availability_integration-3cfce028c121e3fe)
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 11.20s
+     Running tests/agent_types_integration.rs (target/debug/deps/agent_types_integration-e80343bbf7271166)
+test result: ok. 9 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.35s
+     Running tests/cc_switch_integration.rs (target/debug/deps/cc_switch_integration-61d570b042fece09)
+test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+     Running tests/factory_provider_integration.rs (target/debug/deps/factory_provider_integration-79244ec492764095)
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 3.64s
+     Running tests/model_pricing.rs (target/debug/deps/model_pricing-9684bf926d378138)
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+     Running tests/prompt_pipeline_integration.rs (target/debug/deps/prompt_pipeline_integration-5be2e928a8084069)
+test result: ok. 4 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 5.42s
+     Running tests/skill_manager_integration.rs (target/debug/deps/skill_manager_integration-0c928c8bb2d4d631)
+test result: ok. 13 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.21s
+     Running unittests src/lib.rs (target/debug/deps/aionui_api_types-4487a974a78e2e61)
+test result: ok. 534 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.03s
+     Running tests/auth_types.rs (target/debug/deps/auth_types-507d9dc27248a118)
+test result: ok. 18 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+     Running tests/response_format.rs (target/debug/deps/response_format-d7f2fdd91a106e05)
+test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+     Running unittests src/lib.rs (target/debug/deps/aionui_app-56dc91ca87610c58)
+test result: ok. 53 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 16.51s
+     Running unittests src/main.rs (target/debug/deps/aioncore-bc0a7535cda11473)
+test result: ok. 171 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.16s
+     Running tests/acp_config_options_e2e.rs (target/debug/deps/acp_config_options_e2e-bc9459e5e51934a6)
+test result: ok. 9 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 21.84s
+     Running tests/acp_e2e.rs (target/debug/deps/acp_e2e-5721955b86336dd9)
+test result: ok. 11 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 42.94s
+     Running tests/active_lease_e2e.rs (target/debug/deps/active_lease_e2e-246dec164b24d1ea)
+test result: ok. 9 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 28.92s
+     Running tests/adoption_assistant_rules_e2e.rs (target/debug/deps/adoption_assistant_rules_e2e-10e5e970a1de88ea)
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.88s
+     Running tests/agent_integration_e2e.rs (target/debug/deps/agent_integration_e2e-81f16d4524a9bfd8)
+test result: ok. 15 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 36.70s
+     Running tests/agent_provider_health_e2e.rs (target/debug/deps/agent_provider_health_e2e-3da80829a1975203)
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 15.29s
+     Running tests/aionpro_no_default_user_writes_e2e.rs (target/debug/deps/aionpro_no_default_user_writes_e2e-7de1b09c59d7cb63)
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 4.72s
+     Running tests/assets_e2e.rs (target/debug/deps/assets_e2e-cefd62c30ead7dfc)
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 3.21s
+     Running tests/assistants_e2e.rs (target/debug/deps/assistants_e2e-67b2e42187a6cda8)
+test result: ok. 55 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 104.92s
+     Running tests/auth_e2e.rs (target/debug/deps/auth_e2e-dc857d3b3338e031)
+     Running tests/auxiliary_e2e.rs (target/debug/deps/auxiliary_e2e-d208dc6bd67c45c9)
+test result: ok. 17 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 33.32s
+     Running tests/capabilities_cli_e2e.rs (target/debug/deps/capabilities_cli_e2e-bca49f649c4e1644)
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 4.42s
+     Running tests/channel_e2e.rs (target/debug/deps/channel_e2e-4a10655250bda1bc)
+test result: ok. 28 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 55.33s
+     Running tests/config_cli_e2e.rs (target/debug/deps/config_cli_e2e-a469a8dff84e8faf)
+test result: ok. 16 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.03s
+     Running tests/connection_test_e2e.rs (target/debug/deps/connection_test_e2e-176a0935632c888a)
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 21.56s
+     Running tests/conversation_cli_e2e.rs (target/debug/deps/conversation_cli_e2e-0944e007ca0b61f1)
+     Running tests/conversation_e2e.rs (target/debug/deps/conversation_e2e-af039a80319c1965)
+test result: ok. 42 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 53.91s
+     Running tests/conversation_runtime_routes_e2e.rs (target/debug/deps/conversation_runtime_routes_e2e-4e8dc1a5c5519fdd)
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 3.84s
+     Running tests/conversation_skill.rs (target/debug/deps/conversation_skill-6792f7b9f4edb4c9)
+test result: ok. 9 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+     Running tests/cron_e2e.rs (target/debug/deps/cron_e2e-50bbfff8fcf08395)
+test result: ok. 37 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 57.26s
+     Running tests/custom_agent_e2e.rs (target/debug/deps/custom_agent_e2e-2b8fe4d44eb62e0a)
+test result: ok. 9 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 22.11s
+     Running tests/diagnose_cli_e2e.rs (target/debug/deps/diagnose_cli_e2e-209e4f5691db6ece)
+test result: ok. 8 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.56s
+     Running tests/extension_e2e.rs (target/debug/deps/extension_e2e-a7ed6ad10f163bea)
+test result: ok. 52 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 66.59s
+     Running tests/file_e2e.rs (target/debug/deps/file_e2e-3907b76cfe6ffcf5)
+test result: ok. 38 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 54.35s
+     Running tests/health.rs (target/debug/deps/health-03828f77d7d6a5ea)
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 12.76s
+     Running tests/helper_runtime_auth_e2e.rs (target/debug/deps/helper_runtime_auth_e2e-163f756d4ba5e769)
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 21.49s
+     Running tests/live_ws_http_parity_e2e.rs (target/debug/deps/live_ws_http_parity_e2e-55e9f523c573b727)
+test result: ok. 0 passed; 0 failed; 32 ignored; 0 measured; 0 filtered out; finished in 0.00s
+     Running tests/local_mode.rs (target/debug/deps/local_mode-d7fdcaead347555a)
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 5.37s
+     Running tests/mcp_crud_e2e.rs (target/debug/deps/mcp_crud_e2e-9997ad24c3fcc1b5)
+test result: ok. 28 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 90.34s
+     Running tests/mcp_e2e.rs (target/debug/deps/mcp_e2e-4194dbaa72632e2b)
+test result: ok. 10 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 38.32s
+     Running tests/message_e2e.rs (target/debug/deps/message_e2e-c468e6cb8db3602a)
+test result: ok. 32 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 68.54s
+     Running tests/midturn_e2e.rs (target/debug/deps/midturn_e2e-423b7e5a4c37fe9b)
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 6.24s
+     Running tests/office_e2e.rs (target/debug/deps/office_e2e-6c53e7e27ca8dce0)
+test result: ok. 17 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 41.93s
+     Running tests/open_repro_db.rs (target/debug/deps/open_repro_db-6b376438ce0fa2a6)
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+     Running tests/per_user_fs_isolation_e2e.rs (target/debug/deps/per_user_fs_isolation_e2e-c6d4776aa07b9150)
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 3.52s
+     Running tests/product_factory_e2e.rs (target/debug/deps/product_factory_e2e-527bffb78b764fb6)
+test result: ok. 14 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 34.69s
+     Running tests/product_factory_versions_e2e.rs (target/debug/deps/product_factory_versions_e2e-2ba6053047dd9313)
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 16.50s
+     Running tests/remote_agent_e2e.rs (target/debug/deps/remote_agent_e2e-64210be8683d85e2)
+test result: ok. 18 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 40.58s
+     Running tests/runtime_team_tools_e2e.rs (target/debug/deps/runtime_team_tools_e2e-c19e16d9fdec234c)
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 10.55s
+     Running tests/session_revoke_cleanup_e2e.rs (target/debug/deps/session_revoke_cleanup_e2e-85d78171175574ec)
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 2.08s
+     Running tests/session_skill.rs (target/debug/deps/session_skill-5a56808dd878145e)
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+     Running tests/shell_e2e.rs (target/debug/deps/shell_e2e-5774a13e172f645a)
+test result: ok. 25 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 89.23s
+     Running tests/skills_builtin_e2e.rs (target/debug/deps/skills_builtin_e2e-cc797d8c98a8a33a)
+test result: ok. 13 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 43.56s
+     Running tests/startup_smoke.rs (target/debug/deps/startup_smoke-f9a757f7df6b8864)
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.47s
+     Running tests/stt_stream_e2e.rs (target/debug/deps/stt_stream_e2e-608bbfe67ff32ec7)
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 13.40s
+     Running tests/system_auth_e2e.rs (target/debug/deps/system_auth_e2e-6dc43b82bea19330)
+     Running tests/system_provider_e2e.rs (target/debug/deps/system_provider_e2e-4f3a1ae962d5fc48)
+test result: ok. 10 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 42.05s
+     Running tests/system_settings_e2e.rs (target/debug/deps/system_settings_e2e-c8e67300c630416b)
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 23.71s
+     Running tests/system_version_e2e.rs (target/debug/deps/system_version_e2e-d6f6f9c0901a107d)
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 18.15s
+     Running tests/team_cli_e2e.rs (target/debug/deps/team_cli_e2e-e09dfb8b5705d762)
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.25s
+     Running tests/team_e2e.rs (target/debug/deps/team_e2e-fa009b8b7ee3d78a)
+test result: ok. 64 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 189.70s
+     Running tests/team_model_e2e.rs (target/debug/deps/team_model_e2e-c8e409b1c747f37e)
+test result: ok. 10 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 26.50s
+     Running tests/team_phase1_smoke.rs (target/debug/deps/team_phase1_smoke-8f6f155c05a91e29)
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 4.91s
+     Running tests/upgrade_encryption_survives.rs (target/debug/deps/upgrade_encryption_survives-50727c06816e9436)
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 3.17s
+     Running tests/websocket_e2e.rs (target/debug/deps/websocket_e2e-8b668500c6bd2abe)
+test result: ok. 21 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 67.62s
+     Running tests/work_dir_e2e.rs (target/debug/deps/work_dir_e2e-cfc297ff27266f1d)
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 7.57s
+     Running unittests src/lib.rs (target/debug/deps/aionui_assets-c917dc6ee22486a1)
+test result: ok. 9 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+     Running unittests src/lib.rs (target/debug/deps/aionui_assistant-85970cff4f61621b)
+test result: ok. 111 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 122.13s
+     Running unittests src/lib.rs (target/debug/deps/aionui_auth-2df18126fbb4c307)
+test result: ok. 166 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 96.24s
+     Running tests/jwt_tests.rs (target/debug/deps/jwt_tests-9fcf0d7d0ccb3c89)
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+     Running tests/middleware_tests.rs (target/debug/deps/middleware_tests-dd190cc06f350cc2)
+test result: ok. 34 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 18.04s
+     Running tests/route_tests.rs (target/debug/deps/route_tests-205ea7ad9f21198d)
+test result: ok. 51 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 106.80s
+     Running tests/validation_tests.rs (target/debug/deps/validation_tests-038fd37b63e63cac)
+test result: ok. 20 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+     Running unittests src/lib.rs (target/debug/deps/aionui_channel-bdff50d1c337df75)
+test result: ok. 551 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 4.33s
+     Running tests/dingtalk_integration.rs (target/debug/deps/dingtalk_integration-8efeacf4022e9f06)
+test result: ok. 15 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 9.81s
+     Running tests/formatter_test.rs (target/debug/deps/formatter_test-3dd44d266e4759ff)
+test result: ok. 12 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.02s
+     Running tests/lark_integration.rs (target/debug/deps/lark_integration-5708f7ceb81923a2)
+test result: ok. 15 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 10.34s
+     Running tests/manager_integration.rs (target/debug/deps/manager_integration-e74c4fc7b7e20780)
+test result: ok. 28 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 35.55s
+     Running tests/message_service_integration.rs (target/debug/deps/message_service_integration-b97192d6381f9352)
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 16.26s
+     Running tests/orchestrator_test.rs (target/debug/deps/orchestrator_test-f750ff04d525bc42)
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.29s
+     Running tests/pairing_integration.rs (target/debug/deps/pairing_integration-b8365392763c9313)
+test result: ok. 24 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 33.18s
+     Running tests/session_action_integration.rs (target/debug/deps/session_action_integration-5b69d944645c2dd9)
+test result: ok. 12 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 14.01s
+     Running tests/stream_relay_test.rs (target/debug/deps/stream_relay_test-938973a1a01cd55d)
+test result: ok. 8 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+     Running tests/telegram_integration.rs (target/debug/deps/telegram_integration-9333f24e173917c2)
+test result: ok. 14 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 43.54s
+     Running tests/weixin_integration.rs (target/debug/deps/weixin_integration-5fd26e7c60bcaec6)
+test result: ok. 15 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 11.18s
+     Running unittests src/lib.rs (target/debug/deps/aionui_common-9b0de62abd47d6e3)
+test result: ok. 97 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+     Running tests/common_test.rs (target/debug/deps/common_test-b2a6d71bbdeff863)
+test result: ok. 20 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.58s
+     Running unittests src/lib.rs (target/debug/deps/aionui_conversation-82ed57fd2819583b)
+test result: ok. 495 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 73.00s
+     Running tests/acp_tool_call_persistence.rs (target/debug/deps/acp_tool_call_persistence-68b65b9574304a5c)
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.81s
+     Running tests/active_lease.rs (target/debug/deps/active_lease-23db5af3e7c4782f)
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 2.15s
+     Running tests/conversation_crud.rs (target/debug/deps/conversation_crud-c5300cab6ff66272)
+test result: ok. 39 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 33.72s
+     Running tests/conversation_extended.rs (target/debug/deps/conversation_extended-fc3314ae2e95d1ad)
+test result: ok. 42 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 58.06s
+     Running tests/force_kill_convergence.rs (target/debug/deps/force_kill_convergence-5863f70eac40a00e)
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.91s
+     Running tests/response_middleware_integration.rs (target/debug/deps/response_middleware_integration-ee9c7cc43cee3ca4)
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+     Running tests/runtime_create_routes.rs (target/debug/deps/runtime_create_routes-aba54c5cab0cf290)
+test result: ok. 10 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 7.11s
+     Running tests/skill_load_protocol.rs (target/debug/deps/skill_load_protocol-5d77ce68b6c1cc8f)
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+     Running tests/stream_relay_tips.rs (target/debug/deps/stream_relay_tips-abe467be3ad2672c)
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 2.15s
+     Running tests/stream_relay_tool_call.rs (target/debug/deps/stream_relay_tool_call-c2a42c0906cbbccf)
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 3.43s
+     Running tests/thinking_persistence.rs (target/debug/deps/thinking_persistence-d1992511f162354a)
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.47s
+     Running unittests src/lib.rs (target/debug/deps/aionui_cron-34a226fb9e89472e)
+test result: ok. 188 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 29.12s
+     Running tests/prompt_test.rs (target/debug/deps/prompt_test-0b19025db7296b16)
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+     Running tests/service_integration.rs (target/debug/deps/service_integration-519c67de2911ea70)
+test result: ok. 79 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 139.21s
+     Running tests/skill_file_test.rs (target/debug/deps/skill_file_test-0e1286af0f738245)
+test result: ok. 8 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+     Running unittests src/lib.rs (target/debug/deps/aionui_db-3ce499ecd65f8670)
+test result: ok. 369 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 249.82s
+     Running tests/acp_registry_contract_migration.rs (target/debug/deps/acp_registry_contract_migration-bf5f2452cdb8ec5f)
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.29s
+     Running tests/adoption_coverage.rs (target/debug/deps/adoption_coverage-d41ced6f2eb56384)
+test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 4.84s
+     Running tests/agent_binding_resolver.rs (target/debug/deps/agent_binding_resolver-9d7239911dfa19d1)
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.97s
+     Running tests/agent_skill_delivery_migration.rs (target/debug/deps/agent_skill_delivery_migration-9456642a1cdebc00)
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 7.34s
+     Running tests/agent_usage_backfill.rs (target/debug/deps/agent_usage_backfill-d7aaa312aa6a4797)
+test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 3.85s
+     Running tests/agent_usage_repository.rs (target/debug/deps/agent_usage_repository-9ceadf14bf5c8277)
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.62s
+     Running tests/aionrs_fork_capability_migration.rs (target/debug/deps/aionrs_fork_capability_migration-0d821db23bbbfce3)
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.23s
+     Running tests/antigravity_builtin_agent_migration.rs (target/debug/deps/antigravity_builtin_agent_migration-6d67085d4d8fe018)
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 3.04s
+     Running tests/assistant_data_unification_schema.rs (target/debug/deps/assistant_data_unification_schema-83e565611de91a32)
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 2.19s
+     Running tests/assistant_definition_field_removal_migration.rs (target/debug/deps/assistant_definition_field_removal_migration-a3c6a0c86fe0086e)
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.24s
+     Running tests/channel_repository.rs (target/debug/deps/channel_repository-2c6c4a95b93e6e01)
+test result: ok. 11 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 7.70s
+     Running tests/client_preference_repository.rs (target/debug/deps/client_preference_repository-566b67876480c695)
+test result: ok. 11 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 8.93s
+     Running tests/codex_full_access_mode_migration.rs (target/debug/deps/codex_full_access_mode_migration-e038105dcda330d8)
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.75s
+     Running tests/conversation_repository.rs (target/debug/deps/conversation_repository-5c741a73f6e54257)
+test result: ok. 42 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 25.92s
+     Running tests/conversation_schema.rs (target/debug/deps/conversation_schema-24e9e258a33d86d2)
+test result: ok. 24 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 14.60s
+     Running tests/cron_assistant_first_migration.rs (target/debug/deps/cron_assistant_first_migration-3c06e121e9ac5d8d)
+test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.77s
+     Running tests/cron_repository.rs (target/debug/deps/cron_repository-130e8eb9ceb84439)
+test result: ok. 24 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 16.52s
+     Running tests/database_newer_than_app.rs (target/debug/deps/database_newer_than_app-0541e80361f2e2e5)
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 2.32s
+     Running tests/db_lifecycle.rs (target/debug/deps/db_lifecycle-3150ae111a5637a6)
+test result: ok. 22 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 13.21s
+     Running tests/feedback_diagnostics_repository.rs (target/debug/deps/feedback_diagnostics_repository-461ce115a3b83b46)
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 4.83s
+     Running tests/legacy_handoff.rs (target/debug/deps/legacy_handoff-cddbfb00d1f01905)
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.77s
+     Running tests/mcp_server_repository.rs (target/debug/deps/mcp_server_repository-2727fa741ece0e5e)
+test result: ok. 32 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 19.98s
+     Running tests/oauth_token_repository.rs (target/debug/deps/oauth_token_repository-94da867b55668872)
+test result: ok. 10 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 6.59s
+     Running tests/omp_direct_cli_migration.rs (target/debug/deps/omp_direct_cli_migration-e45f47974229890c)
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.70s
+     Running tests/pi_acp_agent_migration.rs (target/debug/deps/pi_acp_agent_migration-ba8d1df0253b7b01)
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.24s
+     Running tests/product_factory_repository.rs (target/debug/deps/product_factory_repository-c6f420a49d88feae)
+test result: ok. 15 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 15.26s
+     Running tests/project_repository.rs (target/debug/deps/project_repository-38b6e6d88f14e211)
+test result: ok. 9 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 7.66s
+     Running tests/provider_model_settings_migration.rs (target/debug/deps/provider_model_settings_migration-dfe5c4a49f563bb9)
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.51s
+     Running tests/provider_repository.rs (target/debug/deps/provider_repository-18758df50232b484)
+test result: ok. 16 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 12.70s
+     Running tests/registry_binary_agents_migration.rs (target/debug/deps/registry_binary_agents_migration-58f03e5e5be1803c)
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.34s
+     Running tests/registry_npx_agents_migration.rs (target/debug/deps/registry_npx_agents_migration-dfe36e295f18288d)
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.23s
+     Running tests/remote_agent_repository.rs (target/debug/deps/remote_agent_repository-d99b2c8251b02e4d)
+test result: ok. 18 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 14.01s
+     Running tests/settings_repository.rs (target/debug/deps/settings_repository-dd61ed1c8eecacbd)
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 3.19s
+     Running tests/skill_management_schema.rs (target/debug/deps/skill_management_schema-51fc7daaee03d27b)
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.20s
+     Running tests/task_review_status_schema.rs (target/debug/deps/task_review_status_schema-1074b9a9fc7a5061)
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.66s
+     Running tests/team_budget_repository.rs (target/debug/deps/team_budget_repository-c2e8229b07b1129c)
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.61s
+     Running tests/team_capability_criteria_migration.rs (target/debug/deps/team_capability_criteria_migration-627afce0a6197df7)
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 2.54s
+     Running tests/team_repository.rs (target/debug/deps/team_repository-bc43682a6a9604f6)
+test result: ok. 54 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 38.59s
+     Running tests/user_repository.rs (target/debug/deps/user_repository-deef4387192e919d)
+test result: ok. 23 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 27.91s
+     Running tests/user_scope_migration.rs (target/debug/deps/user_scope_migration-fe94b58899839e62)
+test result: ok. 12 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 11.04s
+     Running tests/user_scope_pre_migration_repair.rs (target/debug/deps/user_scope_pre_migration_repair-9b01d978f99c5dbd)
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 5.72s
+     Running unittests src/lib.rs (target/debug/deps/aionui_extension-d05b415304830163)
+test result: ok. 402 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 7.61s
+     Running tests/assistant_dispatch_test.rs (target/debug/deps/assistant_dispatch_test-23e74ad0c5e9efdf)
+test result: ok. 11 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 10.26s
+     Running tests/contribution_resolution_test.rs (target/debug/deps/contribution_resolution_test-aef1ab34470d459e)
+test result: ok. 16 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+     Running tests/cron_skill_resolve_test.rs (target/debug/deps/cron_skill_resolve_test-aed256b6785fda2b)
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.41s
+     Running tests/dependency_management_test.rs (target/debug/deps/dependency_management_test-c87a4988f77ab11b)
+test result: ok. 12 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+     Running tests/extension_loading_test.rs (target/debug/deps/extension_loading_test-79108013a7d5fc65)
+test result: ok. 9 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+     Running tests/hub_test.rs (target/debug/deps/hub_test-96bb12b8869d45ee)
+test result: ok. 17 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+     Running tests/lifecycle_hooks_test.rs (target/debug/deps/lifecycle_hooks_test-5eb5a3334774ba57)
+test result: ok. 10 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 3.76s
+     Running tests/manifest_validation_test.rs (target/debug/deps/manifest_validation_test-c2d63ee4f78be843)
+test result: ok. 11 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+     Running tests/permission_system_test.rs (target/debug/deps/permission_system_test-ec0abfa9fee4c035)
+test result: ok. 9 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+     Running tests/registry_test.rs (target/debug/deps/registry_test-77025ba15248e74f)
+test result: ok. 13 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.11s
+     Running tests/skill_integration_test.rs (target/debug/deps/skill_integration_test-6f8d589409e6c675)
+test result: ok. 32 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 2.46s
+     Running tests/skill_service_materialize.rs (target/debug/deps/skill_service_materialize-0d73b6abd0905871)
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+     Running tests/startup_materialize.rs (target/debug/deps/startup_materialize-bae418742befba69)
+test result: ok. 11 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.98s
+     Running tests/state_persistence_test.rs (target/debug/deps/state_persistence_test-0d1b17dcfcfe24d4)
+test result: ok. 12 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+     Running tests/template_resolution_test.rs (target/debug/deps/template_resolution_test-9acf050f3d85d25c)
+test result: ok. 13 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+     Running unittests src/lib.rs (target/debug/deps/aionui_file-0f597994707cdb2b)
+test result: ok. 133 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.18s
+     Running tests/directory_browsing.rs (target/debug/deps/directory_browsing-13d64b597b88946a)
+test result: ok. 20 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+     Running tests/file_management.rs (target/debug/deps/file_management-0a8076a31f2d0db8)
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+     Running tests/file_read_write.rs (target/debug/deps/file_read_write-77f9a5e2c90bf99b)
+test result: ok. 21 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+     Running tests/image_processing.rs (target/debug/deps/image_processing-a5bd5be9741f409f)
+test result: ok. 15 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+     Running tests/snapshot.rs (target/debug/deps/snapshot-ab7966c801682bbc)
+test result: ok. 46 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.33s
+     Running unittests src/lib.rs (target/debug/deps/aionui_mcp-262ee861b9586ac1)
+test result: ok. 289 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 2.23s
+     Running tests/adapter_integration.rs (target/debug/deps/adapter_integration-a51767511f7212d3)
+test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+     Running tests/connection_test_integration.rs (target/debug/deps/connection_test_integration-48461568126ed212)
+test result: ok. 9 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.43s
+     Running tests/connection_test_path_resolution_integration.rs (target/debug/deps/connection_test_path_resolution_integration-922fa7890a9f3a59)
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.56s
+     Running tests/file_adapter_integration.rs (target/debug/deps/file_adapter_integration-82d0e86539c4c2ce)
+test result: ok. 11 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+     Running tests/oauth_integration.rs (target/debug/deps/oauth_integration-e6a6e2aad7188a98)
+test result: ok. 13 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 10.04s
+     Running tests/service_integration.rs (target/debug/deps/service_integration-d4339587caa62cc9)
+test result: ok. 18 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 15.83s
+     Running tests/session_injection_integration.rs (target/debug/deps/session_injection_integration-ecd5ecc1b3d0b4ea)
+test result: ok. 11 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+     Running tests/sync_integration.rs (target/debug/deps/sync_integration-edb9e5e051ba8f57)
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.97s
+     Running tests/types_integration.rs (target/debug/deps/types_integration-f01879368d06b187)
+test result: ok. 8 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+     Running unittests src/lib.rs (target/debug/deps/aionui_office-74afef99fd588619)
+test result: ok. 104 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.17s
+     Running tests/conversion_integration.rs (target/debug/deps/conversion_integration-066f585da9058fb9)
+test result: ok. 10 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.02s
+     Running tests/proxy_integration.rs (target/debug/deps/proxy_integration-f0256ad5ee81898e)
+test result: ok. 18 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.75s
+     Running tests/watch_manager_integration.rs (target/debug/deps/watch_manager_integration-100df735fea41491)
+test result: ok. 11 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.51s
+     Running unittests src/lib.rs (target/debug/deps/aionui_process-563470858dbebe18)
+test result: ok. 13 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+     Running tests/reap_escaped_descendants.rs (target/debug/deps/reap_escaped_descendants-8a7f37f19fe3d414)
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.26s
+     Running unittests src/lib.rs (target/debug/deps/aionui_product_factory-102288f97c0a3c38)
+test result: ok. 8 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+     Running tests/execution.rs (target/debug/deps/execution-956a0cadb1ea1724)
+test result: ok. 22 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 18.04s
+     Running tests/handoff.rs (target/debug/deps/handoff-47b655f031806258)
+test result: ok. 11 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 11.47s
+     Running tests/planning.rs (target/debug/deps/planning-4656fe387a73734e)
+test result: ok. 9 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 20.84s
+     Running tests/routes.rs (target/debug/deps/routes-5145ff9d78e318e5)
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 4.41s
+     Running tests/service.rs (target/debug/deps/service-356559e037b7e132)
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 7.39s
+     Running tests/versions.rs (target/debug/deps/versions-9adc8e35169f3261)
+test result: ok. 15 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 12.01s
+     Running unittests src/lib.rs (target/debug/deps/aionui_project-338cdb8fc9ccab85)
+test result: ok. 367 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 89.80s
+     Running tests/scm_request_path.rs (target/debug/deps/scm_request_path-feef69ee0d8d8873)
+test result: ok. 15 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 15.97s
+     Running tests/service.rs (target/debug/deps/service-4a99a10c9102b56f)
+test result: ok. 27 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 23.29s
+     Running unittests src/lib.rs (target/debug/deps/aionui_realtime-180045e65b0fb0bb)
+test result: ok. 62 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+     Running tests/broadcast_integration.rs (target/debug/deps/broadcast_integration-f0fd885c2c32e2cd)
+test result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+     Running tests/handler_integration.rs (target/debug/deps/handler_integration-a1d8fe0a21b6bc80)
+test result: ok. 14 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.26s
+     Running tests/manager_integration.rs (target/debug/deps/manager_integration-b8135eb7953009ec)
+test result: ok. 9 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+     Running unittests src/lib.rs (target/debug/deps/aionui_runtime-21a7d2f43add4e46)
+test result: ok. 110 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 4.68s
+     Running unittests src/lib.rs (target/debug/deps/aionui_session-b85d267a43e106f8)
+test result: ok. 611 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 8.12s
+     Running tests/live_claude_model.rs (target/debug/deps/live_claude_model-59cf271eef8eeae0)
+test result: ok. 0 passed; 0 failed; 2 ignored; 0 measured; 0 filtered out; finished in 0.00s
+     Running tests/terminate_delegation.rs (target/debug/deps/terminate_delegation-66a3f7aec5b8ed1e)
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+     Running unittests src/lib.rs (target/debug/deps/aionui_session_message-4a6a72d0354e78a1)
+test result: ok. 82 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 23.60s
+     Running tests/cancel_hook.rs (target/debug/deps/cancel_hook-42b8f787c1068a50)
+test result: ok. 8 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 6.40s
+     Running tests/delivery_semantics.rs (target/debug/deps/delivery_semantics-05d88cb8860a0564)
+test result: ok. 27 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 22.44s
+     Running tests/e2e_cross_session.rs (target/debug/deps/e2e_cross_session-82322f044e38a3a5)
+test result: ok. 10 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 7.47s
+     Running tests/routes_test.rs (target/debug/deps/routes_test-41af3c914ef89816)
+test result: ok. 17 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 14.39s
+     Running unittests src/lib.rs (target/debug/deps/aionui_shell-11bddffbff016fa6)
+test result: ok. 122 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.82s
+     Running tests/shell_integration.rs (target/debug/deps/shell_integration-bb23f974f33ac93c)
+test result: ok. 14 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+     Running tests/stt_integration.rs (target/debug/deps/stt_integration-9e9765a7605c9ea9)
+test result: ok. 17 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 3.51s
+     Running tests/stt_stream_deepgram_integration.rs (target/debug/deps/stt_stream_deepgram_integration-b84d3d7cb6ec7a3a)
+test result: ok. 11 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.11s
+     Running tests/stt_stream_openai_integration.rs (target/debug/deps/stt_stream_openai_integration-546a18cdec0a5f84)
+test result: ok. 18 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.90s
+     Running unittests src/lib.rs (target/debug/deps/aionui_sidebar-35bc066f5ff7a470)
+test result: ok. 51 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 38.32s
+     Running unittests src/lib.rs (target/debug/deps/aionui_skill_runtime-9744e26246a91bc2)
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+     Running tests/runtime_skills_e2e.rs (target/debug/deps/runtime_skills_e2e-a51ad00bb75b78ad)
+test result: ok. 13 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 10.72s
+     Running unittests src/lib.rs (target/debug/deps/aionui_system-374b88ae84f4a8ff)
+test result: ok. 172 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 36.17s
+     Running tests/connection_test_integration.rs (target/debug/deps/connection_test_integration-40ad2423852d2312)
+test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.79s
+     Running tests/current_user_routes.rs (target/debug/deps/current_user_routes-ef8d86d3322b39ef)
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 3.28s
+     Running tests/feedback_diagnostics_routes.rs (target/debug/deps/feedback_diagnostics_routes-a6a8d641dae8895b)
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 4.96s
+     Running tests/model_fetch_routes.rs (target/debug/deps/model_fetch_routes-2710ba8851c5bbb8)
+test result: ok. 19 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 16.79s
+     Running tests/protocol_detection_routes.rs (target/debug/deps/protocol_detection_routes-590e3cf319ec33de)
+test result: ok. 15 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 14.83s
+     Running tests/provider_routes.rs (target/debug/deps/provider_routes-d10c995aa991215d)
+test result: ok. 28 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 25.43s
+     Running tests/settings_routes.rs (target/debug/deps/settings_routes-8bc729bc30df4092)
+test result: ok. 20 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 20.35s
+     Running tests/system_info_routes.rs (target/debug/deps/system_info_routes-dc777587ab176f35)
+test result: ok. 15 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 13.14s
+     Running unittests src/lib.rs (target/debug/deps/aionui_team-bd297e2d013a9c7d)
+test result: ok. 512 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.01s
+     Running tests/e2e_smoke.rs (target/debug/deps/e2e_smoke-3da2cb9b863b25d3)
+test result: ok. 1 passed; 0 failed; 4 ignored; 0 measured; 0 filtered out; finished in 0.00s
+     Running tests/e2e_team_flow.rs (target/debug/deps/e2e_team_flow-322fb9ab1eafa53b)
+test result: ok. 30 passed; 0 failed; 2 ignored; 0 measured; 0 filtered out; finished in 0.38s
+     Running tests/mailbox_integration.rs (target/debug/deps/mailbox_integration-2b142249afdec80b)
+test result: ok. 13 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 12.08s
+     Running tests/mcp_server_integration.rs (target/debug/deps/mcp_server_integration-55c202c4be126678)
+test result: ok. 52 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.11s
+     Running tests/prompts_events_integration.rs (target/debug/deps/prompts_events_integration-b14b6c17da482685)
+test result: ok. 19 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+     Running tests/scheduler_integration.rs (target/debug/deps/scheduler_integration-0f1d66e9e9acbb6e)
+test result: ok. 12 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+     Running tests/session_service_integration.rs (target/debug/deps/session_service_integration-58814e5cad902045)
+test result: ok. 131 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.25s
+     Running tests/task_board_integration.rs (target/debug/deps/task_board_integration-1c52124e81522a6c)
+test result: ok. 18 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 16.25s
+     Running unittests src/lib.rs (target/debug/deps/aionui_team_prompts-9f03ee2963ac8836)
+test result: ok. 10 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+   Doc-tests aionui_ai_agent
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+   Doc-tests aionui_api_types
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+   Doc-tests aionui_app
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+   Doc-tests aionui_assets
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+   Doc-tests aionui_assistant
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+   Doc-tests aionui_auth
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+   Doc-tests aionui_channel
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+   Doc-tests aionui_common
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+   Doc-tests aionui_conversation
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+   Doc-tests aionui_cron
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+   Doc-tests aionui_db
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+   Doc-tests aionui_extension
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+   Doc-tests aionui_file
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+   Doc-tests aionui_mcp
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+   Doc-tests aionui_office
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+   Doc-tests aionui_process
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+   Doc-tests aionui_product_factory
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+   Doc-tests aionui_project
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+   Doc-tests aionui_realtime
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+   Doc-tests aionui_runtime
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+   Doc-tests aionui_session
+test result: ok. 0 passed; 0 failed; 1 ignored; 0 measured; 0 filtered out; finished in 0.00s
+   Doc-tests aionui_session_message
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+   Doc-tests aionui_shell
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+   Doc-tests aionui_sidebar
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+   Doc-tests aionui_skill_runtime
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+   Doc-tests aionui_system
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+   Doc-tests aionui_team
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+   Doc-tests aionui_team_prompts
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s

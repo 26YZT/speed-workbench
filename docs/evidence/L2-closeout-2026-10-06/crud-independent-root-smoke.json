@@ -1,0 +1,21 @@
+{
+  "status": "passed",
+  "executed_at": "2026-10-06T11:42:05.876400+00:00",
+  "checks": [
+    "whole bundle serves exact HTML/CSS/JS without task-workspace dependencies",
+    "real HTTP create/read/delete and invalid-title/missing-ID errors",
+    "real SQLite write failure preserves data; retry works after recovery",
+    "graceful service restart preserves titles, done, ID, timestamp and deletion",
+    "new process after forced termination reads acknowledged write and serves page"
+  ],
+  "distinct_server_processes": 3,
+  "temporary_database_cleaned": true,
+  "runtime_files": [
+    "server.py",
+    "storage.py",
+    "schema.sql",
+    "web/index.html",
+    "web/styles.css",
+    "web/app.js"
+  ]
+}

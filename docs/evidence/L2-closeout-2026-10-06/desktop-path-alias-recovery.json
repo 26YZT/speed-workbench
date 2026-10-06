@@ -1,0 +1,27 @@
+{
+  "kind": "guarded_qa_alias_recovery",
+  "atUtc": "2026-10-06T14:43:08.719690+00:00",
+  "initialPreQaTargetCaptured": false,
+  "recoveryTargetBasis": "packaged productName Speed Workbench and existing production Application Support directory; no data files read or rewritten",
+  "aliases": [
+    {
+      "alias": "/path/to/user/.aionui",
+      "qaTargetBefore": "/private/tmp/sw-r2-desktop-version-qa/aionui",
+      "productionTarget": "/path/to/user/Library/Application Support/Speed Workbench/aionui",
+      "beforeInode": 11268842,
+      "afterTarget": "/path/to/user/Library/Application Support/Speed Workbench/aionui",
+      "afterInode": 11286240,
+      "productionDirectoryPreserved": true
+    },
+    {
+      "alias": "/path/to/user/.aionui-config",
+      "qaTargetBefore": "/private/tmp/sw-r2-desktop-version-qa/config",
+      "productionTarget": "/path/to/user/Library/Application Support/Speed Workbench/config",
+      "beforeInode": 11268807,
+      "afterTarget": "/path/to/user/Library/Application Support/Speed Workbench/config",
+      "afterInode": 11286241,
+      "productionDirectoryPreserved": true
+    }
+  ],
+  "realDatabaseOrCredentialsRead": false
+}

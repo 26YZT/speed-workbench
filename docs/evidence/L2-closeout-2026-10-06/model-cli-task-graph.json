@@ -1,0 +1,308 @@
+{
+  "id": "01a11154-d351-75b1-8664-511d214a9365",
+  "run_id": "01a1114e-3705-7741-ad2a-44acaa2235f6",
+  "phase": "task_graph",
+  "input_plan_revision": 8,
+  "input_hash": "91153ae9d9daeb594f1cf9b2449a4df7ced1aa3a7a6608eb79dbf9573856060d",
+  "idempotency_key": "live-taskgraph-20261006-a",
+  "assistant_id": "bare:8e1acf31",
+  "model": "gpt-6-astra",
+  "conversation_id": "685bd67e",
+  "app_turn_id": "turn_ab4a7364",
+  "state": "candidate_ready",
+  "candidate": {
+    "version": 2,
+    "generated_by": "model",
+    "confirmed": false,
+    "revision": 1,
+    "updated_at": 1791292322360,
+    "tasks": [
+      {
+        "id": "t1",
+        "title": "建立独立 CLI 入口与命令契约",
+        "description": "规划后续实现 import、summary、history、help 的命令入口、参数解析、数据库路径传递、JSON 输出和统一错误分类，供导入与查询功能接入。",
+        "type": "backend",
+        "blocked_by": [],
+        "acceptance_criteria": [
+          "CLI 可通过 Python 独立启动，仅使用标准库和本地 SQLite，无 Web、HTTP 或额外依赖。",
+          "提供 import、summary、history、help；import 必须由用户明确指定 CSV，不扫描或发现其他输入文件。",
+          "默认数据库路径为 data/ledger.sqlite，--db 可为导入、汇总和历史查询指定同一数据库。",
+          "help 说明四个命令、CSV 文件指定方式和 --db 用法，并遵守成功标准输出为完整纯 JSON 的要求。",
+          "统一约定成功与重复导入退出码为 0，参数或 CSV 输入错误为 2，文件访问或 SQLite 错误为 3；金额输出使用字符串。"
+        ],
+        "suggested_role": "Python CLI 工程师",
+        "effort": "medium",
+        "execution_scope": "task_workspace",
+        "requirement_ids": [
+          "r1",
+          "r2",
+          "r3",
+          "r15",
+          "r16"
+        ]
+      },
+      {
+        "id": "t2",
+        "title": "实现 CSV 整批校验与 Decimal 精确金额处理",
+        "description": "建立不写入数据库的输入处理模块，从同一份文件内容计算 SHA256 并解析 CSV；提供金额解析、无损序列化和精确求和能力。",
+        "type": "data",
+        "blocked_by": [
+          "t1"
+        ],
+        "acceptance_criteria": [
+          "按 UTF-8 解码 CSV，校验 date/category/amount 表头；缺列、多列、重复导致列结构不合法或解码失败均拒绝整批输入。",
+          "日期严格符合 YYYY-MM-DD 且为有效日历日期；数据行缺列、多列或分类为空均判为坏行，空行忽略。",
+          "金额仅接受有限且严格大于零的 Decimal 值，允许科学计数法；拒绝零、负数、NaN、无穷大、货币符号和不可解析内容。",
+          "完整校验通过后才返回待保存账目与内容 SHA256；任意坏行都不能产生可提交的部分结果。",
+          "SHA256 与 CSV 解析基于同一份原始字节内容，避免内容身份和实际账目不一致。",
+          "金额解析、保存表示和求和均不经过二进制浮点数；使用足够的 Decimal 运算精度避免隐式舍入，并以十进制字符串序列化。"
+        ],
+        "suggested_role": "Python 数据处理工程师",
+        "effort": "high",
+        "execution_scope": "task_workspace",
+        "requirement_ids": [
+          "r1",
+          "r4",
+          "r5",
+          "r6",
+          "r7",
+          "r8",
+          "r9",
+          "r11"
+        ]
+      },
+      {
+        "id": "t3",
+        "title": "建立 SQLite 账目、批次与事务存储",
+        "description": "设计并实现本地 SQLite 存储，保存账目、批次及唯一内容身份，为整批提交、去重和完整查询提供接口。",
+        "type": "backend",
+        "blocked_by": [
+          "t1"
+        ],
+        "acceptance_criteria": [
+          "存储接口使用命令层传入的默认或显式数据库路径，账目与批次保存在 SQLite 文件中。",
+          "账目保存日期、分类、无损金额字符串及批次关联；账目与批次具有可查询的标识。",
+          "成功批次的 SHA256 具有唯一约束；账目字段不设置会删除或合并跨文件相同账目的唯一约束。",
+          "每次导入的账目、批次和成功内容身份在同一事务中提交；写入失败时全部回滚。",
+          "读取金额不触发 SQLite 数值强制转换，汇总不依赖浮点或 SQLite 数值聚合。",
+          "关闭连接并重新连接后，账目、批次和成功内容身份仍可查询；SQLite 异常能映射为退出码 3。"
+        ],
+        "suggested_role": "SQLite 存储工程师",
+        "effort": "medium",
+        "execution_scope": "task_workspace",
+        "requirement_ids": [
+          "r1",
+          "r3",
+          "r8",
+          "r9",
+          "r10",
+          "r11",
+          "r13",
+          "r14",
+          "r16"
+        ]
+      },
+      {
+        "id": "t4",
+        "title": "贯通原子导入与文件内容去重",
+        "description": "将命令入口、CSV 校验和事务存储接通，完成成功导入、重复导入、校验失败及存储失败的完整流程。",
+        "type": "backend",
+        "blocked_by": [
+          "t2",
+          "t3"
+        ],
+        "acceptance_criteria": [
+          "有效 CSV 全量保存为一个成功批次，成功标准输出为完整纯 JSON，退出码为 0。",
+          "同内容文件再次导入，包括改名或移动后导入，不新增账目或成功批次，返回纯 JSON 和退出码 0。",
+          "修改内容且校验通过的文件生成新批次；不同内容文件中的相同账目全部保留。",
+          "CSV 任意坏行导致本次账目、批次和成功去重标记全部不保存，退出码为 2。",
+          "文件访问或 SQLite 写入失败返回退出码 3；事务失败不留下部分记录或成功标记。",
+          "失败后修正输入或恢复存储再重试，可正常导入，不被失败尝试误判为已经成功导入。"
+        ],
+        "suggested_role": "Python CLI 工程师",
+        "effort": "high",
+        "execution_scope": "task_workspace",
+        "requirement_ids": [
+          "r2",
+          "r4",
+          "r5",
+          "r6",
+          "r7",
+          "r9",
+          "r10",
+          "r11",
+          "r15",
+          "r16"
+        ]
+      },
+      {
+        "id": "t5",
+        "title": "实现全部账目分类汇总与完整历史查询",
+        "description": "接通 summary 和 history，复用精确金额处理与存储接口，输出全部账目的分类汇总和带批次关联的逐笔历史。",
+        "type": "backend",
+        "blocked_by": [
+          "t2",
+          "t3"
+        ],
+        "acceptance_criteria": [
+          "summary 读取数据库全部账目，按分类使用 Decimal 精确求和，不隐式舍入。",
+          "history 返回全部逐笔账目和关联批次信息，逐笔账目按 id 升序排列，不遗漏或截断记录。",
+          "金额字段均为十进制字符串，summary 和 history 成功标准输出均为可解析的完整 JSON。",
+          "两项查询均使用默认数据库或用户指定的 --db 数据库，成功返回 0，文件或 SQLite 错误返回 3。",
+          "不增加日期筛选、分类筛选或其他范围外查询功能；无账目时返回合法 JSON，表示无汇总项和无历史记录。"
+        ],
+        "suggested_role": "Python 查询功能工程师",
+        "effort": "medium",
+        "execution_scope": "task_workspace",
+        "requirement_ids": [
+          "r2",
+          "r3",
+          "r8",
+          "r12",
+          "r13",
+          "r15",
+          "r16"
+        ]
+      },
+      {
+        "id": "t6",
+        "title": "验证输入边界与金额精度",
+        "description": "使用标准库测试框架建立 CSV 校验和 Decimal 精度测试，覆盖普通账目、科学计数法及容易被默认 Decimal 上下文舍入的金额。",
+        "type": "test",
+        "blocked_by": [
+          "t2",
+          "t5"
+        ],
+        "acceptance_criteria": [
+          "覆盖有效 CSV、非 UTF-8、错误表头、缺列、多列、空分类、空行、格式错误日期和不存在的日历日期。",
+          "覆盖正金额、科学计数法，以及零、负数、NaN、无穷大、货币符号和非法金额拒绝行为。",
+          "使用明确预期值验证小数求和、超过默认 Decimal 精度的长金额、大幅度不同数量级金额及多条累计金额，证明无隐式舍入。",
+          "验证金额写入 SQLite、关闭并重新读取后数值不变，科学计数法输入的保存和分类汇总均精确。",
+          "校验测试使用明确指定的临时输入和数据库，仅依赖 Python 标准库，提供可重复运行的测试命令。"
+        ],
+        "suggested_role": "数据质量测试工程师",
+        "effort": "medium",
+        "execution_scope": "task_workspace",
+        "requirement_ids": [
+          "r1",
+          "r4",
+          "r5",
+          "r6",
+          "r7",
+          "r8",
+          "r12",
+          "r17"
+        ]
+      },
+      {
+        "id": "t7",
+        "title": "验证去重、事务回滚与失败重试",
+        "description": "针对导入和存储建立测试，直接核对失败前后的账目、批次及成功内容身份，验证去重边界和原子性。",
+        "type": "test",
+        "blocked_by": [
+          "t4"
+        ],
+        "acceptance_criteria": [
+          "有效行与坏行混合时，核对账目、批次和成功内容身份均无新增，原有数据保持一致。",
+          "在部分写入已发生但事务未提交时模拟 SQLite 失败，核对全部回滚；移除故障后相同内容可成功导入。",
+          "覆盖原文件重复、改名、移动，验证账目和成功批次计数均不增加，重复导入退出码为 0。",
+          "覆盖内容修改后的新批次，以及不同内容文件中的相同账目保留，证明不以路径或账目字段去重。",
+          "校验失败后修正输入再导入能够成功，不受失败尝试的残留状态影响。",
+          "测试仅使用标准库和隔离的临时文件、SQLite 数据库，可单独重复运行。"
+        ],
+        "suggested_role": "存储与可靠性测试工程师",
+        "effort": "medium",
+        "execution_scope": "task_workspace",
+        "requirement_ids": [
+          "r1",
+          "r9",
+          "r10",
+          "r11",
+          "r16",
+          "r17"
+        ]
+      },
+      {
+        "id": "t8",
+        "title": "整理可运行交付与使用验收文档",
+        "description": "整理独立 CLI 的交付入口和标准库测试运行方式，编写 START.md 与 ACCEPTANCE.md，使用户能够在本地直接运行和复核需求。",
+        "type": "backend",
+        "blocked_by": [
+          "t4",
+          "t5"
+        ],
+        "acceptance_criteria": [
+          "交付包含完整可运行的 CLI、所需本地模块和测试，无需安装第三方依赖或使用 Web、HTTP、云资源。",
+          "START.md 说明 Python 运行前提、启动命令、import/summary/history/help、CSV 编码及格式、金额规则、默认数据库路径、--db 和 0/2/3 退出码。",
+          "START.md 提供明确选择 CSV 文件后执行导入、汇总和历史查询的可复制示例，成功输出示例为纯 JSON，金额为字符串。",
+          "ACCEPTANCE.md 按 r1 至 r18 映射验收命令、步骤和预期结果，包含精度、整批失败、存储回滚、去重及独立进程重开验证。",
+          "文档提供标准库测试的运行命令，清楚说明默认与显式数据库的访问方式，不引入筛选或自动文件发现功能。"
+        ],
+        "suggested_role": "CLI 交付与文档工程师",
+        "effort": "medium",
+        "execution_scope": "task_workspace",
+        "requirement_ids": [
+          "r1",
+          "r2",
+          "r3",
+          "r8",
+          "r9",
+          "r11",
+          "r14",
+          "r15",
+          "r16",
+          "r17",
+          "r18"
+        ]
+      },
+      {
+        "id": "t9",
+        "title": "执行最终项目集成与独立进程验收",
+        "description": "汇总所有交付和测试，在隔离的本地验收目录中通过真实 CLI 子进程完成端到端验证，并核对使用文档和需求覆盖。",
+        "type": "test",
+        "blocked_by": [
+          "t6",
+          "t7",
+          "t8"
+        ],
+        "acceptance_criteria": [
+          "交付包含可直接运行的独立 CLI、START.md 和 ACCEPTANCE.md；按 START.md 在无第三方依赖的 Python 环境中能够运行四个命令。",
+          "运行全部中间测试并通过，ACCEPTANCE.md 对 r1 至 r18 均具有可执行步骤与对应验收结果。",
+          "分别使用默认 data/ledger.sqlite 和显式 --db：由一个进程导入并退出，再由新进程查询历史和汇总，验证记录、批次关联及精确金额一致。",
+          "在独立进程重开后再次导入相同内容及改名或移动后的文件，验证退出码 0，账目与成功批次均不增加。",
+          "通过真实 CLI 验证有效输入、坏行混合整批失败、内容修改成为新批次和不同内容文件中相同账目保留。",
+          "核对 summary 覆盖全部分类和账目，history 返回全部逐笔账目及批次关联并按 id 升序；长金额和科学计数法经保存、重开、汇总后仍精确。",
+          "对成功的 import、重复 import、summary、history 和 help 分别解析完整标准输出，确认只有一个完整 JSON，金额字段均为字符串。",
+          "验证成功及重复导入为 0、命令输入和 CSV 错误为 2、文件访问及 SQLite 错误为 3；失败场景不留下本次部分账目或成功标记。",
+          "核查交付仅使用标准库和本地 SQLite，仅处理明确指定的 CSV，无 Web、HTTP、额外依赖、自动扫描、筛选或历史截断功能。"
+        ],
+        "suggested_role": "项目验收测试工程师",
+        "effort": "high",
+        "execution_scope": "project_integration",
+        "requirement_ids": [
+          "r1",
+          "r2",
+          "r3",
+          "r4",
+          "r5",
+          "r6",
+          "r7",
+          "r8",
+          "r9",
+          "r10",
+          "r11",
+          "r12",
+          "r13",
+          "r14",
+          "r15",
+          "r16",
+          "r17",
+          "r18"
+        ]
+      }
+    ]
+  },
+  "error_code": null,
+  "created_at": 1791292134225,
+  "updated_at": 1791292322369
+}

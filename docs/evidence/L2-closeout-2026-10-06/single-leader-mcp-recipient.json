@@ -1,0 +1,17 @@
+{
+  "jsonrpc": "2.0",
+  "id": 2,
+  "result": {
+    "content": [
+      {
+        "type": "text",
+        "text": "No message targets resolved"
+      }
+    ],
+    "isError": true,
+    "structuredContent": {
+      "code": "agent_not_found",
+      "message": "No message targets resolved"
+    }
+  }
+}

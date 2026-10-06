@@ -1,0 +1,289 @@
+{
+  "schemaVersion": 1,
+  "generatedAtUtc": "2026-10-06T15:26:01.097882+00:00",
+  "kind": "native_read_only_version_qa",
+  "sourceCommit": "0d35b57032cb719f6d2c9a86b606166257358d08",
+  "backendSha256": "64e862e81b2723ba48b3356c04f351ad48ad7caae0d1da3e11f0d855d389841f",
+  "fixture": {
+    "source": "/private/tmp/sw-r2-completed-fixture.db",
+    "sourceSha256": "8e5f309c11f456a4346c7375f1f13e6862af0e76d7f052a8d8d68195cfae53b2",
+    "pathRelocation": null,
+    "sourceFixtureModified": false,
+    "draftBudgetUsd": 7.5,
+    "draftBudgetMeaning": "An internal API-test new-run budget, not a model price or recorded fee"
+  },
+  "runtime": {
+    "profile": "/private/tmp/sw-r2-desktop-direct-version-qa",
+    "mainPid": 23885,
+    "corePid": 23898,
+    "coreExecutable": "/path/to/speed-workbench/AionUi/out/closeout-r2/mac-arm64/AionUi.app/Contents/Resources/bundled-aioncore/darwin-arm64/aioncore",
+    "coreFlags": {
+      "--data-dir": "/private/tmp/sw-r2-desktop-direct-version-qa/aionui",
+      "--log-dir": "/private/tmp/sw-r2-desktop-direct-version-qa/logs",
+      "--parent-pid": "23885"
+    },
+    "runtimeVerifiedAtUtc": "2026-10-06T15:20:53.504377+00:00",
+    "aliasMetadataBefore": {
+      ".aionui": {
+        "device": 16777233,
+        "inode": 11286240,
+        "target": "$HOME/Library/Application Support/Speed Workbench/aionui",
+        "symlink": true
+      },
+      ".aionui-config": {
+        "device": 16777233,
+        "inode": 11286241,
+        "target": "$HOME/Library/Application Support/Speed Workbench/config",
+        "symlink": true
+      }
+    },
+    "aliasMetadataAfter": {
+      ".aionui": {
+        "device": 16777233,
+        "inode": 11286240,
+        "target": "$HOME/Library/Application Support/Speed Workbench/aionui",
+        "symlink": true
+      },
+      ".aionui-config": {
+        "device": 16777233,
+        "inode": 11286241,
+        "target": "$HOME/Library/Application Support/Speed Workbench/config",
+        "symlink": true
+      }
+    },
+    "aliasTargetsDevicesAndInodesUnchanged": true,
+    "databaseCountsBefore": {
+      "product_factory_runs": 4,
+      "product_factory_planning": 0,
+      "product_factory_execution": 3,
+      "product_factory_products": 2,
+      "product_factory_versions": 3,
+      "product_factory_version_operations": 3,
+      "team_tasks": 12,
+      "agent_usage": 13
+    },
+    "databaseCountsAfter": {
+      "product_factory_runs": 4,
+      "product_factory_planning": 0,
+      "product_factory_execution": 3,
+      "product_factory_products": 2,
+      "product_factory_versions": 3,
+      "product_factory_version_operations": 3,
+      "team_tasks": 12,
+      "agent_usage": 13
+    },
+    "quitRequestedAtUtc": "2026-10-06T15:21:59.345Z",
+    "quitVerifiedAtUtc": "2026-10-06T15:22:19.399721+00:00",
+    "terminalExitCode": 0,
+    "ownedQaProcessesRemaining": 0,
+    "modelOrDevelopmentActionsInitiatedByQa": false
+  },
+  "observations": {
+    "crudProductRevision": 6,
+    "crudVersion1": "sealed/current selected code",
+    "crudVersion2": "working independent iteration",
+    "savedManifestFileCount": 21,
+    "savedManifestContainsStartAndAcceptance": true,
+    "sourceManifestFileCount": 21,
+    "sourceExcludedCount": 3,
+    "sourceFileHashesVisible": true,
+    "codeAndStaticAssetsScopeHintVisible": true,
+    "runtimeServicesAndBusinessDataScopeHintVisible": true,
+    "iterationHintRequiresNewHumanConfirmation": true,
+    "iterationDoesNotAutoCallModelOrStartDevelopmentHint": true,
+    "newBudgetIndependentOldFeesPreservedHintVisible": true,
+    "unknownFeesDisplayedAsUnknownNotZero": true,
+    "fileReviewAllowedDespiteUnknownFees": true,
+    "sourceReviewSubmitted": false,
+    "iterationSubmitted": false,
+    "activationSubmitted": false,
+    "costReestimationSubmitted": false
+  },
+  "retainedHistory": {
+    "states": {
+      "costs": [
+        [
+          null,
+          "model_price_missing"
+        ],
+        [
+          null,
+          "model_price_missing"
+        ],
+        [
+          null,
+          "model_price_missing"
+        ],
+        [
+          null,
+          "model_price_missing"
+        ],
+        [
+          null,
+          "model_price_missing"
+        ],
+        [
+          null,
+          "model_price_missing"
+        ],
+        [
+          null,
+          "model_price_missing"
+        ],
+        [
+          null,
+          "model_price_missing"
+        ],
+        [
+          null,
+          "model_price_missing"
+        ],
+        [
+          null,
+          "model_price_missing"
+        ],
+        [
+          null,
+          "model_price_missing"
+        ],
+        [
+          null,
+          "model_price_missing"
+        ],
+        [
+          null,
+          "model_price_missing"
+        ]
+      ],
+      "taskStates": [
+        [
+          "completed",
+          12
+        ]
+      ],
+      "versionStates": [
+        [
+          "sealed",
+          2
+        ],
+        [
+          "working",
+          1
+        ]
+      ],
+      "runStates": [
+        [
+          "completed",
+          3
+        ],
+        [
+          "draft",
+          1
+        ]
+      ]
+    },
+    "businessTablesUnchanged": true,
+    "businessTableDigestsBefore": {
+      "product_factory_runs": {
+        "count": 4,
+        "sha256": "9b36efee3cf565a3fcbfead9e65745a66b0c83d594c431b5a87c379905121b22"
+      },
+      "product_factory_planning": {
+        "count": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "product_factory_execution": {
+        "count": 3,
+        "sha256": "9a4dee9b39ae5f23840be69299b810ef55de5c16d4d257a721f1e94bbb2d74ab"
+      },
+      "product_factory_products": {
+        "count": 2,
+        "sha256": "e278b6ebc9594a4a18d4214473d915ee94c34aa0b57d87d9e687254d3f9543ee"
+      },
+      "product_factory_versions": {
+        "count": 3,
+        "sha256": "5b4d7c57ccab3accb235e65336e5bdc98627681661b90da49027dad3080e764b"
+      },
+      "product_factory_version_operations": {
+        "count": 3,
+        "sha256": "5b8f1140ebc639d3ad21dd32329db39d5e50664244ae869ef2e1a0562aad0c84"
+      },
+      "team_tasks": {
+        "count": 12,
+        "sha256": "21481a45900db6a786e155ec7269c925edfeb0c50294a040d045f9a3940da468"
+      },
+      "agent_usage": {
+        "count": 13,
+        "sha256": "5db823dc9ece92880406f4f9686cf19d04c69af15097c1c36e1b22da1abc62a7"
+      }
+    },
+    "businessTableDigestsAfter": {
+      "product_factory_runs": {
+        "count": 4,
+        "sha256": "9b36efee3cf565a3fcbfead9e65745a66b0c83d594c431b5a87c379905121b22"
+      },
+      "product_factory_planning": {
+        "count": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "product_factory_execution": {
+        "count": 3,
+        "sha256": "9a4dee9b39ae5f23840be69299b810ef55de5c16d4d257a721f1e94bbb2d74ab"
+      },
+      "product_factory_products": {
+        "count": 2,
+        "sha256": "e278b6ebc9594a4a18d4214473d915ee94c34aa0b57d87d9e687254d3f9543ee"
+      },
+      "product_factory_versions": {
+        "count": 3,
+        "sha256": "5b4d7c57ccab3accb235e65336e5bdc98627681661b90da49027dad3080e764b"
+      },
+      "product_factory_version_operations": {
+        "count": 3,
+        "sha256": "5b8f1140ebc639d3ad21dd32329db39d5e50664244ae869ef2e1a0562aad0c84"
+      },
+      "team_tasks": {
+        "count": 12,
+        "sha256": "21481a45900db6a786e155ec7269c925edfeb0c50294a040d045f9a3940da468"
+      },
+      "agent_usage": {
+        "count": 13,
+        "sha256": "5db823dc9ece92880406f4f9686cf19d04c69af15097c1c36e1b22da1abc62a7"
+      }
+    }
+  },
+  "screenshots": [
+    {
+      "path": "docs/evidence/L2-closeout-2026-10-06/desktop-version-history.png",
+      "format": "PNG",
+      "width": 2352,
+      "height": 1606,
+      "sha256": "1694b06f8a385589902792c71aeced65ffdb1f35d3ae7960d6885118cc81b26b"
+    },
+    {
+      "path": "docs/evidence/L2-closeout-2026-10-06/desktop-version-iteration-hint.png",
+      "format": "PNG",
+      "width": 2352,
+      "height": 1606,
+      "sha256": "dd6358dbc45ad56d93d6d276a7218519d9ebd736a4d6a1170200e436ce24785c"
+    },
+    {
+      "path": "docs/evidence/L2-closeout-2026-10-06/desktop-version-saved-manifest.png",
+      "format": "PNG",
+      "width": 2352,
+      "height": 1606,
+      "sha256": "ab1c91cdb21caa2062d4159a2bc74f425ce846527c968ad19e53322704af3f61"
+    },
+    {
+      "path": "docs/evidence/L2-closeout-2026-10-06/desktop-version-source-manifest.png",
+      "format": "PNG",
+      "width": 2352,
+      "height": 1606,
+      "sha256": "432bf90fb3064249201c918419f23767678ab69bb671b6bc3c3e4f432a087dae"
+    }
+  ],
+  "limits": [
+    "Only UI reads and local dialog open/close were performed. Snapshot/activate/clone write behavior is covered by the separate API QA evidence.",
+    "Original workspace and snapshot paths were read without relocation. No product code tree, original data, budget history or fee records were modified."
+  ]
+}

@@ -1,0 +1,77 @@
+{
+  "date": "2026-10-06",
+  "run_id": "01a110a2-c934-7583-bdaf-266f9645908b",
+  "scope": "independent technical acceptance; final customer sign-off not performed",
+  "python_tests": {
+    "count": 59,
+    "passed": 59,
+    "duration_seconds": 11.487,
+    "exit_code": 0,
+    "model_source": "explicit CLI fixture; actual model calls 0"
+  },
+  "frontend_logic": {
+    "checks": 10,
+    "exit_code": 0,
+    "browser": false
+  },
+  "independent_fixture_http": {
+    "checks": [
+      "root assets and missing-model 503 passed, zero CLI",
+      "fixture CLI failure does not persist",
+      "fixture recovery and independent-process restart preserve full record"
+    ],
+    "actual_model_exec_attempts": 0
+  },
+  "parent_root_browser": {
+    "evidence": [
+      "docs/evidence/L2-closeout-2026-10-06/ai-independent-root-browser.json",
+      "docs/evidence/L2-closeout-2026-10-06/ai-independent-root-browser.png"
+    ],
+    "reported_checks": [
+      "fixture201 single stored record",
+      "reload reads same record",
+      "expanded history retains full input",
+      "XSS literal no injected image/no execution",
+      "no horizontal overflow",
+      "refresh retains same record"
+    ]
+  },
+  "existing_real_call": {
+    "http_status": 201,
+    "reported_model": "gpt-6-astra",
+    "model_exec_attempts": 1,
+    "metadata_commands": 2,
+    "actions_count": 5,
+    "sandbox": "read-only",
+    "approval": "never",
+    "recorded_same_database_independent_process_restart": true,
+    "original_temp_database_cleaned_by_script": true,
+    "independent_second_real_call": false
+  },
+  "closure": {
+    "message_id": "01a11191-3911-7943-8f11-1c2a32b3a626",
+    "warning_code": "CODEX_RETRYING",
+    "warning_at_ms": 1791296244996,
+    "actual_task_submitted_in_review_at_ms": 1791296275857,
+    "all_three_teams_idle_before_upgrade": true,
+    "explicit_interrupt_performed": false
+  },
+  "cost": {
+    "actual_cost_usd": null,
+    "cost_unknown": true,
+    "real_tariffs_configured": false
+  },
+  "source_evidence_sha256": {
+    "evidence/real-call-budget.json": "091193d8764fab65cd09a108d6999957862492bb8ccf0d8f78cc594a5a1f6b44",
+    "evidence/real-cli-trace.json": "e0eca6e1816c7843e9e4f8a7a0fa65f4dce62f481893355c081ce51949bb6f1e",
+    "evidence/real-http-response.json": "a21d12a1be5fff4c8541daf8bff677666c579fc4e27252fc0fb375b540a40692",
+    "evidence/acceptance-smoke.json": "b0e8775f009a325b460c1554813125194af2fd30e71a405e2d0b3a7bedaa226e",
+    "tests/acceptance_smoke.py": "cc85558805411b248437ea1ecd211463dcf9a632b4a51d57fd3124e37a644d69",
+    "brief_service/model_cli.py": "20466fa94bdf22a7e60ced2867a860d45c77631186de053f472dd03bbffba3ad"
+  },
+  "internal_review": {
+    "decision": "approve",
+    "task_status": "completed",
+    "run_status": "completed"
+  }
+}

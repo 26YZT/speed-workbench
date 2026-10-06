@@ -1,0 +1,56 @@
+{
+  "version": 1,
+  "currency": "USD",
+  "costType": "estimate",
+  "generatedAt": 1791275225379,
+  "runId": "01a10077-fe21-7f21-8ae3-6676e68034f2",
+  "productName": "Real smoke title tool",
+  "taskCounts": {
+    "total": 4,
+    "pending": 0,
+    "inProgress": 0,
+    "inReview": 0,
+    "completed": 4,
+    "failed": 0
+  },
+  "usage": {
+    "teamId": "factory-01a10077-fe21-7f21-8ae3-6676e68034f2-r1",
+    "inputTokens": 266156,
+    "outputTokens": 1626,
+    "costEst": null,
+    "costUnknown": true,
+    "budgetLimitUsd": 5,
+    "budgetExceeded": false,
+    "tasks": [
+      {
+        "taskId": "factory-01a10077-fe21-7f21-8ae3-6676e68034f2-r1-data-1",
+        "inputTokens": 46078,
+        "outputTokens": 201,
+        "costEst": 0.09296,
+        "turnCount": 1
+      },
+      {
+        "taskId": "factory-01a10077-fe21-7f21-8ae3-6676e68034f2-r1-backend-1",
+        "inputTokens": 70838,
+        "outputTokens": 740,
+        "costEst": 0.144636,
+        "turnCount": 1
+      },
+      {
+        "taskId": "factory-01a10077-fe21-7f21-8ae3-6676e68034f2-r1-frontend-1",
+        "inputTokens": 149240,
+        "outputTokens": 685,
+        "costEst": null,
+        "turnCount": 1
+      },
+      {
+        "taskId": "factory-01a10077-fe21-7f21-8ae3-6676e68034f2-r1-test-1",
+        "inputTokens": 0,
+        "outputTokens": 0,
+        "costEst": null,
+        "turnCount": 0
+      }
+    ],
+    "unknownReason": "missing_usage_or_model_pricing"
+  }
+}

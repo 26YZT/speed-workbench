@@ -1,0 +1,216 @@
+{
+  "run": {
+    "id": "01a10a3a-a9cb-7171-87bf-984e955bbdfa",
+    "name": "L2 Real Continuous Smoke",
+    "idea": "Build a local product prototype that accepts one product idea and produces a useful result with persistent history",
+    "target_user": "A nontechnical product creator",
+    "problem": "Turning an idea into a runnable prototype is slow",
+    "expected_output": "A locally runnable prototype with persistent data",
+    "workspace_path": "/private/tmp/product-factory-l2-real/workspace/title-tool",
+    "budget_usd": null,
+    "status": "completed",
+    "interview": {
+      "version": 1,
+      "questions": [],
+      "summary": "A locally runnable prototype with persistent data",
+      "confirmed": false,
+      "updated_at": 1791173000000
+    },
+    "blueprint": {
+      "version": 1,
+      "sections": [
+        {
+          "id": "goals",
+          "title": "Goals",
+          "content": "A locally runnable prototype with persistent data",
+          "confirmed": false
+        },
+        {
+          "id": "users",
+          "title": "Users",
+          "content": "A nontechnical product creator",
+          "confirmed": false
+        },
+        {
+          "id": "core_loop",
+          "title": "Core loop",
+          "content": "Build a local product prototype that accepts one product idea and produces a useful result with persistent history",
+          "confirmed": false
+        },
+        {
+          "id": "modules",
+          "title": "Modules",
+          "content": "A locally runnable prototype with persistent data",
+          "confirmed": false
+        },
+        {
+          "id": "risks",
+          "title": "Risks",
+          "content": "Turning an idea into a runnable prototype is slow",
+          "confirmed": false
+        }
+      ],
+      "risks": [],
+      "open_questions": [],
+      "generated_by": "draft",
+      "confirmed": true,
+      "updated_at": 1791173022801
+    },
+    "task_draft": {
+      "version": 1,
+      "generated_by": "draft",
+      "confirmed": true,
+      "revision": 1,
+      "updated_at": 1791173068451,
+      "tasks": [
+        {
+          "id": "data-1",
+          "title": "定义数据契约与存储",
+          "description": "围绕已确认蓝图目标建立数据结构与持久化边界：A locally runnable prototype with persistent data",
+          "type": "data",
+          "blocked_by": [],
+          "acceptance_criteria": [
+            "数据结构可持久化并可被后续接口读取"
+          ],
+          "suggested_role": "backend",
+          "effort": "medium"
+        },
+        {
+          "id": "backend-1",
+          "title": "实现后端接口",
+          "description": "根据数据契约实现核心业务接口和错误处理。",
+          "type": "backend",
+          "blocked_by": [
+            "data-1"
+          ],
+          "acceptance_criteria": [
+            "接口可完成核心流程并返回稳定数据契约"
+          ],
+          "suggested_role": "backend",
+          "effort": "medium"
+        },
+        {
+          "id": "frontend-1",
+          "title": "实现前端核心流程",
+          "description": "在已完成后端接口基础上实现可直接打开的本地网页前端：输入产品关键词，调用真实后端生成三个标题，展示加载/成功/失败状态，并读取持久化历史记录。",
+          "type": "frontend",
+          "blocked_by": [
+            "backend-1"
+          ],
+          "acceptance_criteria": [
+            "页面可启动并输入产品关键词，调用 POST /api/generate 后展示三个真实标题",
+            "页面调用 GET /api/generations 展示历史记录，刷新页面后数据仍存在",
+            "空输入、后端 4xx/5xx 和网络失败均展示明确错误，加载期间按钮不可重复提交"
+          ],
+          "suggested_role": "frontend",
+          "effort": "high"
+        },
+        {
+          "id": "test-1",
+          "title": "完成集成验收",
+          "description": "验证前后端联调、关键状态和错误恢复。",
+          "type": "test",
+          "blocked_by": [
+            "backend-1",
+            "frontend-1"
+          ],
+          "acceptance_criteria": [
+            "关键用户流程通过自动化或人工验收"
+          ],
+          "suggested_role": "qa",
+          "effort": "medium"
+        }
+      ]
+    },
+    "team_id": "factory-01a10a3a-a9cb-7171-87bf-984e955bbdfa-r1",
+    "created_at": 1791172979147,
+    "updated_at": 1791277883685
+  },
+  "ready": false,
+  "workspace_path": "/private/tmp/product-factory-l2-real/workspace/title-tool",
+  "task_counts": {
+    "total": 4,
+    "pending": 0,
+    "in_progress": 0,
+    "in_review": 0,
+    "completed": 4,
+    "failed": 0
+  },
+  "usage_summary": {
+    "team_id": "factory-01a10a3a-a9cb-7171-87bf-984e955bbdfa-r1",
+    "input_tokens": 720741,
+    "output_tokens": 1021,
+    "cost_est": null,
+    "cost_unknown": true,
+    "budget_limit_usd": null,
+    "budget_remaining_usd": null,
+    "budget_exceeded": false,
+    "tasks": [
+      {
+        "task_id": "factory-01a10a3a-a9cb-7171-87bf-984e955bbdfa-r1-data-1",
+        "input_tokens": 76907,
+        "output_tokens": 115,
+        "cost_est": null,
+        "turn_count": 1
+      },
+      {
+        "task_id": "factory-01a10a3a-a9cb-7171-87bf-984e955bbdfa-r1-backend-1",
+        "input_tokens": 373399,
+        "output_tokens": 898,
+        "cost_est": null,
+        "turn_count": 4
+      },
+      {
+        "task_id": "factory-01a10a3a-a9cb-7171-87bf-984e955bbdfa-r1-frontend-1",
+        "input_tokens": 125993,
+        "output_tokens": 4,
+        "cost_est": null,
+        "turn_count": 1
+      },
+      {
+        "task_id": "factory-01a10a3a-a9cb-7171-87bf-984e955bbdfa-r1-test-1",
+        "input_tokens": 144442,
+        "output_tokens": 4,
+        "cost_est": null,
+        "turn_count": 1
+      }
+    ]
+  },
+  "checks": [
+    {
+      "code": "run_completed",
+      "passed": true,
+      "detail": "Product Factory run is completed"
+    },
+    {
+      "code": "all_tasks_completed",
+      "passed": true,
+      "detail": "All planned tasks are completed"
+    },
+    {
+      "code": "workspace_available",
+      "passed": true,
+      "detail": "Workspace path is available"
+    },
+    {
+      "code": "start_guide_exists",
+      "passed": true,
+      "detail": "START.md exists in the project workspace"
+    },
+    {
+      "code": "acceptance_evidence_exists",
+      "passed": true,
+      "detail": "ACCEPTANCE.md exists in the project workspace"
+    },
+    {
+      "code": "usage_recorded",
+      "passed": true,
+      "detail": "Task usage records are present"
+    },
+    {
+      "code": "cost_known",
+      "passed": false,
+      "detail": "Recorded task costs are known or safely marked"
+    }
+  ]
+}

@@ -1,0 +1,26 @@
+{
+  "kind": "independent_assembled_product_browser",
+  "mode": "explicit_fixture_no_real_model",
+  "createdAtUtc": "2026-10-06T14:20:15.319Z",
+  "spaceId": 8,
+  "url": "http://127.0.0.1:51564/",
+  "generateClicks": 1,
+  "first": {
+    "status": "已生成并保存到历史。",
+    "result": "实际模型：test-fixture-model\n2026/10/06 22:20\n摘要\n\n仅用于接口测试的夹具摘要\n\n行动列表\n夹具行动一\n夹具行动二",
+    "historyCount": "1"
+  },
+  "afterReload": {
+    "historyCount": "1",
+    "historyText": "整理本地CSV导入与精确汇总需求。<img data-sw-xss=\"probe\" src=x onerror=\"win…\ntest-fixture-model\n2026/10/06 22:20\n›\n原始需求\n\n整理本地CSV导入与精确汇总需求。<img data-sw-xss=\"probe\" src=x onerror=\"window.__swXssProbe=1\">\n\n摘要\n\n仅用于接口测试的夹具摘要\n\n行动列表\n夹具行动一\n夹具行动二",
+    "literalInputPreserved": true,
+    "scriptExecuted": false,
+    "injectedImageCount": 0,
+    "horizontalOverflow": false
+  },
+  "screenshot": "ai-independent-root-browser.png",
+  "refreshButton": {
+    "clicked": true,
+    "historyCount": "1"
+  }
+}

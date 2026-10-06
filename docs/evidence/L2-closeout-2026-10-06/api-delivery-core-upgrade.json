@@ -1,0 +1,17 @@
+{
+  "binary_path": "/path/to/speed-workbench/AionUi/out/closeout-r2/mac-arm64/AionUi.app/Contents/Resources/bundled-aioncore/darwin-arm64/aioncore",
+  "sha256": "64e862e81b2723ba48b3356c04f351ad48ad7caae0d1da3e11f0d855d389841f",
+  "source_commit": "1e690924a4fd7953afcc1c019a22833a4ba3a0fa",
+  "session_id": 10281,
+  "pid": 12905,
+  "port": 26980,
+  "migration_before": 49,
+  "migration_after": 52,
+  "usage_records_preserved": 13,
+  "task_records_preserved": 12,
+  "run_records_preserved": 3,
+  "all_preexisting_fields_unchanged": true,
+  "all_three_teams_idle_after_upgrade": true,
+  "real_model_calls_during_upgrade": 0,
+  "all_actual_costs_remain_unknown": true
+}

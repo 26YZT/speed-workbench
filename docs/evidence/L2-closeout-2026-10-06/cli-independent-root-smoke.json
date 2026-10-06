@@ -1,0 +1,20 @@
+{
+  "passed": true,
+  "processes": 16,
+  "checks": {
+    "uses_project_root_package_without_pythonpath": true,
+    "help": true,
+    "restart_persistence_initial_rows": 3,
+    "repeated_file_added_rows": 0,
+    "invalid_batch_preserved_all_existing_rows": true,
+    "repair_retry_added_rows": 2,
+    "export_matches_exact_summary": true,
+    "export_failure_recovery": true,
+    "sqlite_integrity": "ok",
+    "final_persisted_batches": 2,
+    "final_persisted_rows": 5,
+    "summary_export_sha256": "27690fe0513f92b0a34ba0e0790bbcff0b32061fe5e15d3b731544669468f667",
+    "runtime_artifacts_cleaned": true
+  },
+  "report": "/private/tmp/sw-fresh-validation/data/product-factory-workspaces/01a110a2-c908-7282-bbe2-625e164719a2/tests/restart-smoke.json"
+}

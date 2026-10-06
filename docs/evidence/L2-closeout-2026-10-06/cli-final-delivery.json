@@ -1,0 +1,235 @@
+{
+  "run": {
+    "id": "01a110a2-c908-7282-bbe2-625e164719a2",
+    "name": "CSV账目汇总器",
+    "idea": "开发本地命令行 CSV 账目工具。导入CSV字段date、category、amount，校验日期、非空分类与有限正数金额；按分类汇总并导出JSON。把有效导入记录保存在SQLite，可再次运行查询历史。重复导入同一文件不得增加重复记录；坏行返回行号和错误，整批失败不部分保存。",
+    "target_user": "整理个人账目的用户",
+    "problem": "交付形态是CLI，不需要Web页面或HTTP服务。只用Python3标准库、不安装依赖、不建云资源，不读取其他个人文件。",
+    "expected_output": "Python3 CLI：import、summary、history；可选数据库路径和--help。持久化、去重、错误退出码、CSV/JSON示例、独立进程重新运行测试和START.md、ACCEPTANCE.md。入口任务按CLI交付形态实现，无需浏览器。",
+    "workspace_path": "/private/tmp/sw-fresh-validation/data/product-factory-workspaces/01a110a2-c908-7282-bbe2-625e164719a2",
+    "budget_usd": null,
+    "status": "completed",
+    "interview": {
+      "version": 1,
+      "summary": "开发本地命令行 CSV 账目工具。导入CSV字段date、category、amount，校验日期、非空分类与有限正数金额；按分类汇总并导出JSON。把有效导入记录保存在SQLite，可再次运行查询历史。重复导入同一文件不得增加重复记录；坏行返回行号和错误，整批失败不部分保存。\nPython3 CLI：import、summary、history；可选数据库路径和--help。持久化、去重、错误退出码、CSV/JSON示例、独立进程重新运行测试和START.md、ACCEPTANCE.md。入口任务按CLI交付形态实现，无需浏览器。",
+      "answers": [
+        {
+          "question": "目标用户",
+          "answer": "整理个人账目的用户"
+        },
+        {
+          "question": "问题与边界",
+          "answer": "交付形态是CLI，不需要Web页面或HTTP服务。只用Python3标准库、不安装依赖、不建云资源，不读取其他个人文件。"
+        },
+        {
+          "question": "交付",
+          "answer": "Python3 CLI：import、summary、history；可选数据库路径和--help。持久化、去重、错误退出码、CSV/JSON示例、独立进程重新运行测试和START.md、ACCEPTANCE.md。入口任务按CLI交付形态实现，无需浏览器。"
+        }
+      ]
+    },
+    "blueprint": {
+      "version": 1,
+      "sections": [
+        {
+          "id": "goals",
+          "title": "Goals",
+          "content": "开发本地命令行 CSV 账目工具。导入CSV字段date、category、amount，校验日期、非空分类与有限正数金额；按分类汇总并导出JSON。把有效导入记录保存在SQLite，可再次运行查询历史。重复导入同一文件不得增加重复记录；坏行返回行号和错误，整批失败不部分保存。\nPython3 CLI：import、summary、history；可选数据库路径和--help。持久化、去重、错误退出码、CSV/JSON示例、独立进程重新运行测试和START.md、ACCEPTANCE.md。入口任务按CLI交付形态实现，无需浏览器。",
+          "confirmed": false
+        },
+        {
+          "id": "users",
+          "title": "Users",
+          "content": "整理个人账目的用户",
+          "confirmed": false
+        },
+        {
+          "id": "core_loop",
+          "title": "Core loop",
+          "content": "开发本地命令行 CSV 账目工具。导入CSV字段date、category、amount，校验日期、非空分类与有限正数金额；按分类汇总并导出JSON。把有效导入记录保存在SQLite，可再次运行查询历史。重复导入同一文件不得增加重复记录；坏行返回行号和错误，整批失败不部分保存。",
+          "confirmed": false
+        },
+        {
+          "id": "modules",
+          "title": "Modules",
+          "content": "Python3 CLI：import、summary、history；可选数据库路径和--help。持久化、去重、错误退出码、CSV/JSON示例、独立进程重新运行测试和START.md、ACCEPTANCE.md。入口任务按CLI交付形态实现，无需浏览器。",
+          "confirmed": false
+        },
+        {
+          "id": "risks",
+          "title": "Risks",
+          "content": "交付形态是CLI，不需要Web页面或HTTP服务。只用Python3标准库、不安装依赖、不建云资源，不读取其他个人文件。",
+          "confirmed": false
+        }
+      ],
+      "risks": [],
+      "open_questions": [],
+      "generated_by": "draft",
+      "confirmed": true,
+      "updated_at": 1791280466187
+    },
+    "task_draft": {
+      "version": 1,
+      "generated_by": "draft",
+      "confirmed": true,
+      "revision": 1,
+      "updated_at": 1791280466192,
+      "tasks": [
+        {
+          "id": "data-1",
+          "title": "定义数据契约与存储",
+          "description": "围绕以下已确认需求，定义实际领域的数据契约、校验规则与必要的持久化；不要添加需求之外的实体或功能。\n\nGoals: 开发本地命令行 CSV 账目工具。导入CSV字段date、category、amount，校验日期、非空分类与有限正数金额；按分类汇总并导出JSON。把有效导入记录保存在SQLite，可再次运行查询历史。重复导入同一文件不得增加重复记录；坏行返回行号和错误，整批失败不部分保存。\nPython3 CLI：import、summary、history；可选数据库路径和--help。持久化、去重、错误退出码、CSV/JSON示例、独立进程重新运行测试和START.md、ACCEPTANCE.md。入口任务按CLI交付形态实现，无需浏览器。\nUsers: 整理个人账目的用户\nCore loop: 开发本地命令行 CSV 账目工具。导入CSV字段date、category、amount，校验日期、非空分类与有限正数金额；按分类汇总并导出JSON。把有效导入记录保存在SQLite，可再次运行查询历史。重复导入同一文件不得增加重复记录；坏行返回行号和错误，整批失败不部分保存。\nModules: Python3 CLI：import、summary、history；可选数据库路径和--help。持久化、去重、错误退出码、CSV/JSON示例、独立进程重新运行测试和START.md、ACCEPTANCE.md。入口任务按CLI交付形态实现，无需浏览器。\nRisks: 交付形态是CLI，不需要Web页面或HTTP服务。只用Python3标准库、不安装依赖、不建云资源，不读取其他个人文件。",
+          "type": "data",
+          "blocked_by": [],
+          "acceptance_criteria": [
+            "数据结构可持久化并可被后续接口读取"
+          ],
+          "suggested_role": "backend",
+          "effort": "medium"
+        },
+        {
+          "id": "backend-1",
+          "title": "实现后端接口",
+          "description": "读取已批准的数据任务产物，根据以下需求实现核心业务逻辑、所需接口和错误处理；接口名称与行为由实际产品决定。若需求包含 AI 调用，应明确真实模型接入与未配置时的降级，不把模板输出冒充模型结果。\n\nGoals: 开发本地命令行 CSV 账目工具。导入CSV字段date、category、amount，校验日期、非空分类与有限正数金额；按分类汇总并导出JSON。把有效导入记录保存在SQLite，可再次运行查询历史。重复导入同一文件不得增加重复记录；坏行返回行号和错误，整批失败不部分保存。\nPython3 CLI：import、summary、history；可选数据库路径和--help。持久化、去重、错误退出码、CSV/JSON示例、独立进程重新运行测试和START.md、ACCEPTANCE.md。入口任务按CLI交付形态实现，无需浏览器。\nUsers: 整理个人账目的用户\nCore loop: 开发本地命令行 CSV 账目工具。导入CSV字段date、category、amount，校验日期、非空分类与有限正数金额；按分类汇总并导出JSON。把有效导入记录保存在SQLite，可再次运行查询历史。重复导入同一文件不得增加重复记录；坏行返回行号和错误，整批失败不部分保存。\nModules: Python3 CLI：import、summary、history；可选数据库路径和--help。持久化、去重、错误退出码、CSV/JSON示例、独立进程重新运行测试和START.md、ACCEPTANCE.md。入口任务按CLI交付形态实现，无需浏览器。\nRisks: 交付形态是CLI，不需要Web页面或HTTP服务。只用Python3标准库、不安装依赖、不建云资源，不读取其他个人文件。",
+          "type": "backend",
+          "blocked_by": [
+            "data-1"
+          ],
+          "acceptance_criteria": [
+            "接口可完成核心流程并返回稳定数据契约"
+          ],
+          "suggested_role": "backend",
+          "effort": "medium"
+        },
+        {
+          "id": "frontend-1",
+          "title": "实现前端核心流程",
+          "description": "读取已批准的数据与业务任务产物，按照以下已确认需求及交付形态实现用户操作入口，连接实际业务接口，展示加载、成功、失败和必要的历史数据；不要套用其他产品的输入、输出数量或接口。\n\nGoals: 开发本地命令行 CSV 账目工具。导入CSV字段date、category、amount，校验日期、非空分类与有限正数金额；按分类汇总并导出JSON。把有效导入记录保存在SQLite，可再次运行查询历史。重复导入同一文件不得增加重复记录；坏行返回行号和错误，整批失败不部分保存。\nPython3 CLI：import、summary、history；可选数据库路径和--help。持久化、去重、错误退出码、CSV/JSON示例、独立进程重新运行测试和START.md、ACCEPTANCE.md。入口任务按CLI交付形态实现，无需浏览器。\nUsers: 整理个人账目的用户\nCore loop: 开发本地命令行 CSV 账目工具。导入CSV字段date、category、amount，校验日期、非空分类与有限正数金额；按分类汇总并导出JSON。把有效导入记录保存在SQLite，可再次运行查询历史。重复导入同一文件不得增加重复记录；坏行返回行号和错误，整批失败不部分保存。\nModules: Python3 CLI：import、summary、history；可选数据库路径和--help。持久化、去重、错误退出码、CSV/JSON示例、独立进程重新运行测试和START.md、ACCEPTANCE.md。入口任务按CLI交付形态实现，无需浏览器。\nRisks: 交付形态是CLI，不需要Web页面或HTTP服务。只用Python3标准库、不安装依赖、不建云资源，不读取其他个人文件。",
+          "type": "frontend",
+          "blocked_by": [
+            "backend-1"
+          ],
+          "acceptance_criteria": [
+            "用户可通过已确认的交付形态完成核心需求，操作入口调用实际业务实现",
+            "结果与已确认需求的数据契约一致，必要的持久化数据在重新打开后可读取",
+            "无效输入和调用失败有明确反馈，执行期间防止重复提交"
+          ],
+          "suggested_role": "frontend",
+          "effort": "high"
+        },
+        {
+          "id": "test-1",
+          "title": "完成最终集成与交付验收",
+          "description": "执行最终集成：检查已批准任务的真实产物，将它们组装到项目根目录；生成可运行产品、START.md 和 ACCEPTANCE.md，实际验证核心流程、错误恢复与服务停止重启后的持久化。验收文档逐项区分已通过、失败和未验证，不预先声明完成。\n\nGoals: 开发本地命令行 CSV 账目工具。导入CSV字段date、category、amount，校验日期、非空分类与有限正数金额；按分类汇总并导出JSON。把有效导入记录保存在SQLite，可再次运行查询历史。重复导入同一文件不得增加重复记录；坏行返回行号和错误，整批失败不部分保存。\nPython3 CLI：import、summary、history；可选数据库路径和--help。持久化、去重、错误退出码、CSV/JSON示例、独立进程重新运行测试和START.md、ACCEPTANCE.md。入口任务按CLI交付形态实现，无需浏览器。\nUsers: 整理个人账目的用户\nCore loop: 开发本地命令行 CSV 账目工具。导入CSV字段date、category、amount，校验日期、非空分类与有限正数金额；按分类汇总并导出JSON。把有效导入记录保存在SQLite，可再次运行查询历史。重复导入同一文件不得增加重复记录；坏行返回行号和错误，整批失败不部分保存。\nModules: Python3 CLI：import、summary、history；可选数据库路径和--help。持久化、去重、错误退出码、CSV/JSON示例、独立进程重新运行测试和START.md、ACCEPTANCE.md。入口任务按CLI交付形态实现，无需浏览器。\nRisks: 交付形态是CLI，不需要Web页面或HTTP服务。只用Python3标准库、不安装依赖、不建云资源，不读取其他个人文件。",
+          "type": "test",
+          "blocked_by": [
+            "backend-1",
+            "frontend-1"
+          ],
+          "acceptance_criteria": [
+            "项目根目录存在可运行产品和 START.md 启动说明",
+            "ACCEPTANCE.md 记录关键流程、错误恢复和人工验收证据",
+            "停止并重启产品后，核心数据仍可读取",
+            "交付检查接口显示所有任务完成、工作区可用且成本状态明确"
+          ],
+          "suggested_role": "qa",
+          "effort": "medium"
+        }
+      ]
+    },
+    "team_id": "factory-01a110a2-c908-7282-bbe2-625e164719a2-r1",
+    "created_at": 1791280466184,
+    "updated_at": 1791287795184
+  },
+  "ready": false,
+  "workspace_path": "/private/tmp/sw-fresh-validation/data/product-factory-workspaces/01a110a2-c908-7282-bbe2-625e164719a2",
+  "task_counts": {
+    "total": 4,
+    "pending": 0,
+    "in_progress": 0,
+    "in_review": 0,
+    "completed": 4,
+    "failed": 0
+  },
+  "usage_summary": {
+    "team_id": "factory-01a110a2-c908-7282-bbe2-625e164719a2-r1",
+    "input_tokens": 5800794,
+    "output_tokens": 81467,
+    "cost_est": null,
+    "cost_unknown": true,
+    "budget_limit_usd": null,
+    "budget_remaining_usd": null,
+    "budget_exceeded": false,
+    "tasks": [
+      {
+        "task_id": "factory-01a110a2-c908-7282-bbe2-625e164719a2-r1-data-1",
+        "input_tokens": 768699,
+        "output_tokens": 20953,
+        "cost_est": null,
+        "turn_count": 1
+      },
+      {
+        "task_id": "factory-01a110a2-c908-7282-bbe2-625e164719a2-r1-backend-1",
+        "input_tokens": 1232179,
+        "output_tokens": 21312,
+        "cost_est": null,
+        "turn_count": 1
+      },
+      {
+        "task_id": "factory-01a110a2-c908-7282-bbe2-625e164719a2-r1-frontend-1",
+        "input_tokens": 1657347,
+        "output_tokens": 20639,
+        "cost_est": null,
+        "turn_count": 1
+      },
+      {
+        "task_id": "factory-01a110a2-c908-7282-bbe2-625e164719a2-r1-test-1",
+        "input_tokens": 2142569,
+        "output_tokens": 18563,
+        "cost_est": null,
+        "turn_count": 1
+      }
+    ]
+  },
+  "checks": [
+    {
+      "code": "run_completed",
+      "passed": true,
+      "detail": "Product Factory run is completed"
+    },
+    {
+      "code": "all_tasks_completed",
+      "passed": true,
+      "detail": "All planned tasks are completed"
+    },
+    {
+      "code": "workspace_available",
+      "passed": true,
+      "detail": "Workspace path is available"
+    },
+    {
+      "code": "start_guide_exists",
+      "passed": true,
+      "detail": "START.md exists in the project workspace"
+    },
+    {
+      "code": "acceptance_evidence_exists",
+      "passed": true,
+      "detail": "ACCEPTANCE.md exists in the project workspace"
+    },
+    {
+      "code": "usage_recorded",
+      "passed": true,
+      "detail": "Task usage records are present"
+    },
+    {
+      "code": "cost_known",
+      "passed": false,
+      "detail": "Recorded task costs are known or configured estimates"
+    },
+    {
+      "code": "budget_within_limit",
+      "passed": true,
+      "detail": "If a budget is configured, recorded costs must remain below its limit"
+    }
+  ]
+}

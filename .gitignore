@@ -1,0 +1,25 @@
+.DS_Store
+node_modules/
+target/
+.env
+.env.*
+!.env.example
+*.log
+
+# Local design scratchpads are not release artifacts.
+docs/superpowers/
+
+# Personal/runtime files and generated desktop distributions are not source releases.
+*.sqlite
+*.sqlite3
+*.sqlite-wal
+*.sqlite-shm
+*.db
+*.db-wal
+*.db-shm
+*.pem
+*.key
+*.app/
+*.dmg
+*.exe
+.envrc

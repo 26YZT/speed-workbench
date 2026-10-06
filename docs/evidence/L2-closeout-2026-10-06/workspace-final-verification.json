@@ -1,0 +1,20 @@
+{
+  "kind": "full_rust_workspace_verification",
+  "completedAtUtc": "2026-10-06T15:26:43.436970+00:00",
+  "command": "cargo test -j 1 --workspace --offline",
+  "terminalExitCode": 0,
+  "passed": 9571,
+  "failed": 0,
+  "ignored": 53,
+  "completedTestTargetsIncludingDocTests": 264,
+  "includesDocTests": true,
+  "ignoredTestsRemainUnverified": true,
+  "rustSourceTree": "d5850744ec35956b469c4345b76052e89ca55c29",
+  "backendSourceCommit": "1e690924a4fd7953afcc1c019a22833a4ba3a0fa",
+  "latestSourceCommit": "0d35b57032cb719f6d2c9a86b606166257358d08",
+  "backendTreeUnchangedBetweenCommits": true,
+  "logSha256": "3c48e2c46f9e1c4e7b655eea4f43d7a2e4873042bda05226216e983bfe9e8d9f",
+  "logPath": "/private/tmp/sw-final-workspace-recovered.log",
+  "earlierDiskFailureRecovered": true,
+  "cacheCleanup": "Only old recoverable codegen/test caches; source/data/Core/app preserved"
+}

@@ -1,0 +1,12 @@
+{
+  "captured_at": "2026-10-06T12:31:22.275825+00:00",
+  "source": "codex-cli 0.160.1 mcp list --json, metadata only; no model calls",
+  "empty_table_override_disables_servers": false,
+  "enabled_before": 4,
+  "complete_disabled_stub_enabled_after": 0,
+  "tested_syntax": "mcp_servers.<safe_name>={command=\"/usr/bin/false\",enabled=false}",
+  "partial_enabled_override_not_universally_valid": true,
+  "quoted_name_override_not_verified": true,
+  "global_configuration_changed": false,
+  "credentials_exported": false
+}

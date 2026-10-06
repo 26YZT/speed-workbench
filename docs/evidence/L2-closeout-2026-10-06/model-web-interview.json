@@ -1,0 +1,55 @@
+{
+  "id": "01a1115b-19ed-7cb2-81e3-da0b1a8d7c79",
+  "run_id": "01a1115b-19c7-74e3-a99c-fb53d77e70a9",
+  "phase": "interview",
+  "input_plan_revision": 1,
+  "input_hash": "720b51672b43dda5c303a82114dbbe2ff2f9b9e5fc9150e12dd3e7b9fd70aee2",
+  "idempotency_key": "live-web-interview-20261006-a",
+  "assistant_id": "bare:8e1acf31",
+  "model": "gpt-6-astra",
+  "conversation_id": "e62f4ca3",
+  "app_turn_id": "turn_f841ba5d",
+  "state": "candidate_ready",
+  "candidate": {
+    "version": 2,
+    "generated_by": "model",
+    "confirmed": false,
+    "questions": [
+      {
+        "id": "q1",
+        "question": "事项标题的长度上限是多少，首尾空格和仅含空白的输入应如何处理？",
+        "reason": "用于明确新增、编辑时的校验规则及错误提示。",
+        "answer": ""
+      },
+      {
+        "id": "q2",
+        "question": "事项列表应按什么顺序排列，已完成事项是否需要单独展示或支持隐藏？",
+        "reason": "用于确定列表展示规则及完成状态变化后的行为。",
+        "answer": ""
+      },
+      {
+        "id": "q3",
+        "question": "修改标题和切换完成状态时，分别希望如何触发保存并显示保存结果？",
+        "reason": "用于明确交互流程，避免保存失败后页面状态与数据库记录不一致。",
+        "answer": ""
+      },
+      {
+        "id": "q4",
+        "question": "删除事项前是否需要确认，误删后是否需要恢复能力？",
+        "reason": "用于明确删除交互、数据保留范围及验收标准。",
+        "answer": ""
+      },
+      {
+        "id": "q5",
+        "question": "你准备在哪个操作系统上运行，SQLite 数据文件希望保存在哪个本地位置？",
+        "reason": "用于规划适用的启动说明、稳定的数据路径和服务重启后的持久化验收。",
+        "answer": ""
+      }
+    ],
+    "summary": "",
+    "updated_at": 1791292675916
+  },
+  "error_code": null,
+  "created_at": 1791292545517,
+  "updated_at": 1791292675923
+}

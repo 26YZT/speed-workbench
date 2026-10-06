@@ -1,0 +1,1395 @@
+{
+  "scope": "code_only; independent internal API acceptance",
+  "checks": [
+    "crud: completed and runtime idle before snapshot",
+    "crud: migrated historical run initially unregistered",
+    "crud: source manifest explicitly includes START/ACCEPTANCE and code-only warning",
+    "crud: manifest excludes runtime databases/data/credentials/task workspaces",
+    "crud: stale hash rejected before any version reservation",
+    "crud: unknown cost does not block complete local code sealing",
+    "crud: sealed copy exactly matches selected paths/hash/size and contains no runtime files",
+    "crud: same-key replay reads original receipt",
+    "crud: activation selects only verified sealed code with CAS",
+    "iteration: independent Draft run with this-version budget and no confirmed artifacts/team",
+    "iteration: working lineage retains sealed parent and next version number",
+    "iteration: clone has an independent directory",
+    "iteration: clone matches code manifest without DB/credentials/data",
+    "iteration: same-key replay does not allocate another run",
+    "iteration: active selection stays on accepted sealed code; no business-data migration",
+    "iteration: reload recovers working version and complete operation",
+    "crud: original source bytes remain unchanged",
+    "crud: original completed run fields/budget/team untouched",
+    "crud: original Team remains idle after local version operations",
+    "cli: completed and runtime idle before snapshot",
+    "cli: migrated historical run initially unregistered",
+    "cli: source manifest explicitly includes START/ACCEPTANCE and code-only warning",
+    "cli: manifest excludes runtime databases/data/credentials/task workspaces",
+    "cli: stale hash rejected before any version reservation",
+    "cli: unknown cost does not block complete local code sealing",
+    "cli: sealed copy exactly matches selected paths/hash/size and contains no runtime files",
+    "cli: same-key replay reads original receipt",
+    "cli: activation selects only verified sealed code with CAS",
+    "cli: original source bytes remain unchanged",
+    "cli: original completed run fields/budget/team untouched",
+    "cli: original Team remains idle after local version operations",
+    "all historical usage rows remain byte-value identical; version operations add no model usage",
+    "all actual costs remain null/unknown; no fixture tariffs or budget reset"
+  ],
+  "http": [
+    {
+      "method": "GET",
+      "path": "/api/product-factory/runs/01a110a2-c8d5-77a3-a2ac-bfe3ed667916",
+      "status": 200,
+      "error_code": null
+    },
+    {
+      "method": "GET",
+      "path": "/api/teams/factory-01a110a2-c8d5-77a3-a2ac-bfe3ed667916-r1/run-state",
+      "status": 200,
+      "error_code": null
+    },
+    {
+      "method": "GET",
+      "path": "/api/product-factory/runs/01a110a2-c8d5-77a3-a2ac-bfe3ed667916/versions",
+      "status": 200,
+      "error_code": null
+    },
+    {
+      "method": "GET",
+      "path": "/api/product-factory/runs/01a110a2-c8d5-77a3-a2ac-bfe3ed667916/versions/source-manifest",
+      "status": 200,
+      "error_code": null
+    },
+    {
+      "method": "POST",
+      "path": "/api/product-factory/runs/01a110a2-c8d5-77a3-a2ac-bfe3ed667916/versions/snapshot",
+      "status": 409,
+      "error_code": "PRODUCT_FACTORY_VERSION_STALE_HASH"
+    },
+    {
+      "method": "GET",
+      "path": "/api/product-factory/runs/01a110a2-c8d5-77a3-a2ac-bfe3ed667916/versions",
+      "status": 200,
+      "error_code": null
+    },
+    {
+      "method": "POST",
+      "path": "/api/product-factory/runs/01a110a2-c8d5-77a3-a2ac-bfe3ed667916/versions/snapshot",
+      "status": 400,
+      "error_code": "PRODUCT_FACTORY_VERSION_FILE_NOT_ALLOWED"
+    },
+    {
+      "method": "POST",
+      "path": "/api/product-factory/runs/01a110a2-c8d5-77a3-a2ac-bfe3ed667916/versions/snapshot",
+      "status": 200,
+      "error_code": null
+    },
+    {
+      "method": "POST",
+      "path": "/api/product-factory/runs/01a110a2-c8d5-77a3-a2ac-bfe3ed667916/versions/snapshot",
+      "status": 200,
+      "error_code": null
+    },
+    {
+      "method": "POST",
+      "path": "/api/product-factory/runs/01a110a2-c8d5-77a3-a2ac-bfe3ed667916/versions/snapshot",
+      "status": 409,
+      "error_code": "PRODUCT_FACTORY_VERSION_IDEMPOTENCY_CONFLICT"
+    },
+    {
+      "method": "POST",
+      "path": "/api/product-factory/runs/01a110a2-c8d5-77a3-a2ac-bfe3ed667916/versions/snapshot",
+      "status": 409,
+      "error_code": "PRODUCT_FACTORY_VERSION_ALREADY_SEALED"
+    },
+    {
+      "method": "POST",
+      "path": "/api/product-factory/runs/01a110a2-c8d5-77a3-a2ac-bfe3ed667916/versions/activate",
+      "status": 200,
+      "error_code": null
+    },
+    {
+      "method": "POST",
+      "path": "/api/product-factory/runs/01a110a2-c8d5-77a3-a2ac-bfe3ed667916/versions/activate",
+      "status": 409,
+      "error_code": "PRODUCT_FACTORY_VERSION_REVISION_CONFLICT"
+    },
+    {
+      "method": "POST",
+      "path": "/api/product-factory/runs/01a110a2-c8d5-77a3-a2ac-bfe3ed667916/versions/iterate",
+      "status": 200,
+      "error_code": null
+    },
+    {
+      "method": "POST",
+      "path": "/api/product-factory/runs/01a110a2-c8d5-77a3-a2ac-bfe3ed667916/versions/iterate",
+      "status": 200,
+      "error_code": null
+    },
+    {
+      "method": "POST",
+      "path": "/api/product-factory/runs/01a110a2-c8d5-77a3-a2ac-bfe3ed667916/versions/iterate",
+      "status": 409,
+      "error_code": "PRODUCT_FACTORY_VERSION_IDEMPOTENCY_CONFLICT"
+    },
+    {
+      "method": "POST",
+      "path": "/api/product-factory/runs/01a1119b-25b5-7553-a76d-c36bb03ffde4/versions/activate",
+      "status": 409,
+      "error_code": "PRODUCT_FACTORY_VERSION_NOT_SEALED"
+    },
+    {
+      "method": "POST",
+      "path": "/api/product-factory/runs/01a1119b-25b5-7553-a76d-c36bb03ffde4/versions/snapshot",
+      "status": 409,
+      "error_code": "PRODUCT_FACTORY_VERSION_SNAPSHOT_INCOMPLETE"
+    },
+    {
+      "method": "POST",
+      "path": "/api/product-factory/runs/01a110a2-c8d5-77a3-a2ac-bfe3ed667916/versions/activate",
+      "status": 200,
+      "error_code": null
+    },
+    {
+      "method": "GET",
+      "path": "/api/product-factory/runs/01a1119b-25b5-7553-a76d-c36bb03ffde4/versions",
+      "status": 200,
+      "error_code": null
+    },
+    {
+      "method": "GET",
+      "path": "/api/product-factory/runs/01a1119b-25b5-7553-a76d-c36bb03ffde4",
+      "status": 200,
+      "error_code": null
+    },
+    {
+      "method": "GET",
+      "path": "/api/product-factory/runs/01a110a2-c8d5-77a3-a2ac-bfe3ed667916",
+      "status": 200,
+      "error_code": null
+    },
+    {
+      "method": "GET",
+      "path": "/api/teams/factory-01a110a2-c8d5-77a3-a2ac-bfe3ed667916-r1/run-state",
+      "status": 200,
+      "error_code": null
+    },
+    {
+      "method": "GET",
+      "path": "/api/product-factory/runs/01a110a2-c908-7282-bbe2-625e164719a2",
+      "status": 200,
+      "error_code": null
+    },
+    {
+      "method": "GET",
+      "path": "/api/teams/factory-01a110a2-c908-7282-bbe2-625e164719a2-r1/run-state",
+      "status": 200,
+      "error_code": null
+    },
+    {
+      "method": "GET",
+      "path": "/api/product-factory/runs/01a110a2-c908-7282-bbe2-625e164719a2/versions",
+      "status": 200,
+      "error_code": null
+    },
+    {
+      "method": "GET",
+      "path": "/api/product-factory/runs/01a110a2-c908-7282-bbe2-625e164719a2/versions/source-manifest",
+      "status": 200,
+      "error_code": null
+    },
+    {
+      "method": "POST",
+      "path": "/api/product-factory/runs/01a110a2-c908-7282-bbe2-625e164719a2/versions/snapshot",
+      "status": 409,
+      "error_code": "PRODUCT_FACTORY_VERSION_STALE_HASH"
+    },
+    {
+      "method": "GET",
+      "path": "/api/product-factory/runs/01a110a2-c908-7282-bbe2-625e164719a2/versions",
+      "status": 200,
+      "error_code": null
+    },
+    {
+      "method": "POST",
+      "path": "/api/product-factory/runs/01a110a2-c908-7282-bbe2-625e164719a2/versions/snapshot",
+      "status": 400,
+      "error_code": "PRODUCT_FACTORY_VERSION_FILE_NOT_ALLOWED"
+    },
+    {
+      "method": "POST",
+      "path": "/api/product-factory/runs/01a110a2-c908-7282-bbe2-625e164719a2/versions/snapshot",
+      "status": 200,
+      "error_code": null
+    },
+    {
+      "method": "POST",
+      "path": "/api/product-factory/runs/01a110a2-c908-7282-bbe2-625e164719a2/versions/snapshot",
+      "status": 200,
+      "error_code": null
+    },
+    {
+      "method": "POST",
+      "path": "/api/product-factory/runs/01a110a2-c908-7282-bbe2-625e164719a2/versions/snapshot",
+      "status": 409,
+      "error_code": "PRODUCT_FACTORY_VERSION_IDEMPOTENCY_CONFLICT"
+    },
+    {
+      "method": "POST",
+      "path": "/api/product-factory/runs/01a110a2-c908-7282-bbe2-625e164719a2/versions/snapshot",
+      "status": 409,
+      "error_code": "PRODUCT_FACTORY_VERSION_ALREADY_SEALED"
+    },
+    {
+      "method": "POST",
+      "path": "/api/product-factory/runs/01a110a2-c908-7282-bbe2-625e164719a2/versions/activate",
+      "status": 200,
+      "error_code": null
+    },
+    {
+      "method": "POST",
+      "path": "/api/product-factory/runs/01a110a2-c908-7282-bbe2-625e164719a2/versions/activate",
+      "status": 409,
+      "error_code": "PRODUCT_FACTORY_VERSION_REVISION_CONFLICT"
+    },
+    {
+      "method": "GET",
+      "path": "/api/product-factory/runs/01a110a2-c908-7282-bbe2-625e164719a2",
+      "status": 200,
+      "error_code": null
+    },
+    {
+      "method": "GET",
+      "path": "/api/teams/factory-01a110a2-c908-7282-bbe2-625e164719a2-r1/run-state",
+      "status": 200,
+      "error_code": null
+    }
+  ],
+  "model_calls": 0,
+  "customer_sign_off": false,
+  "cost_unknown": true,
+  "cases": {
+    "crud": {
+      "run_id": "01a110a2-c8d5-77a3-a2ac-bfe3ed667916",
+      "source_manifest": {
+        "run_id": "01a110a2-c8d5-77a3-a2ac-bfe3ed667916",
+        "plan_revision": 1,
+        "manifest": {
+          "version": 1,
+          "scope": "code_only",
+          "files": [
+            {
+              "path": ".gitignore",
+              "sha256": "2bba97e99fd1cce4530db502ae28c59c7c698ad0fbe5010126b03ba931f11351",
+              "size_bytes": 182
+            },
+            {
+              "path": "ACCEPTANCE.md",
+              "sha256": "2828d4ad08c33ea0ea062eb2f4de87a0f65d4fb683932129a93921752b9bbb14",
+              "size_bytes": 6660
+            },
+            {
+              "path": "API_CONTRACT.md",
+              "sha256": "540862821d3847fb10dafa2c2b2d3bd181bfe69cf1d1e6162a4aa067d01ba2ba",
+              "size_bytes": 9134
+            },
+            {
+              "path": "START.md",
+              "sha256": "2d215871bce36fd74ba5929f28f3d1918b95e4e244f009e292b02dad2300bec4",
+              "size_bytes": 3404
+            },
+            {
+              "path": "schema.sql",
+              "sha256": "125fc43462978640b9a9ca1d90b2aca2e5fbc8e3e81d4b16549d66a604d55618",
+              "size_bytes": 368
+            },
+            {
+              "path": "server.py",
+              "sha256": "56be05b44d44c189e9f493d97a0aa8a60448e2a246e88556bd24402b11b36a43",
+              "size_bytes": 10581
+            },
+            {
+              "path": "storage.py",
+              "sha256": "2475f102181b4a624bafd4bec15909fb9c8508956cbee3700d70a96d75d3af15",
+              "size_bytes": 6424
+            },
+            {
+              "path": "tests/__init__.py",
+              "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "size_bytes": 0
+            },
+            {
+              "path": "tests/browser/README.md",
+              "sha256": "4900c27464825a9b1635d4020d7283bd102f2fee5e0a5879b9b9800856fca68c",
+              "size_bytes": 2188
+            },
+            {
+              "path": "tests/browser/core.js",
+              "sha256": "8c8bca939b7b88799cc29d88eab0d513f70406d438b04a90fb31d1893973009f",
+              "size_bytes": 4115
+            },
+            {
+              "path": "tests/browser/errors.js",
+              "sha256": "7622509ad3e003137e80b98f45bd345c716003632284e458bdef0b3e5cc8f332",
+              "size_bytes": 5057
+            },
+            {
+              "path": "tests/browser/responsive.js",
+              "sha256": "7dff6f1c2b8cbd6e936b3f19506ee37db550a028afc888ed299a96c04b777520",
+              "size_bytes": 1285
+            },
+            {
+              "path": "tests/http_support.py",
+              "sha256": "222b3c0ff4dc6b2f73f107105dc8acb0d6069b050de2625c2eda970558110000",
+              "size_bytes": 996
+            },
+            {
+              "path": "tests/smoke_product.py",
+              "sha256": "c897a5a68ecf13cb8d97141bbf6128f2f5280dc05cd0804f89c4799679b62a0e",
+              "size_bytes": 6870
+            },
+            {
+              "path": "tests/test_http.py",
+              "sha256": "51c5706daba29abd5af244f0c1b93d157ac95e43862a8e78cbf02c2bf48c11c6",
+              "size_bytes": 14888
+            },
+            {
+              "path": "tests/test_persistence.py",
+              "sha256": "66127de7eaf96ecb7459ac5e56417724bb00d6d4014511311b133e787d48a045",
+              "size_bytes": 4119
+            },
+            {
+              "path": "tests/test_server_process.py",
+              "sha256": "a296a5bd7b29fcb6b0784d2b82d85bacce60ad62238c8057ee2ade94848f8ef7",
+              "size_bytes": 7488
+            },
+            {
+              "path": "tests/test_storage.py",
+              "sha256": "d12a7f1b436019b1d5214fbe13859efefc2e1d40cb7584c5dbc98b4577b7ee6e",
+              "size_bytes": 10331
+            },
+            {
+              "path": "web/app.js",
+              "sha256": "efc26307f1c4a7d6bedebb458423919ad1c6161dd07574ccd4c3187be0deea95",
+              "size_bytes": 14035
+            },
+            {
+              "path": "web/index.html",
+              "sha256": "51f1b7a3d7f1ad1e3c7edfb145d850a6e3fd7c284150a8036adcd29954b7d7f4",
+              "size_bytes": 2954
+            },
+            {
+              "path": "web/styles.css",
+              "sha256": "0b4dec1e99a73b49a6ff4a43e883fed1db500b5097c3b4eda93c2b5a49b71580",
+              "size_bytes": 7607
+            }
+          ],
+          "total_bytes": 118686
+        },
+        "excluded_count": 2,
+        "warnings": [
+          "RUNTIME_DATA_NOT_INCLUDED",
+          "SOURCE_MANIFEST_REVIEW_REQUIRED"
+        ]
+      },
+      "snapshot": {
+        "product": {
+          "id": "01a1119b-23c9-7741-aa13-7313e70b03b8",
+          "name": "本地事项簿",
+          "active_version_id": null,
+          "revision": 2,
+          "created_at": 1791296742359,
+          "updated_at": 1791296742734
+        },
+        "version": {
+          "id": "01a1119b-23c9-7741-aa13-7325dd4f53f4",
+          "product_id": "01a1119b-23c9-7741-aa13-7313e70b03b8",
+          "run_id": "01a110a2-c8d5-77a3-a2ac-bfe3ed667916",
+          "parent_run_id": null,
+          "parent_version_id": null,
+          "version_no": 1,
+          "state": "sealed",
+          "snapshot_path": "/private/tmp/sw-fresh-validation/data/product-factory-versions/01a1119b-23c9-7741-aa13-7313e70b03b8/01a1119b-23c9-7741-aa13-7325dd4f53f4/01a1119b-23c9-7741-aa13-733273ff91ff",
+          "manifest": {
+            "version": 1,
+            "scope": "code_only",
+            "files": [
+              {
+                "path": ".gitignore",
+                "sha256": "2bba97e99fd1cce4530db502ae28c59c7c698ad0fbe5010126b03ba931f11351",
+                "size_bytes": 182
+              },
+              {
+                "path": "ACCEPTANCE.md",
+                "sha256": "2828d4ad08c33ea0ea062eb2f4de87a0f65d4fb683932129a93921752b9bbb14",
+                "size_bytes": 6660
+              },
+              {
+                "path": "API_CONTRACT.md",
+                "sha256": "540862821d3847fb10dafa2c2b2d3bd181bfe69cf1d1e6162a4aa067d01ba2ba",
+                "size_bytes": 9134
+              },
+              {
+                "path": "START.md",
+                "sha256": "2d215871bce36fd74ba5929f28f3d1918b95e4e244f009e292b02dad2300bec4",
+                "size_bytes": 3404
+              },
+              {
+                "path": "schema.sql",
+                "sha256": "125fc43462978640b9a9ca1d90b2aca2e5fbc8e3e81d4b16549d66a604d55618",
+                "size_bytes": 368
+              },
+              {
+                "path": "server.py",
+                "sha256": "56be05b44d44c189e9f493d97a0aa8a60448e2a246e88556bd24402b11b36a43",
+                "size_bytes": 10581
+              },
+              {
+                "path": "storage.py",
+                "sha256": "2475f102181b4a624bafd4bec15909fb9c8508956cbee3700d70a96d75d3af15",
+                "size_bytes": 6424
+              },
+              {
+                "path": "tests/__init__.py",
+                "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+                "size_bytes": 0
+              },
+              {
+                "path": "tests/browser/README.md",
+                "sha256": "4900c27464825a9b1635d4020d7283bd102f2fee5e0a5879b9b9800856fca68c",
+                "size_bytes": 2188
+              },
+              {
+                "path": "tests/browser/core.js",
+                "sha256": "8c8bca939b7b88799cc29d88eab0d513f70406d438b04a90fb31d1893973009f",
+                "size_bytes": 4115
+              },
+              {
+                "path": "tests/browser/errors.js",
+                "sha256": "7622509ad3e003137e80b98f45bd345c716003632284e458bdef0b3e5cc8f332",
+                "size_bytes": 5057
+              },
+              {
+                "path": "tests/browser/responsive.js",
+                "sha256": "7dff6f1c2b8cbd6e936b3f19506ee37db550a028afc888ed299a96c04b777520",
+                "size_bytes": 1285
+              },
+              {
+                "path": "tests/http_support.py",
+                "sha256": "222b3c0ff4dc6b2f73f107105dc8acb0d6069b050de2625c2eda970558110000",
+                "size_bytes": 996
+              },
+              {
+                "path": "tests/smoke_product.py",
+                "sha256": "c897a5a68ecf13cb8d97141bbf6128f2f5280dc05cd0804f89c4799679b62a0e",
+                "size_bytes": 6870
+              },
+              {
+                "path": "tests/test_http.py",
+                "sha256": "51c5706daba29abd5af244f0c1b93d157ac95e43862a8e78cbf02c2bf48c11c6",
+                "size_bytes": 14888
+              },
+              {
+                "path": "tests/test_persistence.py",
+                "sha256": "66127de7eaf96ecb7459ac5e56417724bb00d6d4014511311b133e787d48a045",
+                "size_bytes": 4119
+              },
+              {
+                "path": "tests/test_server_process.py",
+                "sha256": "a296a5bd7b29fcb6b0784d2b82d85bacce60ad62238c8057ee2ade94848f8ef7",
+                "size_bytes": 7488
+              },
+              {
+                "path": "tests/test_storage.py",
+                "sha256": "d12a7f1b436019b1d5214fbe13859efefc2e1d40cb7584c5dbc98b4577b7ee6e",
+                "size_bytes": 10331
+              },
+              {
+                "path": "web/app.js",
+                "sha256": "efc26307f1c4a7d6bedebb458423919ad1c6161dd07574ccd4c3187be0deea95",
+                "size_bytes": 14035
+              },
+              {
+                "path": "web/index.html",
+                "sha256": "51f1b7a3d7f1ad1e3c7edfb145d850a6e3fd7c284150a8036adcd29954b7d7f4",
+                "size_bytes": 2954
+              },
+              {
+                "path": "web/styles.css",
+                "sha256": "0b4dec1e99a73b49a6ff4a43e883fed1db500b5097c3b4eda93c2b5a49b71580",
+                "size_bytes": 7607
+              }
+            ],
+            "total_bytes": 118686
+          },
+          "change_request": null,
+          "error_code": null,
+          "created_at": 1791296742359,
+          "updated_at": 1791296742734,
+          "sealed_at": 1791296742734
+        },
+        "operation": {
+          "id": "01a1119b-23c9-7741-aa13-733273ff91ff",
+          "kind": "snapshot",
+          "state": "complete",
+          "version_id": "01a1119b-23c9-7741-aa13-7325dd4f53f4",
+          "idempotency_key": "sw-r2-qa-snapshot-crud-20261006",
+          "error_code": null,
+          "created_at": 1791296742359,
+          "updated_at": 1791296742734
+        }
+      },
+      "activation": {
+        "product": {
+          "id": "01a1119b-23c9-7741-aa13-7313e70b03b8",
+          "name": "本地事项簿",
+          "active_version_id": "01a1119b-23c9-7741-aa13-7325dd4f53f4",
+          "revision": 3,
+          "created_at": 1791296742359,
+          "updated_at": 1791296742788
+        },
+        "version": {
+          "id": "01a1119b-23c9-7741-aa13-7325dd4f53f4",
+          "product_id": "01a1119b-23c9-7741-aa13-7313e70b03b8",
+          "run_id": "01a110a2-c8d5-77a3-a2ac-bfe3ed667916",
+          "parent_run_id": null,
+          "parent_version_id": null,
+          "version_no": 1,
+          "state": "sealed",
+          "snapshot_path": "/private/tmp/sw-fresh-validation/data/product-factory-versions/01a1119b-23c9-7741-aa13-7313e70b03b8/01a1119b-23c9-7741-aa13-7325dd4f53f4/01a1119b-23c9-7741-aa13-733273ff91ff",
+          "manifest": {
+            "version": 1,
+            "scope": "code_only",
+            "files": [
+              {
+                "path": ".gitignore",
+                "sha256": "2bba97e99fd1cce4530db502ae28c59c7c698ad0fbe5010126b03ba931f11351",
+                "size_bytes": 182
+              },
+              {
+                "path": "ACCEPTANCE.md",
+                "sha256": "2828d4ad08c33ea0ea062eb2f4de87a0f65d4fb683932129a93921752b9bbb14",
+                "size_bytes": 6660
+              },
+              {
+                "path": "API_CONTRACT.md",
+                "sha256": "540862821d3847fb10dafa2c2b2d3bd181bfe69cf1d1e6162a4aa067d01ba2ba",
+                "size_bytes": 9134
+              },
+              {
+                "path": "START.md",
+                "sha256": "2d215871bce36fd74ba5929f28f3d1918b95e4e244f009e292b02dad2300bec4",
+                "size_bytes": 3404
+              },
+              {
+                "path": "schema.sql",
+                "sha256": "125fc43462978640b9a9ca1d90b2aca2e5fbc8e3e81d4b16549d66a604d55618",
+                "size_bytes": 368
+              },
+              {
+                "path": "server.py",
+                "sha256": "56be05b44d44c189e9f493d97a0aa8a60448e2a246e88556bd24402b11b36a43",
+                "size_bytes": 10581
+              },
+              {
+                "path": "storage.py",
+                "sha256": "2475f102181b4a624bafd4bec15909fb9c8508956cbee3700d70a96d75d3af15",
+                "size_bytes": 6424
+              },
+              {
+                "path": "tests/__init__.py",
+                "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+                "size_bytes": 0
+              },
+              {
+                "path": "tests/browser/README.md",
+                "sha256": "4900c27464825a9b1635d4020d7283bd102f2fee5e0a5879b9b9800856fca68c",
+                "size_bytes": 2188
+              },
+              {
+                "path": "tests/browser/core.js",
+                "sha256": "8c8bca939b7b88799cc29d88eab0d513f70406d438b04a90fb31d1893973009f",
+                "size_bytes": 4115
+              },
+              {
+                "path": "tests/browser/errors.js",
+                "sha256": "7622509ad3e003137e80b98f45bd345c716003632284e458bdef0b3e5cc8f332",
+                "size_bytes": 5057
+              },
+              {
+                "path": "tests/browser/responsive.js",
+                "sha256": "7dff6f1c2b8cbd6e936b3f19506ee37db550a028afc888ed299a96c04b777520",
+                "size_bytes": 1285
+              },
+              {
+                "path": "tests/http_support.py",
+                "sha256": "222b3c0ff4dc6b2f73f107105dc8acb0d6069b050de2625c2eda970558110000",
+                "size_bytes": 996
+              },
+              {
+                "path": "tests/smoke_product.py",
+                "sha256": "c897a5a68ecf13cb8d97141bbf6128f2f5280dc05cd0804f89c4799679b62a0e",
+                "size_bytes": 6870
+              },
+              {
+                "path": "tests/test_http.py",
+                "sha256": "51c5706daba29abd5af244f0c1b93d157ac95e43862a8e78cbf02c2bf48c11c6",
+                "size_bytes": 14888
+              },
+              {
+                "path": "tests/test_persistence.py",
+                "sha256": "66127de7eaf96ecb7459ac5e56417724bb00d6d4014511311b133e787d48a045",
+                "size_bytes": 4119
+              },
+              {
+                "path": "tests/test_server_process.py",
+                "sha256": "a296a5bd7b29fcb6b0784d2b82d85bacce60ad62238c8057ee2ade94848f8ef7",
+                "size_bytes": 7488
+              },
+              {
+                "path": "tests/test_storage.py",
+                "sha256": "d12a7f1b436019b1d5214fbe13859efefc2e1d40cb7584c5dbc98b4577b7ee6e",
+                "size_bytes": 10331
+              },
+              {
+                "path": "web/app.js",
+                "sha256": "efc26307f1c4a7d6bedebb458423919ad1c6161dd07574ccd4c3187be0deea95",
+                "size_bytes": 14035
+              },
+              {
+                "path": "web/index.html",
+                "sha256": "51f1b7a3d7f1ad1e3c7edfb145d850a6e3fd7c284150a8036adcd29954b7d7f4",
+                "size_bytes": 2954
+              },
+              {
+                "path": "web/styles.css",
+                "sha256": "0b4dec1e99a73b49a6ff4a43e883fed1db500b5097c3b4eda93c2b5a49b71580",
+                "size_bytes": 7607
+              }
+            ],
+            "total_bytes": 118686
+          },
+          "change_request": null,
+          "error_code": null,
+          "created_at": 1791296742359,
+          "updated_at": 1791296742734,
+          "sealed_at": 1791296742734
+        },
+        "workspace_path": "/private/tmp/sw-fresh-validation/data/product-factory-versions/01a1119b-23c9-7741-aa13-7313e70b03b8/01a1119b-23c9-7741-aa13-7325dd4f53f4/01a1119b-23c9-7741-aa13-733273ff91ff",
+        "scope": "code_only"
+      },
+      "iteration": {
+        "product": {
+          "id": "01a1119b-23c9-7741-aa13-7313e70b03b8",
+          "name": "本地事项簿",
+          "active_version_id": "01a1119b-23c9-7741-aa13-7325dd4f53f4",
+          "revision": 5,
+          "created_at": 1791296742359,
+          "updated_at": 1791296743030
+        },
+        "version": {
+          "id": "01a1119b-25b5-7553-a76d-c37d8706a611",
+          "product_id": "01a1119b-23c9-7741-aa13-7313e70b03b8",
+          "run_id": "01a1119b-25b5-7553-a76d-c36bb03ffde4",
+          "parent_run_id": "01a110a2-c8d5-77a3-a2ac-bfe3ed667916",
+          "parent_version_id": "01a1119b-23c9-7741-aa13-7325dd4f53f4",
+          "version_no": 2,
+          "state": "working",
+          "snapshot_path": null,
+          "manifest": {
+            "version": 1,
+            "scope": "code_only",
+            "files": [
+              {
+                "path": ".gitignore",
+                "sha256": "2bba97e99fd1cce4530db502ae28c59c7c698ad0fbe5010126b03ba931f11351",
+                "size_bytes": 182
+              },
+              {
+                "path": "ACCEPTANCE.md",
+                "sha256": "2828d4ad08c33ea0ea062eb2f4de87a0f65d4fb683932129a93921752b9bbb14",
+                "size_bytes": 6660
+              },
+              {
+                "path": "API_CONTRACT.md",
+                "sha256": "540862821d3847fb10dafa2c2b2d3bd181bfe69cf1d1e6162a4aa067d01ba2ba",
+                "size_bytes": 9134
+              },
+              {
+                "path": "START.md",
+                "sha256": "2d215871bce36fd74ba5929f28f3d1918b95e4e244f009e292b02dad2300bec4",
+                "size_bytes": 3404
+              },
+              {
+                "path": "schema.sql",
+                "sha256": "125fc43462978640b9a9ca1d90b2aca2e5fbc8e3e81d4b16549d66a604d55618",
+                "size_bytes": 368
+              },
+              {
+                "path": "server.py",
+                "sha256": "56be05b44d44c189e9f493d97a0aa8a60448e2a246e88556bd24402b11b36a43",
+                "size_bytes": 10581
+              },
+              {
+                "path": "storage.py",
+                "sha256": "2475f102181b4a624bafd4bec15909fb9c8508956cbee3700d70a96d75d3af15",
+                "size_bytes": 6424
+              },
+              {
+                "path": "tests/__init__.py",
+                "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+                "size_bytes": 0
+              },
+              {
+                "path": "tests/browser/README.md",
+                "sha256": "4900c27464825a9b1635d4020d7283bd102f2fee5e0a5879b9b9800856fca68c",
+                "size_bytes": 2188
+              },
+              {
+                "path": "tests/browser/core.js",
+                "sha256": "8c8bca939b7b88799cc29d88eab0d513f70406d438b04a90fb31d1893973009f",
+                "size_bytes": 4115
+              },
+              {
+                "path": "tests/browser/errors.js",
+                "sha256": "7622509ad3e003137e80b98f45bd345c716003632284e458bdef0b3e5cc8f332",
+                "size_bytes": 5057
+              },
+              {
+                "path": "tests/browser/responsive.js",
+                "sha256": "7dff6f1c2b8cbd6e936b3f19506ee37db550a028afc888ed299a96c04b777520",
+                "size_bytes": 1285
+              },
+              {
+                "path": "tests/http_support.py",
+                "sha256": "222b3c0ff4dc6b2f73f107105dc8acb0d6069b050de2625c2eda970558110000",
+                "size_bytes": 996
+              },
+              {
+                "path": "tests/smoke_product.py",
+                "sha256": "c897a5a68ecf13cb8d97141bbf6128f2f5280dc05cd0804f89c4799679b62a0e",
+                "size_bytes": 6870
+              },
+              {
+                "path": "tests/test_http.py",
+                "sha256": "51c5706daba29abd5af244f0c1b93d157ac95e43862a8e78cbf02c2bf48c11c6",
+                "size_bytes": 14888
+              },
+              {
+                "path": "tests/test_persistence.py",
+                "sha256": "66127de7eaf96ecb7459ac5e56417724bb00d6d4014511311b133e787d48a045",
+                "size_bytes": 4119
+              },
+              {
+                "path": "tests/test_server_process.py",
+                "sha256": "a296a5bd7b29fcb6b0784d2b82d85bacce60ad62238c8057ee2ade94848f8ef7",
+                "size_bytes": 7488
+              },
+              {
+                "path": "tests/test_storage.py",
+                "sha256": "d12a7f1b436019b1d5214fbe13859efefc2e1d40cb7584c5dbc98b4577b7ee6e",
+                "size_bytes": 10331
+              },
+              {
+                "path": "web/app.js",
+                "sha256": "efc26307f1c4a7d6bedebb458423919ad1c6161dd07574ccd4c3187be0deea95",
+                "size_bytes": 14035
+              },
+              {
+                "path": "web/index.html",
+                "sha256": "51f1b7a3d7f1ad1e3c7edfb145d850a6e3fd7c284150a8036adcd29954b7d7f4",
+                "size_bytes": 2954
+              },
+              {
+                "path": "web/styles.css",
+                "sha256": "0b4dec1e99a73b49a6ff4a43e883fed1db500b5097c3b4eda93c2b5a49b71580",
+                "size_bytes": 7607
+              }
+            ],
+            "total_bytes": 118686
+          },
+          "change_request": "增加按完成状态筛选事项；重新访谈、蓝图和任务确认后才允许开发。",
+          "error_code": null,
+          "created_at": 1791296742837,
+          "updated_at": 1791296743030,
+          "sealed_at": null
+        },
+        "operation": {
+          "id": "01a1119b-25b5-7553-a76d-c38773c8142f",
+          "kind": "iterate",
+          "state": "complete",
+          "version_id": "01a1119b-25b5-7553-a76d-c37d8706a611",
+          "idempotency_key": "sw-r2-qa-iterate-crud-20261006",
+          "error_code": null,
+          "created_at": 1791296742837,
+          "updated_at": 1791296743030
+        },
+        "run": {
+          "id": "01a1119b-25b5-7553-a76d-c36bb03ffde4",
+          "plan_revision": 1,
+          "name": "本地事项簿",
+          "idea": "开发一个真正可增删改查的事项簿，字段 id、title、done、created_at。Web 页面新增、列出、编辑标题、切换完成状态、删除事项；API 提供相同行为。标题长度1到80字，空标题/不存在ID有明确错误。\n\n变更要求：增加按完成状态筛选事项；重新访谈、蓝图和任务确认后才允许开发。",
+          "target_user": "需要管理个人事项的普通用户",
+          "problem": "需要可靠持久化，刷新和停止服务后重新启动不丢记录。只在本地运行，不安装新依赖、不建云资源。",
+          "expected_output": "Python3 标准库 HTTP + SQLite，原生 HTML/CSS/JS 响应式页面。自包含项目根目录，独立启动；提供 API 契约、START.md、ACCEPTANCE.md、单元与真实 HTTP 和独立进程重启测试。不得包含标题生成业务或固定示例结果。",
+          "workspace_path": "/private/tmp/sw-fresh-validation/data/product-factory-workspaces/01a1119b-25b5-7553-a76d-c36bb03ffde4",
+          "budget_usd": 7.5,
+          "status": "draft",
+          "interview": null,
+          "blueprint": null,
+          "task_draft": null,
+          "team_id": null,
+          "created_at": 1791296742837,
+          "updated_at": 1791296742837
+        }
+      }
+    },
+    "cli": {
+      "run_id": "01a110a2-c908-7282-bbe2-625e164719a2",
+      "source_manifest": {
+        "run_id": "01a110a2-c908-7282-bbe2-625e164719a2",
+        "plan_revision": 1,
+        "manifest": {
+          "version": 1,
+          "scope": "code_only",
+          "files": [
+            {
+              "path": ".gitignore",
+              "sha256": "57ec6762ad4154dcbf41c18a3fc708d8037a03e8c58edb61a5ba0da4ab2ce307",
+              "size_bytes": 182
+            },
+            {
+              "path": "ACCEPTANCE.md",
+              "sha256": "b184fd775911c8184f40412055354224132dca2d9ca10ea5754c92e2648341a0",
+              "size_bytes": 9140
+            },
+            {
+              "path": "API.md",
+              "sha256": "a019ea077b796fb407c260eaf5e44094e776ced7290c0fd1979e78603029c1c8",
+              "size_bytes": 5722
+            },
+            {
+              "path": "DATA_CONTRACT.md",
+              "sha256": "2418ec17fb8f65aeea9d140cc7011d5cb46c4055bf215238c6b2082c610e511e",
+              "size_bytes": 7634
+            },
+            {
+              "path": "START.md",
+              "sha256": "c1c1dd54fab5957eefdb4cab46071970b0437a7745541205ebff66fbb4de8958",
+              "size_bytes": 4966
+            },
+            {
+              "path": "examples/duplicate-result.json",
+              "sha256": "ae5f96db928e7c7c0158b6ae08badd0bcba8ea4a5ff3da71fb7c6abb87dc578d",
+              "size_bytes": 132
+            },
+            {
+              "path": "examples/history.json",
+              "sha256": "a870fa0a0548dddedf0eee4c20bb6980e8657d92195a1eaeef032392c94b064a",
+              "size_bytes": 663
+            },
+            {
+              "path": "examples/import-result.json",
+              "sha256": "400272c9d7260813d0b838710e32732d31f39ca666f9603a1b6b7c92a516731e",
+              "size_bytes": 133
+            },
+            {
+              "path": "examples/invalid.csv",
+              "sha256": "e482e2a0400d085a2629abb84ee8121caa4b0d54e16a057d42558ffd83ad212e",
+              "size_bytes": 84
+            },
+            {
+              "path": "examples/summary-contract.json",
+              "sha256": "65c619218978b076408f3608b89176b6a45b0be5d55716a24c82ce0faa02afa1",
+              "size_bytes": 152
+            },
+            {
+              "path": "examples/summary.json",
+              "sha256": "65c619218978b076408f3608b89176b6a45b0be5d55716a24c82ce0faa02afa1",
+              "size_bytes": 152
+            },
+            {
+              "path": "examples/valid.csv",
+              "sha256": "d3790584f0c76880efe861914ee1607d47e90f1789d534d0029ad2b96b3dede6",
+              "size_bytes": 92
+            },
+            {
+              "path": "examples/validation-error.json",
+              "sha256": "2008f7108b2450459a3f9324ff3395368a09fe6c32fcd44c27db4bb23071978c",
+              "size_bytes": 476
+            },
+            {
+              "path": "ledger/__init__.py",
+              "sha256": "11bba7a5c3a68bb20771600bf2342d2211ac4e0c5f96d72026fdf6dc3d97a4d2",
+              "size_bytes": 755
+            },
+            {
+              "path": "ledger/__main__.py",
+              "sha256": "e7db047e6ef2c95f8b2a820bef39f37ccf8b4b914590604645460f5524c3ae60",
+              "size_bytes": 130
+            },
+            {
+              "path": "ledger/cli.py",
+              "sha256": "4b536d00ad29a3b096f05600bcbb5244bed883eabec2fca542ebd15d92325a89",
+              "size_bytes": 5541
+            },
+            {
+              "path": "ledger/contracts.py",
+              "sha256": "c7bb9685b85e3b31447a3b582dce7600eed947307aa224648f5a811a4528121b",
+              "size_bytes": 3673
+            },
+            {
+              "path": "ledger/csv_input.py",
+              "sha256": "8f31892d4656ad4596d94fcbc8093f2f9b4cb061537b0ad9f7a9127ee8431447",
+              "size_bytes": 3221
+            },
+            {
+              "path": "ledger/errors.py",
+              "sha256": "14162ac5af96bfd24eb58f57c0ac0c03a5654fe0a7f4c78a6630d661a7def756",
+              "size_bytes": 1188
+            },
+            {
+              "path": "ledger/json_output.py",
+              "sha256": "393e6400a825f56623c34da2423867f7ceec95e18c49219e7e6f212cb9e1ac23",
+              "size_bytes": 1246
+            },
+            {
+              "path": "ledger/schema.sql",
+              "sha256": "229a2f60e1843bb941050e36471fde0f28135810d9e9b61d0291be454bdb7029",
+              "size_bytes": 864
+            },
+            {
+              "path": "ledger/service.py",
+              "sha256": "757a370c798c9428e2a7e63f5155644c121c86a616bc0a4b307d691533eb00e6",
+              "size_bytes": 4140
+            },
+            {
+              "path": "ledger/storage.py",
+              "sha256": "3dcf1c4f3735d824ed0f96df143d12472f5988bc26930cd6134a68adcc95e519",
+              "size_bytes": 4161
+            },
+            {
+              "path": "ledger/totals.py",
+              "sha256": "2e437c1d84bf67f4afa12aee0ab6313d5ee384ea86b71bdcc38a349238d0a559",
+              "size_bytes": 1881
+            },
+            {
+              "path": "ledger_cli.py",
+              "sha256": "1b8e3c0d5db779733859baa45de6cfb57e55dab1cbd310ff12a7e0d4df98c9e3",
+              "size_bytes": 159
+            },
+            {
+              "path": "tests/restart_smoke.py",
+              "sha256": "5362a6ea4e5f56558d89e34d40a1fadf49845e87702417c5f1b00a03bd616c14",
+              "size_bytes": 7952
+            },
+            {
+              "path": "tests/results.txt",
+              "sha256": "46f920ba64f9c960f3aa31212f4108c700df3179bce2c0a515e67d6d5c60bc9e",
+              "size_bytes": 11470
+            },
+            {
+              "path": "tests/test_cli.py",
+              "sha256": "ce47c1efb5f739c10730f15c78c73151bbe150dd5f8f8e1a282b0c8cdf51a871",
+              "size_bytes": 16501
+            },
+            {
+              "path": "tests/test_data_layer.py",
+              "sha256": "d347d8e5fcd914a7d68eb52d133fcef8622bc0622323da2a452580fd7e1e8bee",
+              "size_bytes": 16316
+            },
+            {
+              "path": "tests/test_service.py",
+              "sha256": "25953529041c7683f2016fd804fc684404ad1482309a146d708552239c1d80d9",
+              "size_bytes": 18102
+            }
+          ],
+          "total_bytes": 126828
+        },
+        "excluded_count": 4,
+        "warnings": [
+          "RUNTIME_DATA_NOT_INCLUDED",
+          "SOURCE_MANIFEST_REVIEW_REQUIRED"
+        ]
+      },
+      "snapshot": {
+        "product": {
+          "id": "01a1119b-2733-7ee0-a0db-3ea6a8bc8af3",
+          "name": "CSV账目汇总器",
+          "active_version_id": null,
+          "revision": 2,
+          "created_at": 1791296743236,
+          "updated_at": 1791296743545
+        },
+        "version": {
+          "id": "01a1119b-2733-7ee0-a0db-3ebc29753f60",
+          "product_id": "01a1119b-2733-7ee0-a0db-3ea6a8bc8af3",
+          "run_id": "01a110a2-c908-7282-bbe2-625e164719a2",
+          "parent_run_id": null,
+          "parent_version_id": null,
+          "version_no": 1,
+          "state": "sealed",
+          "snapshot_path": "/private/tmp/sw-fresh-validation/data/product-factory-versions/01a1119b-2733-7ee0-a0db-3ea6a8bc8af3/01a1119b-2733-7ee0-a0db-3ebc29753f60/01a1119b-2733-7ee0-a0db-3ec37eecb6bd",
+          "manifest": {
+            "version": 1,
+            "scope": "code_only",
+            "files": [
+              {
+                "path": ".gitignore",
+                "sha256": "57ec6762ad4154dcbf41c18a3fc708d8037a03e8c58edb61a5ba0da4ab2ce307",
+                "size_bytes": 182
+              },
+              {
+                "path": "ACCEPTANCE.md",
+                "sha256": "b184fd775911c8184f40412055354224132dca2d9ca10ea5754c92e2648341a0",
+                "size_bytes": 9140
+              },
+              {
+                "path": "API.md",
+                "sha256": "a019ea077b796fb407c260eaf5e44094e776ced7290c0fd1979e78603029c1c8",
+                "size_bytes": 5722
+              },
+              {
+                "path": "DATA_CONTRACT.md",
+                "sha256": "2418ec17fb8f65aeea9d140cc7011d5cb46c4055bf215238c6b2082c610e511e",
+                "size_bytes": 7634
+              },
+              {
+                "path": "START.md",
+                "sha256": "c1c1dd54fab5957eefdb4cab46071970b0437a7745541205ebff66fbb4de8958",
+                "size_bytes": 4966
+              },
+              {
+                "path": "examples/duplicate-result.json",
+                "sha256": "ae5f96db928e7c7c0158b6ae08badd0bcba8ea4a5ff3da71fb7c6abb87dc578d",
+                "size_bytes": 132
+              },
+              {
+                "path": "examples/history.json",
+                "sha256": "a870fa0a0548dddedf0eee4c20bb6980e8657d92195a1eaeef032392c94b064a",
+                "size_bytes": 663
+              },
+              {
+                "path": "examples/import-result.json",
+                "sha256": "400272c9d7260813d0b838710e32732d31f39ca666f9603a1b6b7c92a516731e",
+                "size_bytes": 133
+              },
+              {
+                "path": "examples/invalid.csv",
+                "sha256": "e482e2a0400d085a2629abb84ee8121caa4b0d54e16a057d42558ffd83ad212e",
+                "size_bytes": 84
+              },
+              {
+                "path": "examples/summary-contract.json",
+                "sha256": "65c619218978b076408f3608b89176b6a45b0be5d55716a24c82ce0faa02afa1",
+                "size_bytes": 152
+              },
+              {
+                "path": "examples/summary.json",
+                "sha256": "65c619218978b076408f3608b89176b6a45b0be5d55716a24c82ce0faa02afa1",
+                "size_bytes": 152
+              },
+              {
+                "path": "examples/valid.csv",
+                "sha256": "d3790584f0c76880efe861914ee1607d47e90f1789d534d0029ad2b96b3dede6",
+                "size_bytes": 92
+              },
+              {
+                "path": "examples/validation-error.json",
+                "sha256": "2008f7108b2450459a3f9324ff3395368a09fe6c32fcd44c27db4bb23071978c",
+                "size_bytes": 476
+              },
+              {
+                "path": "ledger/__init__.py",
+                "sha256": "11bba7a5c3a68bb20771600bf2342d2211ac4e0c5f96d72026fdf6dc3d97a4d2",
+                "size_bytes": 755
+              },
+              {
+                "path": "ledger/__main__.py",
+                "sha256": "e7db047e6ef2c95f8b2a820bef39f37ccf8b4b914590604645460f5524c3ae60",
+                "size_bytes": 130
+              },
+              {
+                "path": "ledger/cli.py",
+                "sha256": "4b536d00ad29a3b096f05600bcbb5244bed883eabec2fca542ebd15d92325a89",
+                "size_bytes": 5541
+              },
+              {
+                "path": "ledger/contracts.py",
+                "sha256": "c7bb9685b85e3b31447a3b582dce7600eed947307aa224648f5a811a4528121b",
+                "size_bytes": 3673
+              },
+              {
+                "path": "ledger/csv_input.py",
+                "sha256": "8f31892d4656ad4596d94fcbc8093f2f9b4cb061537b0ad9f7a9127ee8431447",
+                "size_bytes": 3221
+              },
+              {
+                "path": "ledger/errors.py",
+                "sha256": "14162ac5af96bfd24eb58f57c0ac0c03a5654fe0a7f4c78a6630d661a7def756",
+                "size_bytes": 1188
+              },
+              {
+                "path": "ledger/json_output.py",
+                "sha256": "393e6400a825f56623c34da2423867f7ceec95e18c49219e7e6f212cb9e1ac23",
+                "size_bytes": 1246
+              },
+              {
+                "path": "ledger/schema.sql",
+                "sha256": "229a2f60e1843bb941050e36471fde0f28135810d9e9b61d0291be454bdb7029",
+                "size_bytes": 864
+              },
+              {
+                "path": "ledger/service.py",
+                "sha256": "757a370c798c9428e2a7e63f5155644c121c86a616bc0a4b307d691533eb00e6",
+                "size_bytes": 4140
+              },
+              {
+                "path": "ledger/storage.py",
+                "sha256": "3dcf1c4f3735d824ed0f96df143d12472f5988bc26930cd6134a68adcc95e519",
+                "size_bytes": 4161
+              },
+              {
+                "path": "ledger/totals.py",
+                "sha256": "2e437c1d84bf67f4afa12aee0ab6313d5ee384ea86b71bdcc38a349238d0a559",
+                "size_bytes": 1881
+              },
+              {
+                "path": "ledger_cli.py",
+                "sha256": "1b8e3c0d5db779733859baa45de6cfb57e55dab1cbd310ff12a7e0d4df98c9e3",
+                "size_bytes": 159
+              },
+              {
+                "path": "tests/restart_smoke.py",
+                "sha256": "5362a6ea4e5f56558d89e34d40a1fadf49845e87702417c5f1b00a03bd616c14",
+                "size_bytes": 7952
+              },
+              {
+                "path": "tests/results.txt",
+                "sha256": "46f920ba64f9c960f3aa31212f4108c700df3179bce2c0a515e67d6d5c60bc9e",
+                "size_bytes": 11470
+              },
+              {
+                "path": "tests/test_cli.py",
+                "sha256": "ce47c1efb5f739c10730f15c78c73151bbe150dd5f8f8e1a282b0c8cdf51a871",
+                "size_bytes": 16501
+              },
+              {
+                "path": "tests/test_data_layer.py",
+                "sha256": "d347d8e5fcd914a7d68eb52d133fcef8622bc0622323da2a452580fd7e1e8bee",
+                "size_bytes": 16316
+              },
+              {
+                "path": "tests/test_service.py",
+                "sha256": "25953529041c7683f2016fd804fc684404ad1482309a146d708552239c1d80d9",
+                "size_bytes": 18102
+              }
+            ],
+            "total_bytes": 126828
+          },
+          "change_request": null,
+          "error_code": null,
+          "created_at": 1791296743236,
+          "updated_at": 1791296743545,
+          "sealed_at": 1791296743545
+        },
+        "operation": {
+          "id": "01a1119b-2733-7ee0-a0db-3ec37eecb6bd",
+          "kind": "snapshot",
+          "state": "complete",
+          "version_id": "01a1119b-2733-7ee0-a0db-3ebc29753f60",
+          "idempotency_key": "sw-r2-qa-snapshot-cli-20261006",
+          "error_code": null,
+          "created_at": 1791296743236,
+          "updated_at": 1791296743545
+        }
+      },
+      "activation": {
+        "product": {
+          "id": "01a1119b-2733-7ee0-a0db-3ea6a8bc8af3",
+          "name": "CSV账目汇总器",
+          "active_version_id": "01a1119b-2733-7ee0-a0db-3ebc29753f60",
+          "revision": 3,
+          "created_at": 1791296743236,
+          "updated_at": 1791296743608
+        },
+        "version": {
+          "id": "01a1119b-2733-7ee0-a0db-3ebc29753f60",
+          "product_id": "01a1119b-2733-7ee0-a0db-3ea6a8bc8af3",
+          "run_id": "01a110a2-c908-7282-bbe2-625e164719a2",
+          "parent_run_id": null,
+          "parent_version_id": null,
+          "version_no": 1,
+          "state": "sealed",
+          "snapshot_path": "/private/tmp/sw-fresh-validation/data/product-factory-versions/01a1119b-2733-7ee0-a0db-3ea6a8bc8af3/01a1119b-2733-7ee0-a0db-3ebc29753f60/01a1119b-2733-7ee0-a0db-3ec37eecb6bd",
+          "manifest": {
+            "version": 1,
+            "scope": "code_only",
+            "files": [
+              {
+                "path": ".gitignore",
+                "sha256": "57ec6762ad4154dcbf41c18a3fc708d8037a03e8c58edb61a5ba0da4ab2ce307",
+                "size_bytes": 182
+              },
+              {
+                "path": "ACCEPTANCE.md",
+                "sha256": "b184fd775911c8184f40412055354224132dca2d9ca10ea5754c92e2648341a0",
+                "size_bytes": 9140
+              },
+              {
+                "path": "API.md",
+                "sha256": "a019ea077b796fb407c260eaf5e44094e776ced7290c0fd1979e78603029c1c8",
+                "size_bytes": 5722
+              },
+              {
+                "path": "DATA_CONTRACT.md",
+                "sha256": "2418ec17fb8f65aeea9d140cc7011d5cb46c4055bf215238c6b2082c610e511e",
+                "size_bytes": 7634
+              },
+              {
+                "path": "START.md",
+                "sha256": "c1c1dd54fab5957eefdb4cab46071970b0437a7745541205ebff66fbb4de8958",
+                "size_bytes": 4966
+              },
+              {
+                "path": "examples/duplicate-result.json",
+                "sha256": "ae5f96db928e7c7c0158b6ae08badd0bcba8ea4a5ff3da71fb7c6abb87dc578d",
+                "size_bytes": 132
+              },
+              {
+                "path": "examples/history.json",
+                "sha256": "a870fa0a0548dddedf0eee4c20bb6980e8657d92195a1eaeef032392c94b064a",
+                "size_bytes": 663
+              },
+              {
+                "path": "examples/import-result.json",
+                "sha256": "400272c9d7260813d0b838710e32732d31f39ca666f9603a1b6b7c92a516731e",
+                "size_bytes": 133
+              },
+              {
+                "path": "examples/invalid.csv",
+                "sha256": "e482e2a0400d085a2629abb84ee8121caa4b0d54e16a057d42558ffd83ad212e",
+                "size_bytes": 84
+              },
+              {
+                "path": "examples/summary-contract.json",
+                "sha256": "65c619218978b076408f3608b89176b6a45b0be5d55716a24c82ce0faa02afa1",
+                "size_bytes": 152
+              },
+              {
+                "path": "examples/summary.json",
+                "sha256": "65c619218978b076408f3608b89176b6a45b0be5d55716a24c82ce0faa02afa1",
+                "size_bytes": 152
+              },
+              {
+                "path": "examples/valid.csv",
+                "sha256": "d3790584f0c76880efe861914ee1607d47e90f1789d534d0029ad2b96b3dede6",
+                "size_bytes": 92
+              },
+              {
+                "path": "examples/validation-error.json",
+                "sha256": "2008f7108b2450459a3f9324ff3395368a09fe6c32fcd44c27db4bb23071978c",
+                "size_bytes": 476
+              },
+              {
+                "path": "ledger/__init__.py",
+                "sha256": "11bba7a5c3a68bb20771600bf2342d2211ac4e0c5f96d72026fdf6dc3d97a4d2",
+                "size_bytes": 755
+              },
+              {
+                "path": "ledger/__main__.py",
+                "sha256": "e7db047e6ef2c95f8b2a820bef39f37ccf8b4b914590604645460f5524c3ae60",
+                "size_bytes": 130
+              },
+              {
+                "path": "ledger/cli.py",
+                "sha256": "4b536d00ad29a3b096f05600bcbb5244bed883eabec2fca542ebd15d92325a89",
+                "size_bytes": 5541
+              },
+              {
+                "path": "ledger/contracts.py",
+                "sha256": "c7bb9685b85e3b31447a3b582dce7600eed947307aa224648f5a811a4528121b",
+                "size_bytes": 3673
+              },
+              {
+                "path": "ledger/csv_input.py",
+                "sha256": "8f31892d4656ad4596d94fcbc8093f2f9b4cb061537b0ad9f7a9127ee8431447",
+                "size_bytes": 3221
+              },
+              {
+                "path": "ledger/errors.py",
+                "sha256": "14162ac5af96bfd24eb58f57c0ac0c03a5654fe0a7f4c78a6630d661a7def756",
+                "size_bytes": 1188
+              },
+              {
+                "path": "ledger/json_output.py",
+                "sha256": "393e6400a825f56623c34da2423867f7ceec95e18c49219e7e6f212cb9e1ac23",
+                "size_bytes": 1246
+              },
+              {
+                "path": "ledger/schema.sql",
+                "sha256": "229a2f60e1843bb941050e36471fde0f28135810d9e9b61d0291be454bdb7029",
+                "size_bytes": 864
+              },
+              {
+                "path": "ledger/service.py",
+                "sha256": "757a370c798c9428e2a7e63f5155644c121c86a616bc0a4b307d691533eb00e6",
+                "size_bytes": 4140
+              },
+              {
+                "path": "ledger/storage.py",
+                "sha256": "3dcf1c4f3735d824ed0f96df143d12472f5988bc26930cd6134a68adcc95e519",
+                "size_bytes": 4161
+              },
+              {
+                "path": "ledger/totals.py",
+                "sha256": "2e437c1d84bf67f4afa12aee0ab6313d5ee384ea86b71bdcc38a349238d0a559",
+                "size_bytes": 1881
+              },
+              {
+                "path": "ledger_cli.py",
+                "sha256": "1b8e3c0d5db779733859baa45de6cfb57e55dab1cbd310ff12a7e0d4df98c9e3",
+                "size_bytes": 159
+              },
+              {
+                "path": "tests/restart_smoke.py",
+                "sha256": "5362a6ea4e5f56558d89e34d40a1fadf49845e87702417c5f1b00a03bd616c14",
+                "size_bytes": 7952
+              },
+              {
+                "path": "tests/results.txt",
+                "sha256": "46f920ba64f9c960f3aa31212f4108c700df3179bce2c0a515e67d6d5c60bc9e",
+                "size_bytes": 11470
+              },
+              {
+                "path": "tests/test_cli.py",
+                "sha256": "ce47c1efb5f739c10730f15c78c73151bbe150dd5f8f8e1a282b0c8cdf51a871",
+                "size_bytes": 16501
+              },
+              {
+                "path": "tests/test_data_layer.py",
+                "sha256": "d347d8e5fcd914a7d68eb52d133fcef8622bc0622323da2a452580fd7e1e8bee",
+                "size_bytes": 16316
+              },
+              {
+                "path": "tests/test_service.py",
+                "sha256": "25953529041c7683f2016fd804fc684404ad1482309a146d708552239c1d80d9",
+                "size_bytes": 18102
+              }
+            ],
+            "total_bytes": 126828
+          },
+          "change_request": null,
+          "error_code": null,
+          "created_at": 1791296743236,
+          "updated_at": 1791296743545,
+          "sealed_at": 1791296743545
+        },
+        "workspace_path": "/private/tmp/sw-fresh-validation/data/product-factory-versions/01a1119b-2733-7ee0-a0db-3ea6a8bc8af3/01a1119b-2733-7ee0-a0db-3ebc29753f60/01a1119b-2733-7ee0-a0db-3ec37eecb6bd",
+        "scope": "code_only"
+      }
+    }
+  },
+  "usage_record_count": 13,
+  "complete": true
+}
