@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="360" viewBox="0 0 1280 360" role="img" aria-labelledby="title desc">
+<title id="title">Speed Workbench</title>
+<desc id="desc">AI product development workspace. From idea and plan to development, review, and iteration.</desc>
+<rect x="1" y="1" width="1278" height="358" rx="14" fill="#0d1117" stroke="#30363d"/>
+<rect x="58" y="66" width="110" height="110" rx="16" fill="#f0f6fc"/>
+<text x="113" y="139" text-anchor="middle" fill="#0d1117" font-family="Arial, sans-serif" font-size="46" font-weight="700" letter-spacing="-2">SW</text>
+<text x="200" y="148" fill="#f0f6fc" font-family="Arial, sans-serif" font-size="80" font-weight="700" letter-spacing="-3">Speed Workbench</text>
+<text x="203" y="201" fill="#8b949e" font-family="Arial, sans-serif" font-size="28">AI product development workspace</text>
+<path d="M1080 92l35 35-35 35m65-70 35 35-35 35" fill="none" stroke="#58a6ff" stroke-width="8" stroke-linecap="square" stroke-linejoin="miter"/>
+<path d="M80 294H1170" stroke="#30363d" stroke-width="2"/>
+<circle cx="80" cy="294" r="5" fill="#58a6ff"/><text x="80" y="327" text-anchor="middle" fill="#8b949e" font-family="Arial, sans-serif" font-size="17" letter-spacing="1">01 / IDEA</text>
+<circle cx="298" cy="294" r="5" fill="#58a6ff"/><text x="298" y="327" text-anchor="middle" fill="#8b949e" font-family="Arial, sans-serif" font-size="17" letter-spacing="1">02 / PLAN</text>
+<circle cx="516" cy="294" r="5" fill="#58a6ff"/><text x="516" y="327" text-anchor="middle" fill="#8b949e" font-family="Arial, sans-serif" font-size="17" letter-spacing="1">03 / TASKS</text>
+<circle cx="734" cy="294" r="5" fill="#58a6ff"/><text x="734" y="327" text-anchor="middle" fill="#8b949e" font-family="Arial, sans-serif" font-size="17" letter-spacing="1">04 / BUILD</text>
+<circle cx="952" cy="294" r="5" fill="#58a6ff"/><text x="952" y="327" text-anchor="middle" fill="#8b949e" font-family="Arial, sans-serif" font-size="17" letter-spacing="1">05 / REVIEW</text>
+<circle cx="1170" cy="294" r="5" fill="#58a6ff"/><text x="1170" y="327" text-anchor="middle" fill="#8b949e" font-family="Arial, sans-serif" font-size="17" letter-spacing="1">06 / ITERATE</text>
+</svg>
