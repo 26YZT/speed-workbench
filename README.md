@@ -29,6 +29,8 @@
 
 Speed Workbench 面向独立开发者、产品经理和小型团队。输入产品想法，梳理需求与约束，确认开发任务，再与 AI 一起推进实现。需求、执行记录、审核结果和代码版本围绕同一个产品组织。
 
+**个人独立开发**：Speed Workbench 由张岩（[@26YZT](https://github.com/26YZT)）个人负责产品定义、功能设计、定制开发、迭代与维护。项目基于 AionUi/AionCore 开源基础构建，本产品的设计与定制开发由张岩独立完成。
+
 **你决定产品方向，AI 参与规划与编码，工作台组织开发与迭代。**
 
 <details>
@@ -155,7 +157,7 @@ speed-workbench/
 
 <p align="center">
   <strong>Speed Workbench</strong><br>
-  开发与维护：<a href="https://github.com/26YZT">26YZT</a> ·
+  产品设计、开发与维护：<a href="https://github.com/26YZT">张岩（26YZT）</a> ·
   <a href="LICENSE">许可证</a> ·
   <a href="NOTICE">版权与第三方声明</a> ·
   <a href="docs/AUTHORS.md">作者信息</a>

@@ -1,12 +1,12 @@
-产品经理工作台 / Product Manager Workbench
+Speed Workbench
 
-Product design and custom development: 周承健
-Maintainer: https://github.com/Zhouchengjian-user
-Repository: https://github.com/Zhouchengjian-user/product-manager-workbench
+Independent product design, custom development and maintenance: 张岩 (26YZT)
+Maintainer: https://github.com/26YZT
+Repository: https://github.com/26YZT/speed-workbench
 
-Copyright 2026 周承健
+Copyright 2026 张岩 (26YZT)
 This notice applies only to original additions and modifications in this
-fork to the extent owned by 周承健. These code contributions are licensed
+fork to the extent owned by 张岩 (26YZT). These code contributions are licensed
 under the Apache License, Version 2.0. It does not claim ownership of
 upstream code, third-party material, or underlying components.
 
@@ -27,8 +27,7 @@ not presented as a NOTICE file supplied by either upstream project.
 The product name and presentation identify this customized distribution.
 No upstream endorsement or third-party trademark rights are claimed.
 
-Speed Workbench source publication (2026-10-07):
-Publishing and repository maintenance account: https://github.com/26YZT
+Speed Workbench is independently designed, customized, developed and
+maintained by 张岩 (26YZT), building on the open-source foundations above.
+Product author and maintainer: https://github.com/26YZT
 Repository and issue tracker: https://github.com/26YZT/speed-workbench
-This publication identity does not replace the original authorship,
-copyright, or upstream and third-party notices above.
