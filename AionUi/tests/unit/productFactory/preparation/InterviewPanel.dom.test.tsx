@@ -23,6 +23,20 @@ const artifact: InterviewArtifact = {
 };
 
 describe('InterviewPanel', () => {
+  it('renders every saved question so legacy interviews never hide an unanswered item', () => {
+    const saved: InterviewArtifact = {
+      ...artifact,
+      summary: 'Complete legacy interview',
+      questions: Array.from({ length: 6 }, (_, index) => ({
+        id: `q${index}`,
+        prompt: `Question ${index}`,
+        answer: '',
+        notSure: false,
+      })),
+    };
+    render(<InterviewPanel artifact={saved} onChange={vi.fn()} onSave={vi.fn()} onConfirm={vi.fn()} saving={false} />);
+    expect(screen.getByTestId('product-factory-interview-answer-q5')).toBeInTheDocument();
+  });
   it('does not allow confirmation until the summary is filled', () => {
     render(
       <InterviewPanel artifact={artifact} onChange={vi.fn()} onSave={vi.fn()} onConfirm={vi.fn()} saving={false} />

@@ -1,10 +1,10 @@
 appId: com.speedworkbench.app
 productName: Speed Workbench
-executableName: AionUi
+executableName: Speed Workbench
 copyright: Copyright © 2024 AionUi
 
 protocols:
-  - name: AionUi Protocol
+  - name: Speed Workbench Protocol
     schemes:
       - aionui
 
@@ -177,15 +177,15 @@ linux:
   icon: resources/app.png
   artifactName: ${productName}-${version}-${os}-${arch}.${ext}
   category: Utility
-  maintainer: aionui
-  vendor: aionui
+  maintainer: Speed Workbench
+  vendor: Speed Workbench
   synopsis: ${description}
   description: ${description}
   desktop:
     entry:
       Name: Speed Workbench
       Comment: ${description}
-      Icon: AionUi
+      Icon: Speed Workbench
       Categories: Office;Utility;
       MimeType: x-scheme-handler/aionui;
 

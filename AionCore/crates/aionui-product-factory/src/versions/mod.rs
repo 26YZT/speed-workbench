@@ -2,6 +2,9 @@
 //! usage receipts, and a new iteration remains an unconfirmed independent run.
 mod filesystem;
 pub(crate) use filesystem::established_root;
+pub(crate) use filesystem::{
+    prepare_managed_workspace, validate_managed_workspace, validate_relative as validate_workspace_relative,
+};
 mod operations;
 pub(crate) mod routes;
 
@@ -86,7 +89,10 @@ impl ProductFactoryService {
             .ok_or(VersionError::Unavailable("PRODUCT_FACTORY_VERSION_NOT_CONFIGURED"))
     }
     async fn version_run(&self, user: &str, id: &str) -> VersionResult<ProductFactoryRunRow> {
-        self.repository.get_run(user, id).await?.ok_or(VersionError::NotFound)
+        let row = self.repository.get_run(user, id).await?.ok_or(VersionError::NotFound)?;
+        self.authorize_workspace(&row)
+            .map_err(|_| VersionError::Blocked("PRODUCT_FACTORY_WORKSPACE_UNAUTHORIZED"))?;
+        Ok(row)
     }
     pub async fn get_versions(&self, user: &str, run_id: &str) -> VersionResult<ProductFactoryVersionsResponse> {
         self.version_run(user, run_id).await?;
@@ -159,6 +165,7 @@ impl ProductFactoryService {
         user: &str,
         run_id: &str,
     ) -> Result<(), crate::ProductFactoryError> {
+        self.load_run(user, run_id).await?;
         if let Some(versioning) = self.versioning.as_ref()
             && let Some(version) = versioning.repository.get_by_run(user, run_id).await?
             && version.state != "working"

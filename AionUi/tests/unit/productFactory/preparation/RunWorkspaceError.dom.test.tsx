@@ -7,7 +7,7 @@
 import React from 'react';
 import { act, cleanup, fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { MemoryRouter } from 'react-router-dom';
+import { createMemoryRouter, MemoryRouter, RouterProvider } from 'react-router-dom';
 import type { ProductFactoryRun, TaskDraftArtifact } from '@/renderer/pages/product-factory/types';
 
 const {
@@ -19,6 +19,8 @@ const {
   confirmProductFactoryTaskDraft,
   listProductFactoryPlanning,
   getProductFactoryCostReport,
+  getProductFactoryExecution,
+  getProductFactoryReview,
 } = vi.hoisted(() => ({
   getProductFactoryRun: vi.fn(),
   saveProductFactoryBlueprint: vi.fn(),
@@ -28,11 +30,15 @@ const {
   confirmProductFactoryTaskDraft: vi.fn(),
   listProductFactoryPlanning: vi.fn().mockResolvedValue([]),
   getProductFactoryCostReport: vi.fn().mockRejectedValue(new Error('cost not available')),
+  getProductFactoryExecution: vi.fn(),
+  getProductFactoryReview: vi.fn(),
 }));
 
 vi.mock('@/renderer/pages/product-factory/client', () => ({
   listProductFactoryPlanning,
   getProductFactoryCostReport,
+  getProductFactoryExecution,
+  getProductFactoryReview,
   getProductFactoryRun,
   listProductFactoryRuns: vi.fn().mockResolvedValue([]),
   createProductFactoryRun: vi.fn(),
@@ -77,6 +83,11 @@ vi.mock('react-i18next', () => ({
 }));
 
 import ProductFactoryPage from '@/renderer/pages/product-factory';
+import {
+  editableArtifacts,
+  readArtifactRecovery,
+  writeArtifactRecovery,
+} from '@/renderer/pages/product-factory/artifactRecovery';
 
 const taskDraft: TaskDraftArtifact = {
   version: 1,
@@ -206,6 +217,119 @@ describe('ProductFactoryPage task draft workflow', () => {
   });
 
   afterEach(cleanup);
+
+  it('allows saving the next run while an earlier run save is still pending', async () => {
+    let finishFirst!: (run: ProductFactoryRun) => void;
+    getProductFactoryRun.mockImplementation(async (id: string) => ({ ...taskRun, id, name: id }));
+    saveProductFactoryTaskDraft.mockImplementation(async (id: string, draft: TaskDraftArtifact) => ({
+      ...taskRun,
+      id,
+      name: id,
+      taskDraft: draft,
+    }));
+    saveProductFactoryTaskDraft.mockImplementationOnce(
+      () =>
+        new Promise((resolve) => {
+          finishFirst = resolve;
+        })
+    );
+    const router = createMemoryRouter([{ path: '/product-factory/:id', element: <ProductFactoryPage /> }], {
+      initialEntries: ['/product-factory/run-1'],
+    });
+    render(<RouterProvider router={router} />);
+    fireEvent.click(await screen.findByRole('button', { name: 'productFactory.taskDraft.save' }));
+    await waitFor(() => expect(saveProductFactoryTaskDraft).toHaveBeenCalledTimes(1));
+    await act(async () => {
+      await router.navigate('/product-factory/run-2');
+    });
+    const save = await screen.findByRole('button', { name: 'productFactory.taskDraft.save' });
+    expect(save).toBeEnabled();
+    fireEvent.click(save);
+    await waitFor(() => expect(saveProductFactoryTaskDraft).toHaveBeenLastCalledWith('run-2', expect.any(Object)));
+    await act(async () => {
+      finishFirst({ ...taskRun, name: 'Old run response' });
+    });
+    expect(screen.getByRole('heading', { name: 'run-2' })).toBeInTheDocument();
+    expect(save).toBeEnabled();
+  });
+
+  it('ignores an old run review response after navigating to another run', async () => {
+    let finishOld!: (review: unknown) => void;
+    const running = (id: string): ProductFactoryRun => ({
+      ...taskRun,
+      id,
+      name: id,
+      teamId: `team-${id}`,
+      status: 'in_review',
+    });
+    const snapshot = (id: string) => ({
+      run: running(id),
+      task: {
+        id: `task-${id}`,
+        teamId: `team-${id}`,
+        subject: `Evidence for ${id}`,
+        status: 'in_review',
+        blockedBy: [],
+        blocks: [],
+        createdAt: 1,
+        updatedAt: 1,
+      },
+      workspace: { taskId: `task-${id}`, path: `/workspace/${id}` },
+      usage: [],
+      usageSummary: {
+        teamId: `team-${id}`,
+        inputTokens: 0,
+        outputTokens: 0,
+        costUnknown: true,
+        budgetExceeded: false,
+        tasks: [],
+      },
+      acceptanceCriteria: [],
+      execution: { state: 'enqueued', teamId: `team-${id}`, taskId: `task-${id}`, requestedAt: 1, updatedAt: 1 },
+    });
+    getProductFactoryRun.mockImplementation(async (id: string) => running(id));
+    getProductFactoryExecution.mockImplementation(async (id: string) => snapshot(id).execution);
+    getProductFactoryReview.mockImplementation((id: string) =>
+      id === 'run-1'
+        ? new Promise((resolve) => {
+            finishOld = resolve;
+          })
+        : Promise.resolve(snapshot(id))
+    );
+    const router = createMemoryRouter([{ path: '/product-factory/:id', element: <ProductFactoryPage /> }], {
+      initialEntries: ['/product-factory/run-1'],
+    });
+    render(<RouterProvider router={router} />);
+    await waitFor(() => expect(getProductFactoryReview).toHaveBeenCalledWith('run-1'));
+    await act(async () => {
+      await router.navigate('/product-factory/run-2');
+    });
+    await screen.findByText('Evidence for run-2');
+    await act(async () => {
+      finishOld(snapshot('run-1'));
+    });
+    expect(screen.getByText('Evidence for run-2')).toBeInTheDocument();
+    expect(screen.queryByText('Evidence for run-1')).not.toBeInTheDocument();
+  });
+
+  it('keeps conflicting local edits separate and prevents editing the server preview', async () => {
+    const localDraft = { ...taskDraft, tasks: [{ ...taskDraft.tasks[0], title: 'Local unsubmitted edit' }] };
+    writeArtifactRecovery(taskRun.id, editableArtifacts(taskRun), { taskDraft: localDraft });
+    getProductFactoryRun.mockResolvedValue({
+      ...taskRun,
+      taskDraft: { ...taskDraft, revision: 4, tasks: [{ ...taskDraft.tasks[0], title: 'Updated server task' }] },
+    });
+    renderWorkspace();
+    expect(await screen.findByText('productFactory.recovery.conflict')).toBeInTheDocument();
+    const title = screen.getByPlaceholderText('productFactory.taskDraft.titleField');
+    expect(title).toHaveValue('Updated server task');
+    expect(title.closest('[inert]')).toBeInTheDocument();
+    fireEvent.change(title, { target: { value: 'Do not replace the preserved draft' } });
+    const preserved = readArtifactRecovery(taskRun.id)?.edited.taskDraft as TaskDraftArtifact | undefined;
+    expect(preserved?.tasks[0].title).toBe('Local unsubmitted edit');
+    expect(saveProductFactoryTaskDraft).not.toHaveBeenCalled();
+    expect(screen.getByRole('button', { name: 'common.draftProtection.exportDraft' })).toBeEnabled();
+  });
 
   it('offers generation only after blueprint confirmation and opens the generated tasks', async () => {
     const blueprintRun: ProductFactoryRun = {

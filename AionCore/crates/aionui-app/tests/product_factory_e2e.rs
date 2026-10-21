@@ -5,6 +5,69 @@ use axum::http::{Request, StatusCode};
 use serde_json::{Value, json};
 use tower::ServiceExt;
 
+#[tokio::test]
+async fn authenticated_factory_never_accepts_a_client_selected_host_directory() {
+    let storage = tempfile::tempdir().unwrap();
+    let foreign = tempfile::tempdir().unwrap();
+    let config = aionui_app::AppConfig {
+        data_dir: storage.path().into(),
+        work_dir: storage.path().into(),
+        ..Default::default()
+    };
+    let db = aionui_db::init_database_memory().await.unwrap();
+    let services = aionui_app::AppServices::from_config(db, &config).await.unwrap();
+    let state = aionui_app::build_product_factory_state(&services);
+    let request = aionui_api_types::CreateProductFactoryRunRequest {
+        name: "Remote directory boundary".into(),
+        idea: "Do not accept host paths from a remote browser".into(),
+        workspace_path: Some(foreign.path().to_string_lossy().into_owned()),
+        target_user: None,
+        problem: None,
+        expected_output: None,
+        budget_usd: None,
+    };
+    assert!(matches!(
+        state.service.create_run("user-a", request).await,
+        Err(aionui_product_factory::ProductFactoryError::InvalidRequest(_))
+    ));
+    assert_eq!(std::fs::read_dir(foreign.path()).unwrap().count(), 0);
+}
+
+#[tokio::test]
+async fn embedded_local_factory_preserves_explicit_user_directory_selection() {
+    let storage = tempfile::tempdir().unwrap();
+    let selected = tempfile::tempdir().unwrap();
+    let config = aionui_app::AppConfig {
+        data_dir: storage.path().into(),
+        work_dir: storage.path().into(),
+        local: true,
+        ..Default::default()
+    };
+    let db = aionui_db::init_database_memory().await.unwrap();
+    let services = aionui_app::AppServices::from_config(db, &config).await.unwrap();
+    let state = aionui_app::build_product_factory_state(&services);
+    let run = state
+        .service
+        .create_run(
+            "system_default_user",
+            aionui_api_types::CreateProductFactoryRunRequest {
+                name: "Local directory".into(),
+                idea: "Explicit local picker is retained".into(),
+                workspace_path: Some(selected.path().to_string_lossy().into_owned()),
+                target_user: None,
+                problem: None,
+                expected_output: None,
+                budget_usd: None,
+            },
+        )
+        .await
+        .unwrap();
+    assert_eq!(
+        std::path::Path::new(&run.workspace_path),
+        selected.path().canonicalize().unwrap()
+    );
+}
+
 use common::{build_app, get_with_token, json_with_token, setup_and_login};
 
 #[tokio::test]
@@ -170,8 +233,7 @@ async fn factory_execution_budget_includes_planning_and_report_is_readable_befor
     let (mut app, services) = build_app().await;
     let (token, csrf) = setup_and_login(&mut app, &services, "admin", "StrongP@ss1").await;
     seed_handoff_assistant(&app, &services, &token, &csrf).await;
-    let workspace = tempfile::tempdir().unwrap();
-    let id = confirmed_run(&app, &token, &csrf, workspace.path().to_str().unwrap()).await;
+    let id = confirmed_run(&app, &token, &csrf).await;
     let response=app.clone().oneshot(json_with_token("POST",&format!("/api/product-factory/runs/{id}/handoff"),json!({"expected_revision":1,"agents":[{"name":"Developer","role":"lead","assistant_id":"factory-e2e-assistant","model":"claude"}]}),&token,&csrf)).await.unwrap();
     assert_eq!(response.status(), StatusCode::OK);
     let handoff = common::body_json(response).await;
@@ -214,7 +276,12 @@ async fn factory_execution_budget_includes_planning_and_report_is_readable_befor
     assert_eq!(report["data"]["usage_summary"]["budget_exceeded"], true);
     assert_eq!(report["data"]["planning_usage"].as_array().unwrap().len(), 1);
     assert_eq!(report["data"]["usage"].as_array().unwrap().len(), 2);
-    assert!(!workspace.path().join(".tasks").exists());
+    let workspace: String = sqlx::query_scalar("SELECT workspace_path FROM product_factory_runs WHERE id=?")
+        .bind(&id)
+        .fetch_one(services.database.pool())
+        .await
+        .unwrap();
+    assert!(!std::path::Path::new(&workspace).join(".tasks").exists());
     let response = app
         .clone()
         .oneshot(json_with_token(
@@ -402,8 +469,7 @@ async fn real_execution_adapter_checks_budget_before_starting_any_runtime() {
     let (mut app, services) = build_app().await;
     let (token, csrf) = setup_and_login(&mut app, &services, "admin", "StrongP@ss1").await;
     seed_handoff_assistant(&app, &services, &token, &csrf).await;
-    let workspace = tempfile::tempdir().unwrap();
-    let id = confirmed_run(&app, &token, &csrf, workspace.path().to_str().unwrap()).await;
+    let id = confirmed_run(&app, &token, &csrf).await;
     let handoff = app.clone().oneshot(json_with_token("POST", &format!("/api/product-factory/runs/{id}/handoff"),
         json!({"expected_revision":1,"agents":[{"name":"Developer","role":"lead","assistant_id":"factory-e2e-assistant","model":"claude"}]}),
         &token, &csrf)).await.unwrap();
@@ -445,8 +511,7 @@ async fn real_execution_adapter_blocks_unknown_cost_before_starting_any_runtime(
     let (mut app, services) = build_app().await;
     let (token, csrf) = setup_and_login(&mut app, &services, "admin", "StrongP@ss1").await;
     seed_handoff_assistant(&app, &services, &token, &csrf).await;
-    let workspace = tempfile::tempdir().unwrap();
-    let id = confirmed_run(&app, &token, &csrf, workspace.path().to_str().unwrap()).await;
+    let id = confirmed_run(&app, &token, &csrf).await;
     let handoff = app
         .clone()
         .oneshot(json_with_token(
@@ -499,9 +564,18 @@ async fn real_execution_adapter_blocks_unknown_cost_before_starting_any_runtime(
     services.database.close().await;
 }
 
-async fn confirmed_run(app: &axum::Router, token: &str, csrf: &str, workspace: &str) -> String {
-    let response = app.clone().oneshot(json_with_token("POST", "/api/product-factory/runs",
-        json!({"name":"Handoff Product", "idea":"Build a reviewable product", "workspace_path":workspace, "budget_usd":10}), token, csrf)).await.unwrap();
+async fn confirmed_run(app: &axum::Router, token: &str, csrf: &str) -> String {
+    let response = app
+        .clone()
+        .oneshot(json_with_token(
+            "POST",
+            "/api/product-factory/runs",
+            json!({"name":"Handoff Product", "idea":"Build a reviewable product", "budget_usd":10}),
+            token,
+            csrf,
+        ))
+        .await
+        .unwrap();
     assert_eq!(response.status(), StatusCode::CREATED);
     let value = common::body_json(response).await;
     let id = value["data"]["id"].as_str().unwrap().to_owned();
@@ -561,8 +635,7 @@ async fn real_team_adapter_handoff_and_replay_create_one_pending_graph_without_r
     let (mut app, services) = build_app().await;
     let (token, csrf) = setup_and_login(&mut app, &services, "admin", "StrongP@ss1").await;
     seed_handoff_assistant(&app, &services, &token, &csrf).await;
-    let workspace = tempfile::tempdir().unwrap();
-    let id = confirmed_run(&app, &token, &csrf, workspace.path().to_str().unwrap()).await;
+    let id = confirmed_run(&app, &token, &csrf).await;
     let mut events = services.event_bus.subscribe();
     let path = format!("/api/product-factory/runs/{id}/handoff");
     let body = json!({"expected_revision":1,"agents":[{"name":"Developer","role":"lead","assistant_id":"factory-e2e-assistant","model":"claude"}]});
@@ -597,8 +670,13 @@ async fn real_team_adapter_handoff_and_replay_create_one_pending_graph_without_r
         .await
         .unwrap();
     assert_eq!(messages, 0);
+    let workspace: String = sqlx::query_scalar("SELECT workspace_path FROM product_factory_runs WHERE id=?")
+        .bind(&id)
+        .fetch_one(services.database.pool())
+        .await
+        .unwrap();
     assert_eq!(
-        std::fs::read_dir(workspace.path()).unwrap().count(),
+        std::fs::read_dir(&workspace).unwrap().count(),
         0,
         "handoff must not write workspace files"
     );
@@ -630,8 +708,7 @@ async fn conversation_snapshot_failure_is_cleaned_up_before_handoff_retry() {
     let (mut app, services) = build_app().await;
     let (token, csrf) = setup_and_login(&mut app, &services, "admin", "StrongP@ss1").await;
     seed_handoff_assistant(&app, &services, &token, &csrf).await;
-    let workspace = tempfile::tempdir().unwrap();
-    let id = confirmed_run(&app, &token, &csrf, workspace.path().to_str().unwrap()).await;
+    let id = confirmed_run(&app, &token, &csrf).await;
     sqlx::query("CREATE TRIGGER fail_factory_snapshot BEFORE INSERT ON conversation_assistant_snapshots BEGIN SELECT RAISE(FAIL, 'injected snapshot failure'); END")
         .execute(services.database.pool()).await.unwrap();
     let path = format!("/api/product-factory/runs/{id}/handoff");
@@ -688,8 +765,7 @@ async fn explicit_repricing_uses_configured_snapshot_and_preserves_known_legacy_
     let mut app = aionui_app::create_router(&services).await.unwrap();
     let (token, csrf) = setup_and_login(&mut app, &services, "admin", "StrongP@ss1").await;
     seed_handoff_assistant(&app, &services, &token, &csrf).await;
-    let workspace = tempfile::tempdir().unwrap();
-    let id = confirmed_run(&app, &token, &csrf, workspace.path().to_str().unwrap()).await;
+    let id = confirmed_run(&app, &token, &csrf).await;
     let response = app.clone().oneshot(json_with_token("POST", &format!("/api/product-factory/runs/{id}/handoff"),
         json!({"expected_revision":1,"agents":[{"name":"Developer","role":"lead","assistant_id":"factory-e2e-assistant","model":"claude"}]}), &token,&csrf)).await.unwrap();
     assert_eq!(response.status(), StatusCode::OK);

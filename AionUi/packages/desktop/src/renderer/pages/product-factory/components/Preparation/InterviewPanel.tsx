@@ -45,7 +45,7 @@ const InterviewPanel: React.FC<InterviewPanelProps> = ({ artifact, onChange, onS
           : t('productFactory.planning.ruleSource')}
       </Tag>
       <div className='flex flex-col gap-16px'>
-        {artifact.questions.slice(0, 5).map((question) => (
+        {artifact.questions.map((question) => (
           <div className={styles.field} key={question.id}>
             <span className={styles.label}>{question.prompt}</span>
             {question.reason && <p className='m-0 text-13px text-t-secondary'>{question.reason}</p>}

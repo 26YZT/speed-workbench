@@ -1,0 +1,52 @@
+{
+  "repository": "26YZT/speed-workbench",
+  "baselineCommit": "7cacfe2ec7215ce512dd25fd6b6d8794c4e56246",
+  "sourceParity": {
+    "codeFiles": 3915,
+    "mismatches": []
+  },
+  "sourceScope": "Tracked and intended new source files only; public Git history and licensing retained.",
+  "excludes": [
+    "personal runtime databases and credentials",
+    "node_modules and Cargo target",
+    "desktop application bundles and installers",
+    "local development Git history"
+  ],
+  "appBundle": {
+    "version": "2.2.2",
+    "buildDate": "2026-10-19",
+    "signatureVerifiedOn": "2026-10-21",
+    "contains20261020BackendChanges": false,
+    "rendererSha256": "3bbe104b70a856e2392dbfc645a15519ff4754db701e4bdfdb1caf846cb239a8"
+  },
+  "checks": {
+    "frontendStatic": "passed",
+    "i18n": "13 locales passed",
+    "backendMigrationGuardTests": "passed",
+    "backendMigrationImmutability": "passed",
+    "backendFormat": "passed",
+    "backendClippy": "passed",
+    "frontendFullTests": {
+      "passed": 5226,
+      "skipped": 5,
+      "passedFiles": 548,
+      "skippedFiles": 1,
+      "exitCode": 0
+    },
+    "backendNextest": {
+      "passed": 9626,
+      "skipped": 52,
+      "testBinaries": 239,
+      "exitCode": 0,
+      "doctestsRun": false
+    },
+    "readmePreview": {
+      "renderedWith": "GitHub Markdown API",
+      "brokenImages": 0,
+      "missingLocalLinks": 0
+    }
+  },
+  "realModelCallsThisPublication": false,
+  "newDesktopBuildThisPublication": false,
+  "checkedAtUtc": "2026-10-21T05:06:29.935618+00:00"
+}

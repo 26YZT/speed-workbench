@@ -82,7 +82,7 @@ impl ProductFactoryService {
         validate_workspace_path_availability(workspace)
             .map_err(|_| ProductFactoryError::InvalidHandoff("workspace directory is unavailable".into()))?;
         let agents = request.agents;
-        if agents.is_empty()
+        if agents.len() != 1
             || agents
                 .iter()
                 .filter(|agent| matches!(agent.role.as_str(), "lead" | "leader"))
@@ -96,7 +96,7 @@ impl ProductFactoryService {
             })
         {
             return Err(ProductFactoryError::InvalidHandoff(
-                "select configured assistants/models and exactly one leader".into(),
+                "select exactly one configured Team leader for this MVP".into(),
             ));
         }
         let port = self
@@ -119,7 +119,9 @@ impl ProductFactoryService {
         if let Err(error) = self.repository.complete_handoff(&row, &team, &tasks).await {
             // Delete only this preparation's member conversations, never another
             // process's committed Team or its graph.
-            port.discard_team(user_id, &team).await?;
+            if port.discard_team(user_id, &team).await.is_err() {
+                tracing::warn!(run_id, "failed to discard uncommitted handoff preparation");
+            }
             let current = self
                 .repository
                 .get_run(user_id, run_id)

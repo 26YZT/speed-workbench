@@ -14,6 +14,31 @@ pub const MAX_FILE_BYTES: u64 = 8 * 1024 * 1024;
 pub const MAX_TOTAL_BYTES: u64 = 64 * 1024 * 1024;
 const MAX_ENTRIES: usize = 4096;
 
+pub(crate) fn prepare_managed_workspace(root: &Path, relative: &str) -> VersionResult<PathBuf> {
+    validate_relative(relative)?;
+    let (directory, path) = platform::Directory::prepare_root(root)?;
+    directory.create_leaf(relative)?;
+    Ok(path.join(relative))
+}
+
+pub(crate) fn validate_managed_workspace(path: &Path) -> VersionResult<()> {
+    // A failed iteration may retain a receipt before its leaf was created.
+    // Authorize that exact managed location without hiding its recovery data;
+    // filesystem operations still require/open the actual directory themselves.
+    let mut existing = path;
+    loop {
+        match std::fs::symlink_metadata(existing) {
+            Ok(_) => return platform::Directory::open(existing).map(|_| ()),
+            Err(error) if error.kind() == std::io::ErrorKind::NotFound => {
+                existing = existing
+                    .parent()
+                    .ok_or(VersionError::Invalid("PRODUCT_FACTORY_VERSION_INVALID_PATH"))?;
+            }
+            Err(_) => return Err(VersionError::Blocked("PRODUCT_FACTORY_WORKSPACE_UNAVAILABLE")),
+        }
+    }
+}
+
 /// Establish a configured/new run root once, before operations begin. Existing
 /// OS aliases such as macOS /tmp and /var are resolved here, never while copying.
 pub(crate) fn established_root(path: PathBuf) -> PathBuf {

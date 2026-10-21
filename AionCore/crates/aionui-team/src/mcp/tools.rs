@@ -82,6 +82,7 @@ pub struct SpawnAgentInput {
 }
 
 #[derive(Debug, Deserialize)]
+#[serde(deny_unknown_fields)]
 pub struct TaskCreateInput {
     pub subject: String,
     pub description: Option<String>,
@@ -90,6 +91,7 @@ pub struct TaskCreateInput {
 }
 
 #[derive(Debug, Deserialize)]
+#[serde(deny_unknown_fields)]
 pub struct TaskUpdateInput {
     pub task_id: String,
     pub status: Option<String>,

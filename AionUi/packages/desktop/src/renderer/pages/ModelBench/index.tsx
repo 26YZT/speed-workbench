@@ -7,15 +7,26 @@ import { loadHistory, loadModels, runComparison, saveRecord } from './client';
 import type { BenchModel, BenchRecord, BenchResult } from './types';
 import { modelKey } from './types';
 import styles from './ModelBench.module.css';
+import { useAuth } from '@renderer/hooks/context/AuthContext';
+import { usePageLeaveGuard } from '@renderer/hooks/context/NavigationHistoryContext';
+import { readBenchDraft, writeBenchDraft } from './draftStore';
+import type { BenchDraft } from './draftStore';
 
 const ModelBench: React.FC = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const { user } = useAuth();
+  const owner = user?.id ?? 'local';
+  const [restored] = useState(() => readBenchDraft(owner));
+  const [restoredNotice, setRestoredNotice] = useState(
+    Boolean(restored && (restored.prompt || restored.material || restored.results.length || restored.selected.length))
+  );
   const [models, setModels] = useState<BenchModel[]>([]);
-  const [selected, setSelected] = useState<string[]>([]);
-  const [prompt, setPrompt] = useState('');
-  const [material, setMaterial] = useState<{ name: string; text: string }>();
-  const [results, setResults] = useState<BenchResult[]>([]);
+  const [selected, setSelected] = useState<string[]>(restored?.selected ?? []);
+  const [prompt, setPrompt] = useState(restored?.prompt ?? '');
+  const [material, setMaterial] = useState<{ name: string; text: string } | undefined>(restored?.material);
+  const [results, setResults] = useState<BenchResult[]>(restored?.results ?? []);
+  const [draftSaveError, setDraftSaveError] = useState(false);
   const [active, setActive] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -26,8 +37,42 @@ const ModelBench: React.FC = () => {
   const [now, setNow] = useState(Date.now);
   const controls = useRef<AbortController[]>([]);
   const generation = useRef(0);
-  const snapshot = useRef({ id: '', created: 0, prompt: '' });
+  const snapshot = useRef(restored?.snapshot ?? { id: '', created: 0, prompt: '' });
   const activeRef = useRef(false);
+  const draftWritten = useRef(Boolean(restored));
+  const draftRef = useRef<BenchDraft | undefined>(undefined);
+  draftRef.current = {
+    version: 1,
+    prompt,
+    selected,
+    material,
+    results,
+    snapshot: snapshot.current,
+    selectedModels: selected
+      .map(
+        (key) =>
+          models.find((model) => modelKey(model) === key) ??
+          restored?.selectedModels.find((model) => modelKey(model) === key)
+      )
+      .filter((model): model is BenchModel => Boolean(model)),
+  };
+  useEffect(() => {
+    if (prompt || selected.length || material || results.length || draftWritten.current) {
+      const saved = writeBenchDraft(owner, draftRef.current!);
+      if (saved) draftWritten.current = true;
+      setDraftSaveError(!saved);
+    }
+  }, [owner, prompt, selected, material, results, models, restored]);
+  usePageLeaveGuard(
+    active || draftSaveError,
+    {
+      title: t('common.draftProtection.leaveTitle'),
+      content: t(draftSaveError ? 'common.modelBench.draftSaveError' : 'common.modelBench.leaveActive'),
+      leave: t(draftSaveError ? 'common.draftProtection.leaveUnsafe' : 'common.draftProtection.leave'),
+      stay: t('common.draftProtection.stay'),
+    },
+    draftSaveError
+  );
 
   useEffect(() => {
     if (!active) return;
@@ -48,7 +93,23 @@ const ModelBench: React.FC = () => {
   };
   useEffect(() => {
     void reload();
+    const flush = (event?: BeforeUnloadEvent) => {
+      const draft = draftRef.current;
+      if (
+        !draft ||
+        !(draftWritten.current || draft.prompt || draft.selected.length || draft.material || draft.results.length)
+      )
+        return;
+      if (!writeBenchDraft(owner, draft) && event) {
+        event.preventDefault();
+        event.returnValue = '';
+        setDraftSaveError(true);
+      }
+    };
+    window.addEventListener('beforeunload', flush);
     return () => {
+      window.removeEventListener('beforeunload', flush);
+      flush();
       generation.current++;
       controls.current.forEach((control) => control.abort());
     };
@@ -57,6 +118,7 @@ const ModelBench: React.FC = () => {
   const execute = async (targets: BenchModel[], input: string, retryIndex?: number): Promise<void> => {
     if (activeRef.current) return;
     activeRef.current = true;
+    setRestoredNotice(false);
     setActive(true);
     const current = ++generation.current;
     controls.current = targets.map(() => new AbortController());
@@ -149,6 +211,39 @@ const ModelBench: React.FC = () => {
           </Button>
         </div>
       </header>
+      {(restoredNotice || prompt || selected.length > 0 || material || results.length > 0) &&
+        (draftSaveError ? (
+          <Alert type='error' content={t('common.modelBench.draftSaveError')} />
+        ) : (
+          <p
+            className='m-0 rounded-8px border border-border-2 bg-fill-1 p-12px text-13px text-t-secondary'
+            role='status'
+          >
+            {t(
+              restoredNotice
+                ? 'common.modelBench.draftRestored'
+                : active
+                  ? 'common.modelBench.leaveActive'
+                  : 'common.modelBench.draftLocal'
+            )}
+          </p>
+        ))}
+      {draftSaveError && (
+        <Button
+          onClick={() => {
+            const url = URL.createObjectURL(
+              new Blob([JSON.stringify(draftRef.current, null, 2)], { type: 'application/json' })
+            );
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = 'model-comparison-draft.json';
+            link.click();
+            URL.revokeObjectURL(url);
+          }}
+        >
+          {t('common.draftProtection.exportDraft')}
+        </Button>
+      )}
       <section className={styles.selection}>
         <label htmlFor='bench-models'>{t('common.modelBench.choose')}</label>
         <div className={styles.actions}>
@@ -165,9 +260,15 @@ const ModelBench: React.FC = () => {
             onChange={(value: string[]) => setSelected(value.slice(0, 4))}
             className={styles.modelSelect}
             placeholder={t('common.modelBench.selectPlaceholder')}
-            options={models.map((model) => ({
+            options={[
+              ...models,
+              ...(restored?.selectedModels ?? []).filter(
+                (model) => !models.some((available) => modelKey(available) === modelKey(model))
+              ),
+            ].map((model) => ({
               value: modelKey(model),
               label: `${model.model} · ${model.provider_name}`,
+              disabled: !models.some((available) => modelKey(available) === modelKey(model)),
             }))}
           />
           <Button disabled={active} loading={loading} onClick={() => void reload()}>
@@ -300,6 +401,7 @@ const ModelBench: React.FC = () => {
             className={styles.historyItem}
             key={record.id}
             onClick={() => {
+              setRestoredNotice(false);
               snapshot.current = { id: record.id, created: record.created, prompt: record.prompt };
               setResults(record.results);
               setPrompt(record.prompt);

@@ -9,6 +9,162 @@
   transition: transform 0.14s cubic-bezier(0.33, 1, 0.68, 1);
 }
 
+.navEntry:global(.arco-btn) {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 8px;
+  width: 100%;
+  height: 34px;
+  min-height: 34px;
+  padding-block: 0;
+  padding-inline: 10px 8px;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--color-text-1);
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 24px;
+  text-align: start;
+}
+
+.navEntry:global(.arco-btn):hover {
+  background: var(--color-fill-2);
+  color: var(--color-text-1);
+}
+
+.navEntry:global(.arco-btn)[data-active='true'],
+.navEntry:global(.arco-btn)[data-active='true']:hover,
+.navEntry:global(.arco-btn)[data-active='true']:active {
+  background: var(--color-fill-3);
+  color: var(--color-text-1);
+  font-weight: 600;
+}
+
+.navEntry[data-active='true']::before {
+  position: absolute;
+  inset-inline-start: 0;
+  top: 8px;
+  bottom: 8px;
+  width: 3px;
+  border-radius: 2px;
+  background: var(--color-text-1);
+  content: '';
+}
+
+.navEntry:global(.arco-btn):focus-visible {
+  outline: 2px solid rgb(var(--primary-6));
+  outline-offset: -2px;
+}
+
+.navEntryCollapsed:global(.arco-btn) {
+  justify-content: center;
+  padding: 0;
+}
+
+.navEntry:global(.arco-btn.sider-action-btn-mobile) {
+  height: 44px !important;
+  min-height: 44px;
+}
+
+.navEntryIcon {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  line-height: 0;
+}
+
+.navEntryLabel {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.toolbarAction:global(.arco-btn) {
+  flex: 1;
+  width: auto;
+  min-width: 0;
+}
+
+.iconAction:global(.arco-btn),
+.itemMenuButton:global(.arco-btn) {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  padding: 0;
+  border: 0;
+  border-radius: 6px;
+  color: var(--color-text-2);
+}
+
+@media (max-width: 640px) {
+  .iconAction:global(.arco-btn) {
+    min-width: 44px !important;
+    min-height: 44px !important;
+  }
+
+  .teamHeader,
+  .itemRow {
+    min-height: 44px;
+  }
+}
+
+.iconAction:global(.arco-btn):focus-visible,
+.sectionToggle:global(.arco-btn):focus-visible,
+.itemActivation:global(.arco-btn):focus-visible,
+.itemMenuButton:global(.arco-btn):focus-visible {
+  outline: 2px solid rgb(var(--primary-6));
+  outline-offset: -2px;
+}
+
+.footerIcon:global(.arco-btn) {
+  width: 40px;
+  height: 32px;
+}
+
+.collapsedTeam:global(.arco-btn) {
+  min-height: 40px;
+  height: 40px;
+  padding: 0;
+}
+
+.sectionToggle:global(.arco-btn),
+.itemActivation:global(.arco-btn) {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 8px;
+  min-width: 0;
+  height: 100%;
+  padding: 0;
+  border: 0;
+  background: transparent !important;
+  color: var(--color-text-1);
+  text-align: start;
+}
+
+.sectionToggle:global(.arco-btn) {
+  color: var(--color-text-3);
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.itemMenuButton:global(.arco-btn) {
+  width: 20px;
+  height: 20px;
+  background: var(--bg-2);
+}
+
 .newChatTrigger:hover .newChatIcon {
   transform: scale(0.92) translateZ(0);
 }

@@ -58,6 +58,34 @@ struct ReviewPort {
     pool: sqlx::SqlitePool,
 }
 
+struct UnknownCostReviewPort(ReviewPort);
+
+#[async_trait::async_trait]
+impl ProductFactoryReviewPort for UnknownCostReviewPort {
+    async fn get_task_snapshot(
+        &self,
+        user: &str,
+        team: &str,
+        task: &str,
+    ) -> Result<ProductFactoryTaskReviewSnapshot, ProductFactoryError> {
+        let mut snapshot = self.0.get_task_snapshot(user, team, task).await?;
+        snapshot.usage_summary.cost_est = None;
+        snapshot.usage_summary.cost_unknown = true;
+        snapshot.usage_summary.budget_limit_usd = None;
+        Ok(snapshot)
+    }
+
+    async fn review_task(
+        &self,
+        user: &str,
+        team: &str,
+        task: &str,
+        request: TeamTaskReviewRequest,
+    ) -> Result<TeamTaskResponse, ProductFactoryError> {
+        self.0.review_task(user, team, task, request).await
+    }
+}
+
 #[async_trait::async_trait]
 impl ProductFactoryReviewPort for ReviewPort {
     async fn get_task_snapshot(
@@ -382,6 +410,210 @@ async fn completed_run_exposes_delivery_checks_and_task_counts() {
     assert_eq!(delivery.task_counts.total, 4);
     assert_eq!(delivery.task_counts.completed, 4);
     assert!(delivery.checks.iter().all(|check| check.passed));
+}
+
+#[tokio::test]
+async fn unknown_cost_never_certifies_delivery_even_without_a_budget() {
+    let (db, repo, service, _, id) = setup().await;
+    service.start_run("owner", &id, request()).await.unwrap();
+    let row = repo.get_run("owner", &id).await.unwrap().unwrap();
+    sqlx::query("UPDATE team_tasks SET status = 'completed' WHERE team_id = ?")
+        .bind(&row.team_id)
+        .execute(db.pool())
+        .await
+        .unwrap();
+    sqlx::query("UPDATE product_factory_runs SET status = 'completed' WHERE id = ?")
+        .bind(&id)
+        .execute(db.pool())
+        .await
+        .unwrap();
+    for name in ["START.md", "ACCEPTANCE.md"] {
+        std::fs::write(std::path::Path::new(&row.workspace_path).join(name), "# Evidence").unwrap();
+    }
+    let service = service.with_review_port(Arc::new(UnknownCostReviewPort(ReviewPort {
+        pool: db.pool().clone(),
+    })));
+    let delivery = service.get_delivery("owner", &id).await.unwrap();
+    assert!(delivery.usage_summary.cost_unknown);
+    assert!(!delivery.ready, "unknown cost is not verified delivery");
+    assert!(
+        delivery
+            .checks
+            .iter()
+            .any(|check| check.code == "cost_known" && !check.passed)
+    );
+}
+
+#[tokio::test]
+async fn crashed_first_reservation_can_be_recovered_without_dispatching_on_read() {
+    let (db, repo, service, _, id) = setup().await;
+    let row = repo.get_run("owner", &id).await.unwrap().unwrap();
+    let team_id = row.team_id.as_deref().unwrap();
+    let team = repo.get_handoff_team("owner", team_id).await.unwrap().unwrap();
+    let task = repo
+        .get_handoff_task("owner", team_id, &format!("{team_id}-data-1"))
+        .await
+        .unwrap()
+        .unwrap();
+    assert!(repo.reserve_execution(&row, &team, &task, 1).await.unwrap());
+    assert!(matches!(
+        service.recover_execution("other", &id).await,
+        Err(ProductFactoryError::NotFound(_))
+    ));
+    assert_eq!(
+        repo.get_execution("owner", &id).await.unwrap().unwrap().state,
+        "pending"
+    );
+    assert!(
+        service
+            .recover_execution("owner", &id)
+            .await
+            .unwrap()
+            .execution
+            .is_none()
+    );
+    let count: i64 = sqlx::query_scalar("SELECT COUNT(*) FROM mailbox")
+        .fetch_one(db.pool())
+        .await
+        .unwrap();
+    assert_eq!(count, 0, "recovery does not start an Agent");
+    service.start_run("owner", &id, request()).await.unwrap();
+    let count: i64 = sqlx::query_scalar("SELECT COUNT(*) FROM mailbox")
+        .fetch_one(db.pool())
+        .await
+        .unwrap();
+    assert_eq!(count, 1);
+}
+
+#[tokio::test]
+async fn crashed_continuation_preserves_its_task_and_can_be_explicitly_dispatched() {
+    let (db, repo, service, _, id) = setup().await;
+    service.start_run("owner", &id, request()).await.unwrap();
+    let receipt = repo.get_execution("owner", &id).await.unwrap().unwrap();
+    let next_id = format!("{}-backend-1", receipt.team_id);
+    sqlx::query("UPDATE team_tasks SET status = 'completed' WHERE id = ?")
+        .bind(&receipt.task_id)
+        .execute(db.pool())
+        .await
+        .unwrap();
+    sqlx::query("UPDATE team_tasks SET blocked_by = '[]' WHERE id = ?")
+        .bind(&next_id)
+        .execute(db.pool())
+        .await
+        .unwrap();
+    let next = repo
+        .get_handoff_task("owner", &receipt.team_id, &next_id)
+        .await
+        .unwrap()
+        .unwrap();
+    assert!(
+        repo.advance_execution("owner", &id, &receipt.team_id, &receipt.task_id, &next, 1)
+            .await
+            .unwrap()
+    );
+    let recovered = service
+        .recover_execution("owner", &id)
+        .await
+        .unwrap()
+        .execution
+        .unwrap();
+    assert_eq!(recovered.task_id, next_id);
+    assert_eq!(
+        recovered.state,
+        aionui_api_types::ProductFactoryExecutionState::Uncertain
+    );
+    let continued = service.continue_run("owner", &id).await.unwrap().execution.unwrap();
+    assert_eq!(continued.task_id, next_id);
+    assert_eq!(
+        continued.state,
+        aionui_api_types::ProductFactoryExecutionState::Enqueued
+    );
+}
+
+#[tokio::test]
+async fn failed_run_cannot_resume_or_approve_a_task() {
+    let (db, repo, service, _, id) = setup().await;
+    service.start_run("owner", &id, request()).await.unwrap();
+    sqlx::query("UPDATE product_factory_runs SET status = 'failed' WHERE id = ?")
+        .bind(&id)
+        .execute(db.pool())
+        .await
+        .unwrap();
+    let task = repo.get_execution("owner", &id).await.unwrap().unwrap().task_id;
+    sqlx::query("UPDATE team_tasks SET status = 'in_progress', owner = 'lead-slot' WHERE id = ?")
+        .bind(&task)
+        .execute(db.pool())
+        .await
+        .unwrap();
+    let before: i64 = sqlx::query_scalar("SELECT COUNT(*) FROM mailbox")
+        .fetch_one(db.pool())
+        .await
+        .unwrap();
+    assert!(matches!(
+        service.continue_run("owner", &id).await,
+        Err(ProductFactoryError::ExecutionBlocked(_))
+    ));
+    let after: i64 = sqlx::query_scalar("SELECT COUNT(*) FROM mailbox")
+        .fetch_one(db.pool())
+        .await
+        .unwrap();
+    assert_eq!(before, after, "terminal runs cannot cause another dispatch");
+    sqlx::query("UPDATE team_tasks SET status = 'in_review' WHERE id = ?")
+        .bind(&task)
+        .execute(db.pool())
+        .await
+        .unwrap();
+    let service = service.with_review_port(Arc::new(ReviewPort {
+        pool: db.pool().clone(),
+    }));
+    assert!(matches!(
+        service
+            .review(
+                "owner",
+                &id,
+                TeamTaskReviewRequest {
+                    decision: TeamTaskReviewDecision::Approve,
+                    feedback: None,
+                }
+            )
+            .await,
+        Err(ProductFactoryError::ReviewBlocked(_))
+    ));
+    assert_eq!(
+        repo.get_handoff_task(
+            "owner",
+            &repo.get_run("owner", &id).await.unwrap().unwrap().team_id.unwrap(),
+            &task
+        )
+        .await
+        .unwrap()
+        .unwrap()
+        .status,
+        "in_review"
+    );
+}
+
+#[tokio::test]
+async fn polling_never_reopens_a_completed_run() {
+    let (db, repo, service, _, id) = setup().await;
+    service.start_run("owner", &id, request()).await.unwrap();
+    let receipt = repo.get_execution("owner", &id).await.unwrap().unwrap();
+    sqlx::query("UPDATE product_factory_runs SET status = 'completed' WHERE id = ?")
+        .bind(&id)
+        .execute(db.pool())
+        .await
+        .unwrap();
+    sqlx::query("UPDATE team_tasks SET status = 'in_review' WHERE id = ?")
+        .bind(&receipt.task_id)
+        .execute(db.pool())
+        .await
+        .unwrap();
+    let service = service.with_review_port(Arc::new(ReviewPort {
+        pool: db.pool().clone(),
+    }));
+    let review = service.get_review("owner", &id).await.unwrap();
+    assert_eq!(review.run.status.as_str(), "completed");
+    assert_eq!(repo.get_run("owner", &id).await.unwrap().unwrap().status, "completed");
 }
 
 #[tokio::test]

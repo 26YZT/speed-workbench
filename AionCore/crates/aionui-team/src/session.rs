@@ -354,7 +354,14 @@ impl TeamSession {
 
     pub(crate) async fn ensure_task_budget(&self) -> Result<(), TeamError> {
         let Some(service) = self.service.upgrade() else {
-            return Ok(());
+            // Explicit standalone sessions have no host or budget provider.
+            // A previously bound host disappearing is a different condition:
+            // never start another billable turn after its guard was dropped.
+            return if self.service.ptr_eq(&Weak::new()) {
+                Ok(())
+            } else {
+                Err(TeamError::SessionNotFound(self.team.id.clone()))
+            };
         };
         service.ensure_task_budget(&self.user_id, &self.team.id).await
     }

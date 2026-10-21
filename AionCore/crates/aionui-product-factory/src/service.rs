@@ -57,6 +57,7 @@ pub struct ProductFactoryService {
     pub(crate) usage_repository: Option<Arc<dyn aionui_db::IAgentUsageRepository>>,
     pub(crate) planning_workers: Arc<tokio::sync::Mutex<std::collections::HashSet<String>>>,
     pub(crate) managed_workspace_root: Option<std::path::PathBuf>,
+    pub(crate) isolate_user_workspaces: bool,
     pub(crate) versioning: Option<crate::versions::Versioning>,
 }
 
@@ -74,6 +75,7 @@ impl ProductFactoryService {
             usage_repository: None,
             planning_workers: Arc::new(tokio::sync::Mutex::new(Default::default())),
             managed_workspace_root: None,
+            isolate_user_workspaces: false,
             versioning: None,
         }
     }
@@ -92,6 +94,19 @@ impl ProductFactoryService {
         let name = required_text("name", request.name)?;
         let idea = required_text("idea", request.idea)?;
         let budget_usd = normalize_budget(request.budget_usd)?;
+        if self.isolate_user_workspaces
+            && request
+                .workspace_path
+                .as_ref()
+                .is_some_and(|path| !path.trim().is_empty())
+        {
+            return Err(ProductFactoryError::InvalidRequest(
+                "remote workspaces are allocated by the server; omit workspace_path".into(),
+            ));
+        }
+        if self.isolate_user_workspaces && self.managed_workspace_root.is_none() {
+            return Err(crate::workspace::workspace_blocked());
+        }
         let now = now_ms();
         let mut row = ProductFactoryRunRow {
             id: generate_id(),
@@ -120,6 +135,13 @@ impl ProductFactoryService {
         let managed = row.workspace_path.is_empty() && self.managed_workspace_root.is_some();
         if let Some(root) = self.managed_workspace_root.as_ref().filter(|_| managed) {
             let prepare = || -> std::io::Result<std::path::PathBuf> {
+                if self.isolate_user_workspaces {
+                    return crate::versions::prepare_managed_workspace(
+                        root,
+                        &self.user_relative_path(user_id, &row.id),
+                    )
+                    .map_err(std::io::Error::other);
+                }
                 std::fs::create_dir_all(root)?;
                 let folder = std::fs::canonicalize(root)?.join(&row.id);
                 std::fs::create_dir(&folder)?;
@@ -128,7 +150,12 @@ impl ProductFactoryService {
             let folder = prepare().map_err(|error| {
                 tracing::warn!(run_id = %row.id, kind = ?error.kind(), "managed product workspace preparation failed");
                 ProductFactoryError::InvalidRequest(
-                    "local product folder could not be prepared; choose an existing writable directory".into(),
+                    if self.isolate_user_workspaces {
+                        "managed product folder could not be prepared"
+                    } else {
+                        "local product folder could not be prepared; choose an existing writable directory"
+                    }
+                    .into(),
                 )
             })?;
             row.workspace_path = folder.to_string_lossy().into_owned();
@@ -150,16 +177,13 @@ impl ProductFactoryService {
             .list_runs(user_id)
             .await?
             .into_iter()
+            .filter(|run| self.authorize_workspace(run).is_ok())
             .map(to_response)
             .collect())
     }
 
     pub async fn get_run(&self, user_id: &str, run_id: &str) -> Result<ProductFactoryRunResponse, ProductFactoryError> {
-        let row = self
-            .repository
-            .get_run(user_id, run_id)
-            .await?
-            .ok_or_else(|| ProductFactoryError::NotFound(run_id.to_owned()))?;
+        let row = self.load_run(user_id, run_id).await?;
         Ok(to_response(row))
     }
 
@@ -277,11 +301,9 @@ impl ProductFactoryService {
         interview["confirmed"] = serde_json::Value::Bool(true);
         row.interview_json = Some(interview.to_string());
 
-        row.status = ProductFactoryRunStatus::BlueprintGenerating.as_str().to_owned();
-        row.updated_at = now_ms();
-        row.plan_revision += 1;
-        self.repository.update_run(&row).await?;
-
+        // Rule-based blueprint creation has no asynchronous work. Persist its
+        // result and interview confirmation in one CAS, so a failed write
+        // leaves the original interview available for a safe retry.
         row.blueprint_json = Some(
             serde_json::to_string(&draft_blueprint(&row, &summary)).map_err(|error| {
                 ProductFactoryError::InvalidRequest(format!("blueprint could not be serialized: {error}"))
@@ -509,10 +531,13 @@ impl ProductFactoryService {
         user_id: &str,
         run_id: &str,
     ) -> Result<ProductFactoryRunRow, ProductFactoryError> {
-        self.repository
+        let row = self
+            .repository
             .get_run(user_id, run_id)
             .await?
-            .ok_or_else(|| ProductFactoryError::NotFound(run_id.to_owned()))
+            .ok_or_else(|| ProductFactoryError::NotFound(run_id.to_owned()))?;
+        self.authorize_workspace(&row)?;
+        Ok(row)
     }
 }
 
@@ -643,6 +668,14 @@ fn is_valid_transition(from: ProductFactoryRunStatus, to: ProductFactoryRunStatu
                 ProductFactoryRunStatus::TaskDraftGenerating,
                 ProductFactoryRunStatus::Failed
             )
+            // Execution states could previously only be entered, never closed.
+            // A run whose dispatch is stranded — a reservation no retry accepts,
+            // an Agent that never reports back — had no exit at all, so the only
+            // way out was editing the database. Failing is terminal, so allowing
+            // it here cannot be used to rewind a run.
+            | (ProductFactoryRunStatus::HandedOff, ProductFactoryRunStatus::Failed)
+            | (ProductFactoryRunStatus::Running, ProductFactoryRunStatus::Failed)
+            | (ProductFactoryRunStatus::InReview, ProductFactoryRunStatus::Failed)
     )
 }
 
@@ -686,6 +719,34 @@ mod tests {
             ProductFactoryRunStatus::Draft,
             ProductFactoryRunStatus::TaskDraftReady
         ));
+    }
+
+    #[test]
+    fn execution_states_can_be_closed_as_failed() {
+        for from in [
+            ProductFactoryRunStatus::HandedOff,
+            ProductFactoryRunStatus::Running,
+            ProductFactoryRunStatus::InReview,
+        ] {
+            assert!(
+                is_valid_transition(from, ProductFactoryRunStatus::Failed),
+                "{from:?} must be closable so a stranded run is not permanent"
+            );
+        }
+    }
+
+    #[test]
+    fn failed_is_terminal_and_never_a_rewind_target() {
+        for to in [
+            ProductFactoryRunStatus::Draft,
+            ProductFactoryRunStatus::HandedOff,
+            ProductFactoryRunStatus::Running,
+            ProductFactoryRunStatus::InReview,
+            ProductFactoryRunStatus::Completed,
+        ] {
+            assert!(!is_valid_transition(ProductFactoryRunStatus::Failed, to));
+            assert!(!is_valid_transition(ProductFactoryRunStatus::Completed, to));
+        }
     }
 
     #[test]

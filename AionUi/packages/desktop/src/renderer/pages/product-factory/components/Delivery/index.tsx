@@ -10,7 +10,7 @@ import { getProductFactoryCostReport, repriceProductFactoryCosts } from '../../c
 import type { ProductFactoryDelivery } from '../../types';
 import styles from '../../ProductFactory.module.css';
 
-import { buildCostReportExport } from './costReport';
+import { buildCostReportExport, formatUsdCost } from './costReport';
 
 type Props = { delivery: ProductFactoryDelivery };
 
@@ -46,7 +46,7 @@ const DeliveryPanel: React.FC<Props> = ({ delivery: initialDelivery }) => {
   };
   const summary = delivery.usageSummary;
   const unknown = summary.costUnknown || summary.costEst == null;
-  const cost = unknown ? t('productFactory.review.unknown') : `$${summary.costEst!.toFixed(4)}`;
+  const cost = unknown ? t('productFactory.review.unknown') : formatUsdCost(summary.costEst!);
   const exportReport = async () => {
     if (exporting || repricing) return;
     setExporting(true);
@@ -125,7 +125,7 @@ const DeliveryPanel: React.FC<Props> = ({ delivery: initialDelivery }) => {
             <code className='break-all'>{task.taskId}</code>
             <span className='text-t-secondary'>
               {task.inputTokens} / {task.outputTokens} ·{' '}
-              {task.costEst == null ? t('productFactory.review.unknown') : `$${task.costEst.toFixed(4)}`}
+              {unknown || task.costEst == null ? t('productFactory.review.unknown') : formatUsdCost(task.costEst)}
             </span>
           </div>
         ))}

@@ -32,7 +32,11 @@
       "done": "已完成",
       "error": "失败",
       "stopped": "已停止"
-    }
+    },
+    "draftRestored": "已恢复本机对比草稿。中断的请求已停止，不会自动重新发送。",
+    "draftLocal": "输入和已收到的回答会保留在本机；保存到对比记录仍需手动操作。",
+    "draftSaveError": "未能保留本机草稿，请先保存对比或导出草稿后再离开。",
+    "leaveActive": "离开会停止本轮对比，输入和已收到的回答会保留为本机草稿。"
   },
   "send": "发送",
   "cancel": "取消",
@@ -237,5 +241,13 @@
   },
   "selectedCount": "已选 {{count}}",
   "selectedSkills": "已选技能",
-  "aiAssistant": "AI 助手"
+  "aiAssistant": "AI 助手",
+  "draftProtection": {
+    "leaveTitle": "离开当前页面？",
+    "leave": "离开并保留草稿",
+    "stay": "继续编辑",
+    "storageError": "未能保留本机草稿，请先保存或导出后再离开。",
+    "exportDraft": "导出草稿",
+    "leaveUnsafe": "仍然离开"
+  }
 }

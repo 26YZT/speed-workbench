@@ -32,7 +32,11 @@
       "done": "Completed",
       "error": "Failed",
       "stopped": "Stopped"
-    }
+    },
+    "draftRestored": "Your local comparison draft has been restored. Interrupted requests are stopped and will not be sent again automatically.",
+    "draftLocal": "Input and received answers are kept on this device. Saving a comparison to history is still a separate action.",
+    "draftSaveError": "The local draft could not be saved. Please save the comparison or export the draft before leaving.",
+    "leaveActive": "Leaving will stop the current comparison. Your input and received answers will stay in the local draft."
   },
   "send": "Senden",
   "cancel": "Abbrechen",
@@ -237,5 +241,13 @@
   "goBack": "Zurück",
   "selectedCount": "{{count}} ausgewählt",
   "selectedSkills": "Ausgewählte Skills",
-  "aiAssistant": "KI-Assistent"
+  "aiAssistant": "KI-Assistent",
+  "draftProtection": {
+    "leaveTitle": "Leave this page?",
+    "leave": "Leave and keep draft",
+    "stay": "Continue editing",
+    "storageError": "The local draft could not be saved. Save or export it before leaving.",
+    "exportDraft": "Export draft",
+    "leaveUnsafe": "Leave anyway"
+  }
 }

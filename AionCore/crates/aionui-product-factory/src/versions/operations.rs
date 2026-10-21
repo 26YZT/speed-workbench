@@ -170,7 +170,7 @@ impl ProductFactoryService {
             .unwrap_or_else(generate_id);
         let version_id = existing.as_ref().map(|row| row.id.clone()).unwrap_or_else(generate_id);
         let operation_id = generate_id();
-        let relative = format!("{product_id}/{version_id}/{operation_id}");
+        let relative = self.user_relative_path(user, &format!("{product_id}/{version_id}/{operation_id}"));
         let path = PathBuf::from(&run.workspace_path);
         let files = request.files;
         let selected = tokio::task::spawn_blocking(move || filesystem::selected_manifest(&path, &files))
@@ -311,8 +311,7 @@ impl ProductFactoryService {
         let expected_root = self
             .versioning()?
             .snapshot_root
-            .join(&version.product_id)
-            .join(&version.id);
+            .join(self.user_relative_path(&version.user_id, &format!("{}/{}", version.product_id, version.id)));
         if !path.starts_with(&expected_root)
             || path
                 .strip_prefix(&expected_root)
@@ -389,6 +388,7 @@ impl ProductFactoryService {
             .ok_or(VersionError::Unavailable("PRODUCT_FACTORY_VERSION_NOT_CONFIGURED"))?
             .clone();
         let id = generate_id();
+        let workspace_relative = self.user_relative_path(user, &id);
         let now = now_ms();
         let version_id = generate_id();
         let operation_id = generate_id();
@@ -405,7 +405,7 @@ impl ProductFactoryService {
             target_user: old.target_user,
             problem: old.problem,
             expected_output: old.expected_output,
-            workspace_path: managed.join(&id).to_string_lossy().into_owned(),
+            workspace_path: managed.join(&workspace_relative).to_string_lossy().into_owned(),
             budget_usd: budget,
             status: "draft".into(),
             interview_json: None,
@@ -448,7 +448,7 @@ impl ProductFactoryService {
                 CopyFiles {
                     source: source_path,
                     target_root: managed,
-                    relative: id,
+                    relative: workspace_relative,
                     manifest: selected,
                     sealed: false,
                     source_run_id: run_id.to_owned(),

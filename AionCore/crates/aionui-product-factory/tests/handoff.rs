@@ -111,6 +111,19 @@ async fn setup() -> (
 }
 
 #[tokio::test]
+async fn multiple_members_are_rejected_before_creating_an_undispatchable_team() {
+    let (_db, repo, service, port, id) = setup().await;
+    let mut input = request(2);
+    let mut teammate = input.agents[0].clone();
+    teammate.role = "teammate".into();
+    input.agents.push(teammate);
+    let result = service.handoff("owner", &id, input).await;
+    assert!(matches!(result, Err(ProductFactoryError::InvalidHandoff(_))));
+    assert_eq!(port.prepared.load(Ordering::SeqCst), 0);
+    assert!(repo.get_run("owner", &id).await.unwrap().unwrap().team_id.is_none());
+}
+
+#[tokio::test]
 async fn handoff_preserves_dependencies_criteria_budget_and_pending_state() {
     let (db, _, service, port, id) = setup().await;
     let result = service.handoff("owner", &id, request(2)).await.unwrap();

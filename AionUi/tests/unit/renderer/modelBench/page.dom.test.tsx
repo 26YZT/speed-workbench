@@ -1,7 +1,8 @@
 import React from 'react';
 import { cleanup, fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
-import { afterEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+vi.mock('@renderer/hooks/context/AuthContext', () => ({ useAuth: () => ({ user: { id: 'test-user' } }) }));
 
 vi.mock('react-i18next', () => ({ useTranslation: () => ({ t: (key: string) => key }) }));
 vi.mock('@/renderer/components/Markdown', () => ({
@@ -21,8 +22,27 @@ afterEach(() => {
   cleanup();
   vi.resetAllMocks();
 });
+beforeEach(() => localStorage.clear());
 
 describe('model comparison page', () => {
+  it('restores the input draft after leaving and remounting the page', async () => {
+    vi.mocked(loadModels).mockResolvedValue([]);
+    const first = render(
+      <MemoryRouter>
+        <ModelBench />
+      </MemoryRouter>
+    );
+    fireEvent.change(screen.getByLabelText('common.modelBench.prompt'), {
+      target: { value: 'Keep this comparison draft' },
+    });
+    first.unmount();
+    render(
+      <MemoryRouter>
+        <ModelBench />
+      </MemoryRouter>
+    );
+    expect(screen.getByLabelText('common.modelBench.prompt')).toHaveValue('Keep this comparison draft');
+  });
   it('renders an actionable empty state and disables sending without models', async () => {
     vi.mocked(loadModels).mockResolvedValue([]);
     render(

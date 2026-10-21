@@ -1,5 +1,7 @@
 # Speed Workbench 开发交接
 
+当前公开源码与维护入口（2026-10-21）：[项目状态](STATUS.md) · [近期更新与检查](RELEASE_NOTES.md)。以下交接内容保留原日期和历史证据，不能替代最新状态。
+
 更新：2026-10-06。以 [STATUS](STATUS.md)、当前源码和 [本轮证据](evidence/L2-closeout-2026-10-06/README.md) 为准。旧聊天、旧测试和旧包保留历史身份。
 
 ## 目录与源码身份

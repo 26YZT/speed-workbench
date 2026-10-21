@@ -38,6 +38,123 @@ async fn setup() -> (TaskBoard, aionui_db::Database) {
     (TaskBoard::new(repo as Arc<dyn ITeamRepository>), db)
 }
 
+#[tokio::test]
+async fn concurrent_dispatch_claims_have_exactly_one_winner() {
+    let (board, db) = setup().await;
+    let task = board.create_task("t1", "Claim once", None, None, &[]).await.unwrap();
+    let observed: aionui_db::models::TeamTaskRow = sqlx::query_as("SELECT * FROM team_tasks WHERE id = ?")
+        .bind(&task.id)
+        .fetch_one(db.pool())
+        .await
+        .unwrap();
+    let update = TaskUpdate {
+        status: Some(TaskStatus::InProgress),
+        owner: Some("lead".into()),
+        ..Default::default()
+    };
+    let (first, second) = tokio::join!(
+        board.update_task_if_unchanged("t1", &task.id, &update, &observed),
+        board.update_task_if_unchanged("t1", &task.id, &update, &observed),
+    );
+    assert_eq!(usize::from(first.is_ok()) + usize::from(second.is_ok()), 1);
+    let error = first.err().or_else(|| second.err()).unwrap();
+    assert!(error.to_string().contains("changed before the update"));
+}
+
+#[tokio::test]
+async fn stale_review_cannot_overwrite_a_human_approval() {
+    let (board, db) = setup().await;
+    let task = board.create_task("t1", "Review once", None, None, &[]).await.unwrap();
+    board
+        .update_task(
+            "t1",
+            &task.id,
+            &TaskUpdate {
+                status: Some(TaskStatus::InReview),
+                ..Default::default()
+            },
+        )
+        .await
+        .unwrap();
+    let observed: aionui_db::models::TeamTaskRow = sqlx::query_as("SELECT * FROM team_tasks WHERE id = ?")
+        .bind(&task.id)
+        .fetch_one(db.pool())
+        .await
+        .unwrap();
+    board
+        .update_task_if_unchanged(
+            "t1",
+            &task.id,
+            &TaskUpdate {
+                status: Some(TaskStatus::Completed),
+                ..Default::default()
+            },
+            &observed,
+        )
+        .await
+        .unwrap();
+    let rejected = board
+        .update_task_if_unchanged(
+            "t1",
+            &task.id,
+            &TaskUpdate {
+                status: Some(TaskStatus::InProgress),
+                ..Default::default()
+            },
+            &observed,
+        )
+        .await
+        .unwrap_err();
+    assert!(rejected.to_string().contains("changed before the update"));
+    assert_eq!(board.list_tasks("t1").await.unwrap()[0].status, TaskStatus::Completed);
+}
+
+#[tokio::test]
+async fn agent_cannot_reopen_or_edit_a_reviewed_or_terminal_task() {
+    let (board, _db) = setup().await;
+    for status in [TaskStatus::InReview, TaskStatus::Completed, TaskStatus::Deleted] {
+        let task = board
+            .create_task("t1", "Frozen", Some("Evidence"), None, &[])
+            .await
+            .unwrap();
+        board
+            .update_task(
+                "t1",
+                &task.id,
+                &TaskUpdate {
+                    status: Some(status),
+                    ..Default::default()
+                },
+            )
+            .await
+            .unwrap();
+        let rejected = board
+            .update_task_from_agent(
+                "t1",
+                &task.id,
+                &TaskUpdate {
+                    status: Some(TaskStatus::Pending),
+                    description: Some("Overwrite evidence".into()),
+                    ..Default::default()
+                },
+            )
+            .await
+            .unwrap_err();
+        assert!(rejected.to_string().contains("only the user"));
+        let current = board
+            .list_tasks("t1")
+            .await
+            .unwrap()
+            .into_iter()
+            .find(|t| t.id == task.id)
+            .unwrap();
+        assert_eq!(
+            (current.status, current.description.as_deref()),
+            (status, Some("Evidence"))
+        );
+    }
+}
+
 // -- TK: Create tasks ---------------------------------------------------------
 
 #[tokio::test]

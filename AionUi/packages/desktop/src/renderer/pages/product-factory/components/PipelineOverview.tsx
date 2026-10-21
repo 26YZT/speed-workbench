@@ -6,6 +6,7 @@
 
 import React from 'react';
 import { useTranslation } from 'react-i18next';
+import styles from '../ProductFactory.module.css';
 
 const STEP_KEYS = ['idea', 'interview', 'blueprint', 'tasks', 'execution', 'review', 'delivery'] as const;
 
@@ -20,7 +21,7 @@ const PipelineOverview: React.FC = () => {
       <h2 id='product-factory-pipeline-title' className='m-0 text-14px font-600 text-t-primary'>
         {t('productFactory.pipeline.title')}
       </h2>
-      <ol className='m-0 mt-16px grid list-none grid-cols-7 gap-8px p-0 max-980px:grid-cols-4 max-640px:grid-cols-2'>
+      <ol className={styles.pipelineSteps}>
         {STEP_KEYS.map((key, index) => (
           <li key={key} className='min-w-0 rounded-8px border border-border-2 bg-fill-1 px-10px py-12px'>
             <div className='mb-8px flex size-24px items-center justify-center rounded-full bg-fill-3 text-12px font-600 text-t-secondary'>

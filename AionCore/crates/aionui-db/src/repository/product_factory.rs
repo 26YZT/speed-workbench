@@ -86,6 +86,43 @@ pub trait IProductFactoryRepository: Send + Sync {
         now: i64,
     ) -> Result<bool, DbError>;
 
+    /// Recover a reservation left in `pending` by a crash between reserving and
+    /// recording the dispatch receipt.
+    ///
+    /// Team dispatch flips the task to `in_progress` and assigns an owner before
+    /// it sends anything, so a task that is still `pending` with no owner proves
+    /// no message was ever handed to an Agent. That case releases the reservation
+    /// so a fresh dispatch may be reserved. Any other task state means the send
+    /// may have happened, so the receipt is reconciled to `uncertain` and is
+    /// never resent automatically.
+    ///
+    /// `None` means there was no pending reservation to recover.
+    async fn recover_pending_execution(
+        &self,
+        user_id: &str,
+        run_id: &str,
+        now: i64,
+    ) -> Result<Option<&'static str>, DbError>;
+
+    /// Release an `uncertain` receipt back to `pending` when the task it points
+    /// at was provably never dispatched.
+    ///
+    /// A continuation reserves the next task with `advance_execution` before it
+    /// calls Team, so an admission failure inside Team's enqueue leaves an
+    /// `uncertain` receipt on a task that is still `pending` with no owner —
+    /// proof that no message was sent. Without this transition that receipt has
+    /// no legal exit: no continuation branch accepts a `pending` task and no
+    /// retry accepts a receipt whose task was never claimed. Requiring the
+    /// `uncertain` state keeps a live reservation from being stolen.
+    async fn release_undispatched_execution(
+        &self,
+        user_id: &str,
+        run_id: &str,
+        team_id: &str,
+        task_id: &str,
+        now: i64,
+    ) -> Result<bool, DbError>;
+
     /// Move an execution-owned Product Factory run through its runtime states.
     /// Generic status writes remain blocked by the service and cannot call this.
     async fn set_execution_run_status(

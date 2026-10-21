@@ -158,6 +158,7 @@ pub use product_factory::{
     StartProductFactoryPlanningRequest, StartProductFactoryRequest, TaskDraftArtifact, TaskDraftEffort,
     TaskDraftExecutionScope, TaskDraftTask, TaskDraftType, TransitionProductFactoryRunRequest,
 };
+pub use product_factory_versions::*;
 pub use project::{
     AttachFolderRequest, ProjectDetailResponse, ProjectEntry, ProjectExplorer, ResolveRefRequest, ResolveRefResponse,
 };
@@ -256,5 +257,3 @@ mod public_contract_tests {
         assert_eq!(resolution.target, Some(AgentErrorResolutionTarget::Feedback));
     }
 }
-
-pub use product_factory_versions::*;

@@ -25,6 +25,8 @@ export type ProductIdeaDraft = {
   expectedOutput: string;
   workspacePath: string;
   budgetUsd?: number;
+  /** Preserve the user's budget text until validation succeeds; never sent to the API. */
+  budgetInput?: string;
 };
 
 /** A durable dispatch receipt; it does not establish Agent or product success. */

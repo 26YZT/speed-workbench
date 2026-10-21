@@ -81,7 +81,11 @@ impl ProductFactoryService {
                 .await?;
             row = self.load_run(user_id, run_id).await?;
         }
-        if snapshot.task.status == "in_review" && row.status != "in_review" {
+        // Observed workflow facts may only move a run forward. A run that the
+        // human already completed must not be pulled back to `in_review` just
+        // because the Team task reappears that way (for example after a stale
+        // scheduler write), because that silently un-completes a delivery.
+        if snapshot.task.status == "in_review" && runtime_status_can_advance(&row.status, "in_review") {
             let _ = self
                 .repository
                 .set_execution_run_status(user_id, run_id, &row.status, "in_review", now_ms())
@@ -121,6 +125,11 @@ impl ProductFactoryService {
     ) -> Result<ProductFactoryTaskReviewResponse, ProductFactoryError> {
         self.ensure_version_mutable(user_id, run_id).await?;
         let row = self.load_run(user_id, run_id).await?;
+        if !matches!(row.status.as_str(), "handed_off" | "running" | "in_review") {
+            return Err(ProductFactoryError::ReviewBlocked(
+                "run is not available for task review".into(),
+            ));
+        }
         let team_id = row
             .team_id
             .as_deref()
@@ -148,10 +157,23 @@ impl ProductFactoryService {
             "running"
         };
         if row.status != next_status {
-            let _ = self
-                .repository
-                .set_execution_run_status(user_id, run_id, &row.status, next_status, now_ms())
-                .await?;
+            let supported = matches!(
+                (row.status.as_str(), next_status),
+                ("handed_off" | "running" | "in_review", "running" | "completed")
+            );
+            if supported {
+                let _ = self
+                    .repository
+                    .set_execution_run_status(user_id, run_id, &row.status, next_status, now_ms())
+                    .await?;
+            } else {
+                tracing::warn!(
+                    run_id,
+                    from = %row.status,
+                    to = next_status,
+                    "product factory review did not change an unsupported run state"
+                );
+            }
         }
         self.get_review(user_id, run_id).await
     }
@@ -166,6 +188,11 @@ impl ProductFactoryService {
     ) -> Result<ProductFactoryExecutionResponse, ProductFactoryError> {
         self.ensure_version_mutable(user_id, run_id).await?;
         let row = self.load_run(user_id, run_id).await?;
+        if !matches!(row.status.as_str(), "handed_off" | "running" | "in_review") {
+            return Err(ProductFactoryError::ExecutionBlocked(
+                "run is not available for continuation".into(),
+            ));
+        }
         let team_id = row
             .team_id
             .as_deref()
@@ -205,6 +232,12 @@ impl ProductFactoryService {
                 .await;
         }
 
+        if current.status == "pending" && current.owner.is_none() {
+            return self
+                .dispatch_undispatched_next(user_id, team_id, &row, &execution, &current, port)
+                .await;
+        }
+
         if current.status != "completed" {
             return Err(ProductFactoryError::ReviewBlocked(
                 "the current task must be approved before continuing".into(),
@@ -218,10 +251,12 @@ impl ProductFactoryService {
                     task.title
                 )));
             }
-            let _ = self
-                .repository
-                .set_execution_run_status(user_id, run_id, &row.status, "completed", now_ms())
-                .await?;
+            if matches!(row.status.as_str(), "handed_off" | "running" | "in_review") {
+                let _ = self
+                    .repository
+                    .set_execution_run_status(user_id, run_id, &row.status, "completed", now_ms())
+                    .await?;
+            }
             return self.get_execution(user_id, run_id).await;
         };
         let prompt = continuation_prompt(
@@ -247,6 +282,71 @@ impl ProductFactoryService {
         }
         let result = port.enqueue(user_id, team_id, &next_row.id, &prompt).await;
         self.finish_continuation(user_id, run_id, team_id, &next_row.id, result)
+            .await
+    }
+
+    /// Redispatch the next task after an earlier continuation advanced the
+    /// receipt but never reached Team.
+    ///
+    /// `advance_execution` moves the receipt to the next task before Team is
+    /// called, so an admission failure inside Team leaves the receipt pointing at
+    /// a task that is still `pending` and ownerless. That is the same evidence
+    /// `recover_pending_execution` relies on: every dispatch claims the task
+    /// before it sends, so nobody was ever messaged and resending cannot
+    /// duplicate work. The `uncertain` gate is what keeps this from stealing a
+    /// dispatch that is still in flight.
+    async fn dispatch_undispatched_next(
+        &self,
+        user_id: &str,
+        team_id: &str,
+        row: &aionui_db::models::ProductFactoryRunRow,
+        execution: &aionui_db::models::ProductFactoryExecutionRow,
+        current: &TeamTaskRow,
+        port: &Arc<dyn crate::execution::ProductFactoryExecutionPort>,
+    ) -> Result<ProductFactoryExecutionResponse, ProductFactoryError> {
+        let run_id = &row.id;
+        if execution.state != "uncertain" {
+            return Err(ProductFactoryError::ExecutionBlocked(
+                "the task has not been dispatched".into(),
+            ));
+        }
+        let draft = parse_task_draft(row)?;
+        let next_draft_task = draft
+            .tasks
+            .iter()
+            .find(|task| format!("{team_id}-{}", task.id) == current.id)
+            .ok_or_else(|| ProductFactoryError::ReviewBlocked("task is missing from the approved plan".into()))?;
+        let prompt = continuation_prompt(
+            &draft,
+            &row.idea,
+            &row.target_user,
+            &row.expected_output,
+            &row.workspace_path,
+            next_draft_task,
+        );
+        if prompt.len() > 32_768 {
+            return Err(ProductFactoryError::ExecutionBlocked(
+                "execution brief exceeds the supported size".into(),
+            ));
+        }
+        port.check_start(user_id, team_id).await?;
+        if !self
+            .repository
+            .release_undispatched_execution(user_id, run_id, team_id, &current.id, now_ms())
+            .await?
+        {
+            // Another window won the race, or the task was claimed between the
+            // read above and the release. Report what really happened.
+            return self.get_execution(user_id, run_id).await;
+        }
+        tracing::info!(
+            run_id,
+            team_id,
+            task_id = %current.id,
+            "product factory released an undispatched continuation and is resending it"
+        );
+        let result = port.enqueue(user_id, team_id, &current.id, &prompt).await;
+        self.finish_continuation(user_id, run_id, team_id, &current.id, result)
             .await
     }
 
@@ -323,6 +423,15 @@ impl ProductFactoryService {
         }
         Ok(None)
     }
+}
+
+/// Runtime states observed from Team may only move a run forward. Reads never
+/// reopen a completed run, and a failed run stays failed.
+fn runtime_status_can_advance(current: &str, next: &str) -> bool {
+    matches!(
+        (current, next),
+        ("handed_off", "running") | ("handed_off", "in_review") | ("running", "in_review")
+    )
 }
 
 fn draft_task_for_team_task<'a>(

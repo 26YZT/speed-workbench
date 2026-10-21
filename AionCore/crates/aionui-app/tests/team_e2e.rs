@@ -285,7 +285,7 @@ async fn tc_task_review_endpoint_is_user_only_and_requires_in_review() {
     let approve = json_with_token(
         "POST",
         &format!("/api/teams/{team_id}/tasks/review-task/review"),
-        json!({"decision": "approve"}),
+        json!({"decision": "approve", "feedback": "Reviewed the restart evidence"}),
         &token,
         &csrf,
     );
@@ -294,6 +294,12 @@ async fn tc_task_review_endpoint_is_user_only_and_requires_in_review() {
     let payload = body_json(response).await;
     assert_eq!(payload["success"], true);
     assert_eq!(payload["data"]["status"], "completed");
+    assert!(
+        payload["data"]["description"]
+            .as_str()
+            .unwrap()
+            .contains("Reviewed the restart evidence")
+    );
 
     let rejected = json_with_token(
         "POST",

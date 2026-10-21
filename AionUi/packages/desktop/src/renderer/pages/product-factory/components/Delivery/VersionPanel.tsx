@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 import React, { useEffect, useState } from 'react';
-import { Alert, Button, Card, Collapse, Descriptions, Space, Tag } from '@arco-design/web-react';
+import { Alert, Button, Card, Collapse, Descriptions, Modal, Space, Tag } from '@arco-design/web-react';
 import { Refresh } from '@icon-park/react';
 import { useTranslation } from 'react-i18next';
 import type { ProductFactoryRun, ProductVersion, SourceManifest } from '../../types';
@@ -29,6 +29,7 @@ export default function VersionPanel({ run, onOpenRun, onPreparationBlocked }: P
   const [iteration, setIteration] = useState<ProductVersion>();
   const [selectedVersion, setSelectedVersion] = useState<string>();
   const [activatedPath, setActivatedPath] = useState<string>();
+  const [confirmNewRequest, setConfirmNewRequest] = useState(false);
   const current = versions.history?.versions.find((version) => version.id === versions.history?.currentVersionId);
   const blocked = current?.state === 'copying' || current?.state === 'failed';
   const canWrite = !versions.loading && !versions.busy && !versions.readFailed && !versions.pending;
@@ -73,6 +74,20 @@ export default function VersionPanel({ run, onOpenRun, onPreparationBlocked }: P
 
   return (
     <Card title={t('productFactory.versions.title')}>
+      <Modal
+        visible={confirmNewRequest}
+        title={t('productFactory.versions.newRequest')}
+        okText={t('common.confirm')}
+        cancelText={t('common.cancel')}
+        onCancel={() => setConfirmNewRequest(false)}
+        onOk={() => {
+          versions.newRequest();
+          setSource(undefined);
+          setConfirmNewRequest(false);
+        }}
+      >
+        <p>{t('productFactory.versions.discardPendingDescription')}</p>
+      </Modal>
       <p className='text-13px text-t-secondary'>{t('productFactory.versions.scopeHint')}</p>
       <Space wrap>
         <Button icon={<Refresh />} loading={versions.loading} onClick={() => void versions.refresh()}>
@@ -130,13 +145,7 @@ export default function VersionPanel({ run, onOpenRun, onPreparationBlocked }: P
             >
               {t('productFactory.versions.retrySameRequest')}
             </Button>
-            <Button
-              disabled={versions.busy}
-              onClick={() => {
-                versions.newRequest();
-                setSource(undefined);
-              }}
-            >
+            <Button disabled={versions.busy} onClick={() => setConfirmNewRequest(true)}>
               {t('productFactory.versions.newRequest')}
             </Button>
           </Space>

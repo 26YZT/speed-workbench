@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { render, screen, waitFor } from '@testing-library/react';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import React from 'react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { LayoutContext } from '@/renderer/hooks/context/LayoutContext';
@@ -44,7 +44,7 @@ const {
       custom_skill_names: [],
       disabled_builtin_skills: [],
       context_i18n: {},
-      prompts: [],
+      prompts: [] as string[],
       prompts_i18n: {},
       models: [],
       agent_status: 'online',
@@ -65,7 +65,7 @@ const {
         custom_skill_names: [],
         disabled_builtin_skills: [],
         context_i18n: {},
-        prompts: [],
+        prompts: [] as string[],
         prompts_i18n: {},
         models: [],
         agent_status: 'online',
@@ -301,6 +301,19 @@ const guidInputCardProps = {
 };
 
 describe('GuidPage', () => {
+  it('brands built-in example prompts and the text placed in the input', () => {
+    agentSelectionMock.assistants[0].prompts = ['Configure AionUi remote access'];
+    render(<GuidPage />);
+    fireEvent.click(screen.getByRole('button', { name: 'Configure Speed Workbench remote access' }));
+    expect(guidInputMock.setInput).toHaveBeenCalledWith('Configure Speed Workbench remote access');
+  });
+  it('leaves a user-created assistant prompt unchanged', () => {
+    agentSelectionMock.assistants[0].source = 'user';
+    agentSelectionMock.assistants[0].prompts = ['Study AionUi source code'];
+    render(<GuidPage />);
+    expect(screen.getByRole('button', { name: 'Study AionUi source code' })).toBeInTheDocument();
+  });
+
   beforeEach(() => {
     locationMock.state = null;
     locationMock.key = 'guid-location';
@@ -338,7 +351,7 @@ describe('GuidPage', () => {
         custom_skill_names: [],
         disabled_builtin_skills: [],
         context_i18n: {},
-        prompts: [],
+        prompts: [] as string[],
         prompts_i18n: {},
         models: [],
         agent_status: 'online',
@@ -482,7 +495,7 @@ describe('GuidPage', () => {
         custom_skill_names: [],
         disabled_builtin_skills: [],
         context_i18n: {},
-        prompts: [],
+        prompts: [] as string[],
         prompts_i18n: {
           'en-US': [
             'Create a three-page financial dashboard with profit, revenue mix, and conditional formatting highlights',
@@ -537,7 +550,7 @@ describe('GuidPage', () => {
         custom_skill_names: [],
         disabled_builtin_skills: ['stale-disabled-builtin'],
         context_i18n: {},
-        prompts: [],
+        prompts: [] as string[],
         prompts_i18n: {},
         models: [],
         agent_status: 'online',

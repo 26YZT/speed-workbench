@@ -27,6 +27,7 @@ import styles from '../ProductFactory.module.css';
 import { asRecord } from '../handoffPreview';
 import PlanningPanel from './Preparation/Planning';
 import VersionPanel from './Delivery/VersionPanel';
+import { factoryRunStatusKey } from '../runStatus';
 
 const toStringArray = (value: unknown): string[] =>
   Array.isArray(value) ? value.filter((item): item is string => typeof item === 'string') : [];
@@ -55,7 +56,7 @@ type RunWorkspaceProps = {
   reviewError?: string;
   reviewBusy?: boolean;
   onReviewReload?: () => void;
-  onApproveReview?: () => Promise<void>;
+  onApproveReview?: (feedback?: string) => Promise<void>;
   onRequestChanges?: (feedback: string) => Promise<void>;
   onContinueReview?: () => Promise<void>;
   delivery?: ProductFactoryDelivery;
@@ -257,7 +258,7 @@ const RunWorkspace: React.FC<RunWorkspaceProps> = ({
           <h1 className='m-0 text-26px font-650 leading-36px text-t-primary'>{run.name}</h1>
           <p className='m-0 mt-8px max-w-720px text-14px leading-22px text-t-secondary'>{run.idea}</p>
         </div>
-        <Tag color='arcoblue'>{run.status}</Tag>
+        <Tag color='arcoblue'>{t(factoryRunStatusKey(run.status))}</Tag>
       </header>
       {actionError && (
         <div
@@ -272,7 +273,10 @@ const RunWorkspace: React.FC<RunWorkspaceProps> = ({
       )}
       {run.teamId ? (
         <section>
-          <Alert type='success' content={t('productFactory.handoff.execution.success')} />
+          {run.status === 'handed_off' && (
+            <Alert type='success' content={t('productFactory.handoff.execution.success')} />
+          )}
+          {run.status === 'failed' && !review && <Alert type='error' content={t('productFactory.review.failedHint')} />}
           <p>
             {t('productFactory.handoff.execution.teamId')}: {run.teamId}
           </p>
@@ -284,7 +288,11 @@ const RunWorkspace: React.FC<RunWorkspaceProps> = ({
                 (delivery ? (
                   <DeliveryPanel delivery={delivery} />
                 ) : (
-                  <Alert type='warning' content={t('productFactory.delivery.loadError')} />
+                  <Alert
+                    type='warning'
+                    content={t('productFactory.delivery.loadError')}
+                    action={<Button onClick={onReviewReload}>{t('productFactory.workspace.retry')}</Button>}
+                  />
                 ))}
               <ReviewPanel
                 review={review}
@@ -298,7 +306,7 @@ const RunWorkspace: React.FC<RunWorkspaceProps> = ({
               />
             </>
           ) : (
-            <ExecutionStart key={run.id} run={run} />
+            <ExecutionStart key={run.id} run={run} onChanged={onReviewReload} />
           )}
         </section>
       ) : previewRunId === run.id ? (
@@ -331,6 +339,7 @@ const RunWorkspace: React.FC<RunWorkspaceProps> = ({
               onSave={() => void execute(() => onTaskDraftSave(taskDraft))}
               onConfirm={() => void execute(() => onTaskDraftConfirm(taskDraft))}
               saving={preparationBusy}
+              hasUnsavedChanges={hasUnsavedChanges}
             />
           ) : showTaskDraft ? (
             <div className={styles.workspaceState}>

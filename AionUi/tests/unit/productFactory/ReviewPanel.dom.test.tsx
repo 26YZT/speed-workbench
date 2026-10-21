@@ -76,6 +76,63 @@ const review: ProductFactoryReview = {
 describe('Product Factory review panel', () => {
   afterEach(() => cleanup());
 
+  it('never offers approval or resume actions for a failed run', () => {
+    render(
+      <ReviewPanel
+        review={{ ...review, run: { ...review.run, status: 'failed' } }}
+        loading={false}
+        busy={false}
+        onReload={vi.fn()}
+        onApprove={vi.fn()}
+        onRequestChanges={vi.fn()}
+        onContinue={vi.fn()}
+      />
+    );
+    expect(screen.getByText('productFactory.review.failedHint')).toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: 'productFactory.review.approve' })).not.toBeInTheDocument();
+  });
+
+  it('offers a confirmed undispatched task only as an explicit new invocation', async () => {
+    const onContinue = vi.fn().mockResolvedValue(undefined);
+    render(
+      <ReviewPanel
+        review={{
+          ...review,
+          task: { ...review.task, status: 'pending', owner: undefined },
+          execution: { ...review.execution!, state: 'uncertain' },
+        }}
+        loading={false}
+        busy={false}
+        onReload={vi.fn()}
+        onApprove={vi.fn()}
+        onRequestChanges={vi.fn()}
+        onContinue={onContinue}
+      />
+    );
+    expect(screen.getByText('productFactory.review.undispatchedHint')).toBeInTheDocument();
+    expect(onContinue).not.toHaveBeenCalled();
+    fireEvent.click(screen.getByRole('button', { name: 'productFactory.review.resume' }));
+    await waitFor(() => expect(onContinue).toHaveBeenCalledTimes(1));
+  });
+
+  it('keeps approval feedback and clears it when the displayed task changes', async () => {
+    const onApprove = vi.fn().mockResolvedValue(undefined);
+    const props = {
+      loading: false,
+      busy: false,
+      onReload: vi.fn(),
+      onApprove,
+      onRequestChanges: vi.fn(),
+      onContinue: vi.fn(),
+    };
+    const view = render(<ReviewPanel {...props} review={review} />);
+    fireEvent.change(screen.getByRole('textbox'), { target: { value: 'Restart evidence checked' } });
+    fireEvent.click(screen.getByRole('button', { name: 'productFactory.review.approve' }));
+    await waitFor(() => expect(onApprove).toHaveBeenCalledWith('Restart evidence checked'));
+    view.rerender(<ReviewPanel {...props} review={{ ...review, task: { ...review.task, id: 'next-task' } }} />);
+    expect(screen.getByRole('textbox')).toHaveValue('');
+  });
+
   it('shows evidence and sends human feedback instead of silently dispatching', async () => {
     const onRequestChanges = vi.fn().mockResolvedValue(undefined);
     const onApprove = vi.fn().mockResolvedValue(undefined);

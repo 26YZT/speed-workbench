@@ -1,5 +1,11 @@
 # 项目状态入口
 
+更新：2026-10-21。最新源码同步、交互修复、应用包版本与远程部署边界见 [STATUS](STATUS.md) 和 [RELEASE_NOTES](RELEASE_NOTES.md)。本仓库为公开源码；正式桌面发行仍需独立验收。
+
+## 2026-10-06 历史记录
+
+以下内容保留原日期与原证据，不代表 10 月 21 日重新执行。
+
 更新：2026-10-06。**本轮核心开发和内测验证完成；未正式发布。** 当前状态：[STATUS](STATUS.md)；接手：[HANDOFF](HANDOFF.md)；[本轮证据](evidence/L2-closeout-2026-10-06/README.md)与[verification.json](evidence/L2-closeout-2026-10-06/verification.json)。
 
 开发目录 `/path/to/speed-workbench`，分支`feat/product-factory-frontend`。最新验收source_commit `0d35b57032cb719f6d2c9a86b606166257358d08`；backend_source_commit `1e690924a4fd7953afcc1c019a22833a4ba3a0fa`；两提交Rust树`d5850744ec35956b469c4345b76052e89ca55c29`相同，Core SHA64e862不变。R2包manifest0d35b57；后续文档HEAD另计，旧1468229/54864c4与旧包仅历史身份。

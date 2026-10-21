@@ -5,14 +5,15 @@
  */
 
 import React from 'react';
-import { Button, Tooltip } from '@arco-design/web-react';
 import { FactoryBuilding } from '@icon-park/react';
 import { useTranslation } from 'react-i18next';
 import type { SiderTooltipProps } from '@renderer/utils/ui/siderTooltip';
+import SiderNavEntry from './SiderNavEntry';
 
 type SiderProductFactoryEntryProps = {
   isActive: boolean;
   collapsed: boolean;
+  isMobile?: boolean;
   siderTooltipProps: SiderTooltipProps;
   onClick: () => void;
 };
@@ -20,6 +21,7 @@ type SiderProductFactoryEntryProps = {
 const SiderProductFactoryEntry: React.FC<SiderProductFactoryEntryProps> = ({
   isActive,
   collapsed,
+  isMobile,
   siderTooltipProps,
   onClick,
 }) => {
@@ -27,18 +29,16 @@ const SiderProductFactoryEntry: React.FC<SiderProductFactoryEntryProps> = ({
   const label = t('productFactory.sidebar');
 
   return (
-    <Tooltip {...siderTooltipProps} content={label} position='right'>
-      <Button
-        type={isActive ? 'secondary' : 'text'}
-        aria-label={label}
-        data-testid='product-factory-sider-entry'
-        className='w-full min-h-34px text-t-primary'
-        icon={<FactoryBuilding theme='outline' size={collapsed ? 20 : 17} fill='currentColor' />}
-        onClick={onClick}
-      >
-        {!collapsed && label}
-      </Button>
-    </Tooltip>
+    <SiderNavEntry
+      label={label}
+      icon={<FactoryBuilding theme='outline' size={collapsed ? 20 : 16} fill='currentColor' />}
+      isActive={isActive}
+      collapsed={collapsed}
+      isMobile={isMobile}
+      siderTooltipProps={siderTooltipProps}
+      onClick={onClick}
+      testId='product-factory-sider-entry'
+    />
   );
 };
 

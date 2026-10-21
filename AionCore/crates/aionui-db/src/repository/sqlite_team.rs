@@ -167,14 +167,23 @@ impl ITeamRepository for SqliteTeamRepository {
     }
 
     async fn delete_team(&self, user_id: &str, team_id: &str) -> Result<(), DbError> {
+        let mut transaction = self.pool.begin().await?;
         let result = sqlx::query("DELETE FROM teams WHERE user_id = ? AND id = ?")
             .bind(user_id)
             .bind(team_id)
-            .execute(&self.pool)
+            .execute(&mut *transaction)
             .await?;
         if result.rows_affected() == 0 {
             return Err(DbError::NotFound(format!("team {team_id}")));
         }
+        // Legacy budgets have no foreign key. Delete only after ownership was
+        // proven, in the same transaction as the team and its cascade triggers.
+        sqlx::query("DELETE FROM team_budgets WHERE user_id = ? AND team_id = ?")
+            .bind(user_id)
+            .bind(team_id)
+            .execute(&mut *transaction)
+            .await?;
+        transaction.commit().await?;
         Ok(())
     }
 
@@ -546,12 +555,15 @@ impl ITeamRepository for SqliteTeamRepository {
         }
 
         set_clauses.push("updated_at = ?");
-        let sql = format!(
+        let mut sql = format!(
             "UPDATE team_tasks SET {} \
              WHERE team_id = ? AND id = ? \
                AND EXISTS (SELECT 1 FROM teams t WHERE t.id = team_tasks.team_id AND t.user_id = ?)",
             set_clauses.join(", ")
         );
+        if params.expected.is_some() {
+            sql.push_str(" AND status = ? AND owner IS ? AND description IS ? AND blocked_by = ? AND blocks = ? AND metadata IS ? AND updated_at = ?");
+        }
 
         let mut query = sqlx::query(&sql);
         if let Some(ref status) = params.status {
@@ -573,9 +585,22 @@ impl ITeamRepository for SqliteTeamRepository {
         query = query.bind(team_id);
         query = query.bind(task_id);
         query = query.bind(user_id);
+        if let Some(expected) = &params.expected {
+            query = query
+                .bind(&expected.status)
+                .bind(&expected.owner)
+                .bind(&expected.description)
+                .bind(&expected.blocked_by)
+                .bind(&expected.blocks)
+                .bind(&expected.metadata)
+                .bind(expected.updated_at);
+        }
 
         let result = query.execute(&self.pool).await?;
         if result.rows_affected() == 0 {
+            if params.expected.is_some() {
+                return Err(DbError::Conflict(format!("task {task_id} changed before the update")));
+            }
             return Err(DbError::NotFound(format!("task {task_id}")));
         }
         Ok(())

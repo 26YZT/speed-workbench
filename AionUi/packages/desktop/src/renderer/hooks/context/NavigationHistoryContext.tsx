@@ -19,7 +19,105 @@
  */
 
 import React, { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
-import { useLocation, useNavigate, useNavigationType, NavigationType } from 'react-router-dom';
+import {
+  useLocation,
+  useNavigate,
+  useNavigationType,
+  NavigationType,
+  UNSAFE_NavigationContext,
+} from 'react-router-dom';
+import { Modal } from '@arco-design/web-react';
+
+type PageLeaveGuard = { blocked: () => boolean; confirm: () => Promise<boolean> };
+let pageLeaveGuard: PageLeaveGuard | undefined;
+let bypassGuard = false;
+let pendingNavigation = false;
+
+const requestPageNavigation = (action: () => void): void => {
+  if (bypassGuard || !pageLeaveGuard?.blocked()) {
+    action();
+    return;
+  }
+  if (pendingNavigation) return;
+  pendingNavigation = true;
+  void pageLeaveGuard.confirm().then((allowed) => {
+    pendingNavigation = false;
+    if (!allowed) return;
+    bypassGuard = true;
+    try {
+      action();
+    } finally {
+      bypassGuard = false;
+    }
+  });
+};
+
+/** Protect in-app navigation; persisted recovery also covers browser/native exits. */
+export function usePageLeaveGuard(
+  blocked: boolean,
+  labels: { title: string; content: string; leave: string; stay: string },
+  preventUnload = blocked
+): void {
+  const context = useContext(UNSAFE_NavigationContext);
+  const current = useRef({ blocked, labels, preventUnload });
+  current.current = { blocked, labels, preventUnload };
+  useEffect(() => {
+    if (!context) return;
+    const navigator = context.navigator;
+    const original = { push: navigator.push, replace: navigator.replace, go: navigator.go };
+    let pending: Promise<boolean> | undefined;
+    let closeDialog: (() => void) | undefined;
+    const guard: PageLeaveGuard = {
+      blocked: () => current.current.blocked,
+      confirm: () => {
+        if (pending) return pending;
+        pending = new Promise<boolean>((resolve) => {
+          const { title, content, leave, stay } = current.current.labels;
+          const finish = (allowed: boolean) => {
+            pending = undefined;
+            resolve(allowed);
+          };
+          const controller = Modal.confirm({
+            title,
+            content,
+            okText: leave,
+            cancelText: stay,
+            onOk: () => finish(true),
+            onCancel: () => finish(false),
+          });
+          closeDialog = () => {
+            controller.close();
+            finish(false);
+          };
+        });
+        return pending;
+      },
+    };
+    pageLeaveGuard = guard;
+    const push: typeof navigator.push = (...args) => requestPageNavigation(() => original.push.apply(navigator, args));
+    const replace: typeof navigator.replace = (...args) =>
+      requestPageNavigation(() => original.replace.apply(navigator, args));
+    const go: typeof navigator.go = (...args) => requestPageNavigation(() => original.go.apply(navigator, args));
+    navigator.push = push;
+    navigator.replace = replace;
+    navigator.go = go;
+    const beforeUnload = (event: BeforeUnloadEvent) => {
+      if (current.current.preventUnload) {
+        event.preventDefault();
+        event.returnValue = '';
+      }
+    };
+    window.addEventListener('beforeunload', beforeUnload);
+    return () => {
+      if (navigator.push === push) navigator.push = original.push;
+      if (navigator.replace === replace) navigator.replace = original.replace;
+      if (navigator.go === go) navigator.go = original.go;
+      if (pageLeaveGuard === guard) pageLeaveGuard = undefined;
+      closeDialog?.();
+      window.removeEventListener('beforeunload', beforeUnload);
+    };
+  }, [context]);
+}
 
 const MAX_HISTORY = 50;
 
@@ -100,12 +198,14 @@ export const NavigationHistoryProvider: React.FC<React.PropsWithChildren> = ({ c
     if (next < 0) return;
     const target = stack[next];
     if (!target) return;
-    skipNextRef.current = true;
-    setCursor(next);
-    // Use { replace: true } so traversing our own stack doesn't grow
-    // React Router's history unboundedly — this is meant to emulate
-    // browser back/forward, which never creates new history entries.
-    void navigate(target.path, { replace: true });
+    requestPageNavigation(() => {
+      skipNextRef.current = true;
+      setCursor(next);
+      // Use { replace: true } so traversing our own stack doesn't grow
+      // React Router's history unboundedly — this is meant to emulate
+      // browser back/forward, which never creates new history entries.
+      void navigate(target.path, { replace: true });
+    });
   }, [cursor, stack, navigate]);
 
   const forward = useCallback(() => {
@@ -113,9 +213,11 @@ export const NavigationHistoryProvider: React.FC<React.PropsWithChildren> = ({ c
     if (next >= stack.length) return;
     const target = stack[next];
     if (!target) return;
-    skipNextRef.current = true;
-    setCursor(next);
-    void navigate(target.path, { replace: true });
+    requestPageNavigation(() => {
+      skipNextRef.current = true;
+      setCursor(next);
+      void navigate(target.path, { replace: true });
+    });
   }, [cursor, stack, navigate]);
 
   const value = useMemo<NavigationHistoryContextValue>(

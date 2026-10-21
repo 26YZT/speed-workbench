@@ -33,6 +33,20 @@ const artifact: TaskDraftArtifact = {
 };
 
 describe('TaskDraftReview', () => {
+  it('shows the actual unsaved state passed by the workspace', () => {
+    render(
+      <TaskDraftReview
+        artifact={artifact}
+        onChange={vi.fn()}
+        onGenerate={vi.fn()}
+        onSave={vi.fn()}
+        onConfirm={vi.fn()}
+        saving={false}
+        hasUnsavedChanges
+      />
+    );
+    expect(screen.getByText('productFactory.taskDraft.unsaved')).toBeInTheDocument();
+  });
   it('locks edits while saving so an in-flight response cannot discard newer input', () => {
     const onChange = vi.fn();
     render(

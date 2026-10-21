@@ -1059,17 +1059,21 @@ pub fn build_product_factory_state(services: &AppServices) -> ProductFactoryRout
     let repository: Arc<dyn aionui_db::IProductFactoryRepository> = Arc::new(
         aionui_db::SqliteProductFactoryRepository::new(services.database.pool().clone()),
     );
+    let service = ProductFactoryService::new(repository)
+        .with_managed_workspace_root(services.data_dir.join("product-factory-workspaces"))
+        .with_versioning(
+            Arc::new(aionui_db::SqliteProductFactoryVersionsRepository::new(
+                services.database.pool().clone(),
+            )),
+            services.data_dir.join("product-factory-versions"),
+        );
+    let service = if services.local {
+        service
+    } else {
+        service.with_user_workspace_isolation()
+    };
     ProductFactoryRouterState {
-        service: Arc::new(
-            ProductFactoryService::new(repository)
-                .with_managed_workspace_root(services.data_dir.join("product-factory-workspaces"))
-                .with_versioning(
-                    Arc::new(aionui_db::SqliteProductFactoryVersionsRepository::new(
-                        services.database.pool().clone(),
-                    )),
-                    services.data_dir.join("product-factory-versions"),
-                ),
-        ),
+        service: Arc::new(service),
     }
 }
 

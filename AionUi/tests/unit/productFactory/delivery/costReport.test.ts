@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { buildCostReportExport } from '@/renderer/pages/product-factory/components/Delivery/costReport';
+import { buildCostReportExport, formatUsdCost } from '@/renderer/pages/product-factory/components/Delivery/costReport';
 import type { FactoryTaskUsage, ProductFactoryCostReport } from '@/renderer/pages/product-factory/types';
 import { run } from '../planning/fixtures';
 
@@ -33,6 +33,11 @@ const report: ProductFactoryCostReport = {
 };
 
 describe('cost ledger export semantics', () => {
+  it('keeps small positive charges distinct from a verified zero', () => {
+    expect(formatUsdCost(0.000001)).toBe('< $0.0001');
+    expect(formatUsdCost(0)).toBe('$0.0000');
+    expect(formatUsdCost(0.12)).toBe('$0.1200');
+  });
   it('preserves a verified not_sent zero and its original source', () => {
     const exported = buildCostReportExport(report);
     expect(exported.turns[0]).toMatchObject({

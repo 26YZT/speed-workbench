@@ -311,6 +311,33 @@ async fn delete_team() {
 }
 
 #[tokio::test]
+async fn team_deletion_removes_only_the_owned_budget() {
+    let (repo, db) = repo().await;
+    repo.create_team(&make_team("budget-team", "Budgeted")).await.unwrap();
+    sqlx::query("INSERT INTO team_budgets (team_id,user_id,limit_usd,updated_at) VALUES (?, ?, 1, 1)")
+        .bind("budget-team")
+        .bind(DEFAULT_USER_ID)
+        .execute(db.pool())
+        .await
+        .unwrap();
+    assert!(matches!(
+        repo.delete_team("other-user", "budget-team").await,
+        Err(DbError::NotFound(_))
+    ));
+    let count: i64 = sqlx::query_scalar("SELECT COUNT(*) FROM team_budgets WHERE team_id = 'budget-team'")
+        .fetch_one(db.pool())
+        .await
+        .unwrap();
+    assert_eq!(count, 1);
+    repo.delete_team(DEFAULT_USER_ID, "budget-team").await.unwrap();
+    let count: i64 = sqlx::query_scalar("SELECT COUNT(*) FROM team_budgets WHERE team_id = 'budget-team'")
+        .fetch_one(db.pool())
+        .await
+        .unwrap();
+    assert_eq!(count, 0);
+}
+
+#[tokio::test]
 async fn delete_nonexistent_team_returns_not_found() {
     let (repo, _db) = repo().await;
     let result = repo.delete_team("system_default_user", "nonexistent").await;

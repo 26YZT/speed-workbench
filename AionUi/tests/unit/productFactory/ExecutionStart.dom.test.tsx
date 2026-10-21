@@ -1,5 +1,5 @@
 import React from 'react';
-import { cleanup, fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { cleanup, fireEvent, render, screen, waitFor, within } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import ExecutionStart from '@/renderer/pages/product-factory/components/ExecutionStart';
 import type { ProductFactoryRun } from '@/renderer/pages/product-factory/types';
@@ -71,6 +71,10 @@ describe('explicit first-task execution', () => {
           if (readFailure) throw new Error('offline');
           return response({ execution });
         }
+        if (path.endsWith('/execution/recover')) {
+          execution = null;
+          return response({ execution });
+        }
         if (path.endsWith('/start')) {
           if (startCode) {
             return new Response(JSON.stringify({ code: startCode, error: 'Team cost cannot be verified' }), {
@@ -97,6 +101,31 @@ describe('explicit first-task execution', () => {
     render(<ExecutionStart run={run} />);
     await screen.findByRole('button', { name: 'productFactory.execution.start' });
     expect(calls.filter((call) => call.method === 'POST')).toHaveLength(0);
+  });
+
+  it('offers explicit recovery for a pending receipt without dispatching automatically', async () => {
+    execution = { ...receipt, state: 'pending', message_id: null, team_run_id: null };
+    render(<ExecutionStart run={run} />);
+    await screen.findByRole('button', { name: 'productFactory.execution.recover' });
+    expect(calls.every((call) => call.method === 'GET')).toBe(true);
+  });
+
+  it('recovery requires confirmation, sends CSRF, and never starts work by itself', async () => {
+    execution = { ...receipt, state: 'pending', message_id: null, team_run_id: null };
+    render(<ExecutionStart run={run} />);
+    fireEvent.click(await screen.findByRole('button', { name: 'productFactory.execution.recover' }));
+    expect(calls.every((call) => call.method === 'GET')).toBe(true);
+    const dialog = await screen.findByRole('dialog');
+    fireEvent.click(within(dialog).getByRole('button', { name: 'productFactory.execution.recover' }));
+    await screen.findByRole('button', { name: 'productFactory.execution.start' });
+    expect(calls.filter((call) => call.method === 'POST')).toEqual([
+      {
+        path: '/api/product-factory/runs/run-1/execution/recover',
+        method: 'POST',
+        body: {},
+        csrf: 'test-csrf',
+      },
+    ]);
   });
 
   it('requires explicit confirmation and posts the confirmed revision with CSRF', async () => {

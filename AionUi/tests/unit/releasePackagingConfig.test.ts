@@ -22,11 +22,11 @@ function yamlBlock(content: string, key: string): string {
 }
 
 describe('release packaging configuration', () => {
-  it('uses the custom display name while preserving the executable compatibility name', () => {
+  it('uses Speed Workbench for both the display and executable names', () => {
     const config = readProjectFile('packages/desktop/electron-builder.yml');
 
     expect(config).toContain('productName: Speed Workbench');
-    expect(config).toContain('executableName: AionUi');
+    expect(config).toContain('executableName: Speed Workbench');
   });
 
   it('keeps mac zip artifacts enabled', () => {

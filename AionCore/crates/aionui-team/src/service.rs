@@ -700,7 +700,11 @@ impl TeamSessionService {
             TeamTaskReviewDecision::RequestChanges => TaskStatus::InProgress,
         };
         let feedback = match request.decision {
-            TeamTaskReviewDecision::Approve => None,
+            TeamTaskReviewDecision::Approve => request
+                .feedback
+                .as_deref()
+                .map(str::trim)
+                .filter(|value| !value.is_empty()),
             TeamTaskReviewDecision::RequestChanges => {
                 let feedback = request
                     .feedback
@@ -718,6 +722,11 @@ impl TeamSessionService {
                 Some(feedback)
             }
         };
+        if feedback.is_some_and(|value| value.chars().count() > 4_000) {
+            return Err(TeamError::InvalidRequest(
+                "review feedback exceeds 4000 characters".into(),
+            ));
+        }
         let description = feedback.map(|feedback| {
             const MARKER: &str = "\n\n--- Human review feedback ---\n";
             let existing = current.description.as_deref().unwrap_or_default();
@@ -731,7 +740,7 @@ impl TeamSessionService {
         ));
         let board = TaskBoard::new_for_user(self.repo.clone(), user_id.to_owned()).with_events(events);
         let reviewed = board
-            .update_task(
+            .update_task_if_unchanged(
                 team_id,
                 task_id,
                 &TaskUpdate {
@@ -739,6 +748,7 @@ impl TeamSessionService {
                     description,
                     ..Default::default()
                 },
+                &row,
             )
             .await?;
         Ok(task_to_response(&reviewed))
@@ -3012,7 +3022,7 @@ impl TeamSessionService {
         ));
         let board = TaskBoard::new_for_user(self.repo.clone(), user_id.to_owned()).with_events(events);
         let assigned = board
-            .update_task(
+            .update_task_if_unchanged(
                 team_id,
                 task_id,
                 &TaskUpdate {
@@ -3020,6 +3030,7 @@ impl TeamSessionService {
                     owner: Some(lead_slot_id.clone()),
                     ..Default::default()
                 },
+                &row,
             )
             .await?;
         let task_workspace = self.prepare_task_workspace(team_id, task_id).await?;
@@ -5814,6 +5825,27 @@ mod tests {
                 .collect(),
         }));
         (svc, team.id, task_id)
+    }
+
+    #[tokio::test]
+    async fn a_session_cannot_bypass_its_budget_guard_after_the_host_is_dropped() {
+        let (service, team_id, _) = seed_budget_guard_service(None, None).await;
+        service.ensure_session("user-test", &team_id).await.unwrap();
+        let session = service.published_session(&team_id).unwrap();
+        session.ensure_task_budget().await.unwrap();
+        let host = Arc::downgrade(&service);
+        service.stop_session_unchecked(&team_id);
+        drop(service);
+        tokio::time::timeout(std::time::Duration::from_secs(3), async {
+            while host.strong_count() != 0 {
+                tokio::task::yield_now().await;
+            }
+        })
+        .await
+        .expect("stopped host is released");
+        assert!(
+            matches!(session.ensure_task_budget().await, Err(crate::error::TeamError::SessionNotFound(id)) if id == team_id)
+        );
     }
 
     async fn seed_budget_guard_service_with_unknown_cost(

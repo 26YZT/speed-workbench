@@ -110,7 +110,26 @@
     "createProduct": "创建产品",
     "continueDraft": "继续草稿",
     "emptyTitle": "还没有产品项目",
-    "emptyDescription": "先输入一句话想法，产品工厂会帮助你生成蓝图和可执行的任务关系。"
+    "emptyDescription": "先输入一句话想法，产品工厂会帮助你生成蓝图和可执行的任务关系。",
+    "localDraft": "未提交的本机草稿",
+    "productsTitle": "产品项目",
+    "updatedAt": "更新于 {{time}}",
+    "replaceTitle": "新建一个产品想法？",
+    "replaceDescription": "这会替换当前未提交的本机想法草稿。已有产品项目会保留。",
+    "newIdea": "新建想法",
+    "actions": {
+      "draft": "开始需求补全",
+      "interviewing": "继续需求补全",
+      "blueprint_generating": "查看蓝图生成",
+      "blueprint_ready": "审阅蓝图",
+      "task_draft_generating": "查看任务草稿",
+      "task_draft_ready": "审阅任务",
+      "handed_off": "查看交接",
+      "running": "查看执行",
+      "in_review": "处理验收",
+      "completed": "查看交付",
+      "failed": "查看失败详情"
+    }
   },
   "pipeline": {
     "title": "产品流水线",
@@ -147,11 +166,14 @@
     "startingAnalysis": "正在创建运行记录...",
     "startError": "创建运行记录失败，请稍后重试。",
     "back": "返回项目",
-    "saved": "草稿已保存",
+    "saved": "草稿已保存到本机",
     "validation": {
       "nameRequired": "请输入产品名称",
-      "ideaRequired": "请描述产品想法"
-    }
+      "ideaRequired": "请描述产品想法",
+      "budgetInvalid": "预算须为大于 0 的有效数字，也可以留空。"
+    },
+    "autoSaved": "已保留本机草稿",
+    "saveError": "未能保存草稿，输入内容仍保留在当前页面。"
   },
   "status": {
     "draft": "草稿"
@@ -214,7 +236,9 @@
     "scopes": {
       "taskWorkspace": "当前任务目录",
       "projectIntegration": "项目根目录最终集成"
-    }
+    },
+    "moveUp": "上移任务",
+    "moveDown": "下移任务"
   },
   "execution": {
     "title": "首个开发任务",
@@ -233,7 +257,10 @@
     "requestError": "无法确认启动响应。正在重新读取派发记录，不会自动重试投递。",
     "blocked": "当前不能执行。请在 Team 检查单 Leader 配置、工作区、任务状态和剩余预算。",
     "revisionError": "已确认的任务版本发生变化，请重新加载产品后再操作。",
-    "costUnknown": "当前已配置预算，但无法核验模型成本。为避免超预算，暂不能启动。"
+    "costUnknown": "当前已配置预算，但无法核验模型成本。为避免超预算，暂不能启动。",
+    "recover": "核对并恢复",
+    "recoverDescription": "此操作只核对已保存的派发回执，不会启动任务。如果结果仍不确定，请先查看团队和已有产物。",
+    "recoverError": "暂时无法核对回执，请稍后重试。"
   },
   "review": {
     "title": "人工验收",
@@ -261,7 +288,9 @@
       "failed": "失败"
     },
     "resume": "继续当前任务",
-    "resumeHint": "打回修改或任务中断后，可继续当前任务并保留已有产物。如果 Agent 仍在运行，后端会拒绝重复派发。"
+    "resumeHint": "打回修改或任务中断后，可继续当前任务并保留已有产物。如果 Agent 仍在运行，后端会拒绝重复派发。",
+    "failedHint": "此轮执行已失败。请查看团队与已有产物，再返回产品列表开始新一轮。",
+    "undispatchedHint": "已核实此任务尚未派发。继续会启动新的 AI 调用，并可能产生费用。"
   },
   "delivery": {
     "ready": "交付检查已通过",
@@ -394,6 +423,17 @@
     "fileCount": "清单文件数",
     "noSnapshot": "尚无封存快照",
     "savedManifest": "已保存文件清单",
-    "activationResult": "已选择代码目录 {{path}}。没有迁移业务数据，也没有启动进程。"
+    "activationResult": "已选择代码目录 {{path}}。没有迁移业务数据，也没有启动进程。",
+    "discardPendingDescription": "开始新请求会清除本机记住的旧请求。服务器上的回执和已有文件会保留。确定继续吗？"
+  },
+  "recovery": {
+    "local": "未提交的编辑已保留在本机，点击保存后才会提交到产品项目。",
+    "restored": "已恢复本机尚未提交的编辑。",
+    "leave": "当前有未提交的编辑。离开会保留本机草稿，点击保存后才会提交到产品项目。",
+    "conflict": "产品「{{name}}」的服务器版本已有变化。本机草稿已单独保留，未覆盖当前产品。下方仅供预览；请先导出草稿，再决定保留哪些编辑。",
+    "discard": "放弃本机编辑",
+    "discardTitle": "放弃本机编辑？",
+    "discardDescription": "将保留当前服务器版本，仅移除此产品尚未提交的本机编辑。",
+    "saveError": "未能保留本机编辑，请先保存或导出后再离开。"
   }
 }

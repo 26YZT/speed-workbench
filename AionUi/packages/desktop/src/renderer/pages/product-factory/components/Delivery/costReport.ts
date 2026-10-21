@@ -5,6 +5,11 @@
  */
 import type { FactoryTaskUsage, ProductFactoryCostReport } from '../../types';
 
+/** Preserve the difference between a verified zero and a small recorded cost. */
+export function formatUsdCost(value: number): string {
+  return value > 0 && value < 0.0001 ? '< $0.0001' : `$${value.toFixed(4)}`;
+}
+
 const exportAttempt = (attempt: FactoryTaskUsage) => ({
   ...attempt,
   costEst: attempt.costEst ?? null,

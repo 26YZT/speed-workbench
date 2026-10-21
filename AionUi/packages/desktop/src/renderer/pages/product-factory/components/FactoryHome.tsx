@@ -10,6 +10,9 @@ import { ArrowRight, Plus } from '@icon-park/react';
 import { useTranslation } from 'react-i18next';
 import type { ProductFactoryRun, ProductIdeaDraft } from '../types';
 import PipelineOverview from './PipelineOverview';
+import { factoryRunStatusKey } from '../runStatus';
+import styles from '../ProductFactory.module.css';
+import { hasProductIdeaDraft } from '../draftStore';
 
 type FactoryHomeProps = {
   draft: ProductIdeaDraft;
@@ -19,6 +22,7 @@ type FactoryHomeProps = {
   onRetry: () => void;
   onCreate: () => void;
   onContinue: () => void;
+  onOpenRun?: (runId: string) => void;
 };
 
 const FactoryHome: React.FC<FactoryHomeProps> = ({
@@ -29,15 +33,16 @@ const FactoryHome: React.FC<FactoryHomeProps> = ({
   onRetry,
   onCreate,
   onContinue,
+  onOpenRun,
 }) => {
   const { t } = useTranslation();
-  const hasDraft = Boolean(draft.name || draft.idea);
+  const hasDraft = hasProductIdeaDraft(draft);
 
   return (
     <div className='flex flex-col gap-20px'>
-      <header className='flex items-start justify-between gap-20px max-720px:flex-col'>
+      <header className={styles.factoryHeader}>
         <div className='max-w-720px'>
-          <div className='mb-8px text-12px font-600 uppercase tracking-1px text-brand-6'>
+          <div className='mb-8px text-12px font-600 uppercase tracking-1px text-t-secondary'>
             {t('productFactory.home.eyebrow')}
           </div>
           <h1 className='m-0 text-28px font-650 leading-38px text-t-primary max-640px:text-24px'>
@@ -62,14 +67,16 @@ const FactoryHome: React.FC<FactoryHomeProps> = ({
         </div>
       )}
 
-      {runs.length > 0 || hasDraft ? (
-        <section className='rounded-12px border border-border-2 bg-bg-2 p-20px'>
-          <div className='flex items-start justify-between gap-18px max-640px:flex-col'>
+      {hasDraft && (
+        <section data-testid='product-idea-draft-card' className='rounded-12px border border-border-2 bg-bg-2 p-20px'>
+          <div className={styles.factoryCardHeader}>
             <div className='min-w-0'>
               <Tag color='arcoblue' size='small'>
-                {runs[0] ? runs[0].status : t('productFactory.status.draft')}
+                {t('productFactory.home.localDraft')}
               </Tag>
-              <h2 className='m-0 mt-12px truncate text-18px font-600 text-t-primary'>{draft.name}</h2>
+              <h2 className='m-0 mt-12px text-18px font-600 text-t-primary'>
+                {draft.name || t('productFactory.status.draft')}
+              </h2>
               <p className='m-0 mt-8px line-clamp-2 text-13px leading-20px text-t-secondary'>{draft.idea}</p>
             </div>
             <Button type='secondary' icon={<ArrowRight size={16} />} onClick={onContinue}>
@@ -77,7 +84,49 @@ const FactoryHome: React.FC<FactoryHomeProps> = ({
             </Button>
           </div>
         </section>
-      ) : (
+      )}
+      {runs.length > 0 && (
+        <section aria-labelledby='factory-products-title'>
+          <h2 id='factory-products-title' className='m-0 mb-12px text-16px font-600 text-t-primary'>
+            {t('productFactory.home.productsTitle')}
+          </h2>
+          <div className='flex flex-col gap-12px'>
+            {runs.map((run) => {
+              const action = t(`productFactory.home.actions.${run.status}`);
+              const updated = new Date(Number.isFinite(run.updatedAt) ? run.updatedAt : run.createdAt || 0);
+              return (
+                <article
+                  key={run.id}
+                  data-testid={`factory-run-${run.id}`}
+                  className='rounded-12px border border-border-2 bg-bg-2 p-20px'
+                >
+                  <div className={styles.factoryCardHeader}>
+                    <div className='min-w-0'>
+                      <Tag color='arcoblue' size='small'>
+                        {t(factoryRunStatusKey(run.status))}
+                      </Tag>
+                      <h3 className='m-0 mt-12px break-words text-18px font-600 text-t-primary'>{run.name}</h3>
+                      <p className='m-0 mt-8px line-clamp-2 text-13px leading-20px text-t-secondary'>{run.idea}</p>
+                      <time className='mt-10px block text-12px text-t-secondary' dateTime={updated.toISOString()}>
+                        {t('productFactory.home.updatedAt', { time: updated.toLocaleString() })}
+                      </time>
+                    </div>
+                    <Button
+                      type='secondary'
+                      aria-label={`${action}: ${run.name}`}
+                      icon={<ArrowRight size={16} />}
+                      onClick={() => (onOpenRun ? onOpenRun(run.id) : onContinue())}
+                    >
+                      {action}
+                    </Button>
+                  </div>
+                </article>
+              );
+            })}
+          </div>
+        </section>
+      )}
+      {!runs.length && !hasDraft && (
         <section className='flex min-h-190px flex-col items-center justify-center rounded-12px border border-dashed border-border-3 bg-fill-1 px-24px py-32px text-center'>
           <h2 className='m-0 text-17px font-600 text-t-primary'>{t('productFactory.home.emptyTitle')}</h2>
           <p className='m-0 mt-8px max-w-520px text-13px leading-20px text-t-secondary'>

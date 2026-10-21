@@ -110,7 +110,26 @@
     "createProduct": "建立產品",
     "continueDraft": "繼續草稿",
     "emptyTitle": "目前沒有產品專案",
-    "emptyDescription": "先輸入一句話想法，產品工廠會協助產生藍圖與可執行的任務關係。"
+    "emptyDescription": "先輸入一句話想法，產品工廠會協助產生藍圖與可執行的任務關係。",
+    "localDraft": "未提交的本機草稿",
+    "productsTitle": "產品專案",
+    "updatedAt": "更新於 {{time}}",
+    "replaceTitle": "新增一个產品想法？",
+    "replaceDescription": "這會取代目前未提交的本機想法草稿。既有產品專案會保留。",
+    "newIdea": "新增想法",
+    "actions": {
+      "draft": "开始需求补全",
+      "interviewing": "繼續需求补全",
+      "blueprint_generating": "查看藍圖生成",
+      "blueprint_ready": "審閱藍圖",
+      "task_draft_generating": "查看任務草稿",
+      "task_draft_ready": "審閱任務",
+      "handed_off": "查看交接",
+      "running": "查看執行",
+      "in_review": "處理驗收",
+      "completed": "查看交付",
+      "failed": "查看失敗詳情"
+    }
   },
   "pipeline": {
     "title": "產品流程",
@@ -147,11 +166,14 @@
     "startingAnalysis": "正在建立執行記錄...",
     "startError": "建立執行記錄失敗，請稍後重試。",
     "back": "返回專案",
-    "saved": "草稿已儲存",
+    "saved": "草稿已儲存至本機",
     "validation": {
       "nameRequired": "請輸入產品名稱",
-      "ideaRequired": "請描述產品想法"
-    }
+      "ideaRequired": "請描述產品想法",
+      "budgetInvalid": "預算須为大于 0 的有效數字，也可以留空。"
+    },
+    "autoSaved": "已保留本機草稿",
+    "saveError": "無法儲存草稿，輸入內容仍保留在目前頁面。"
   },
   "status": {
     "draft": "草稿"
@@ -203,7 +225,10 @@
     "requestError": "無法確認啟動回應。正在重新讀取派發紀錄，不會自動重試投遞。",
     "blocked": "目前不能執行。請在 Team 檢查單 Leader 設定、工作區、任務狀態和剩餘預算。",
     "revisionError": "已確認的任務版本發生變化，請重新載入產品後再操作。",
-    "costUnknown": "目前已設定預算，但無法核驗模型成本。為避免超出預算，暫時不能啟動。"
+    "costUnknown": "目前已設定預算，但無法核驗模型成本。為避免超出預算，暫時不能啟動。",
+    "recover": "核對並恢復",
+    "recoverDescription": "此操作只核對已儲存的派發回執，不會啟動任務。如果結果仍不確定，請先查看團隊與既有產物。",
+    "recoverError": "暫時無法核對回執，請稍後重試。"
   },
   "taskDraft": {
     "title": "Task draft review",
@@ -233,7 +258,9 @@
     "scopes": {
       "taskWorkspace": "Task workspace",
       "projectIntegration": "Final integration in product root"
-    }
+    },
+    "moveUp": "上移任務",
+    "moveDown": "下移任務"
   },
   "review": {
     "title": "Human review",
@@ -261,7 +288,9 @@
       "failed": "Failed"
     },
     "resume": "Resume current task",
-    "resumeHint": "Use this after requesting changes or an interrupted task. Existing work is preserved. The backend refuses to dispatch while an Agent turn is already active."
+    "resumeHint": "Use this after requesting changes or an interrupted task. Existing work is preserved. The backend refuses to dispatch while an Agent turn is already active.",
+    "failedHint": "此輪執行已失敗。請查看團隊與既有產物，再返回產品清單開始新一輪。",
+    "undispatchedHint": "已核實此任務尚未派發。繼續會啟動新的 AI 呼叫，並可能產生費用。"
   },
   "delivery": {
     "ready": "Delivery checks passed",
@@ -394,6 +423,17 @@
     "fileCount": "Manifest files",
     "noSnapshot": "No sealed snapshot yet",
     "savedManifest": "Saved file manifest",
-    "activationResult": "The selected code folder is {{path}}. Business data was not migrated and no process was started."
+    "activationResult": "The selected code folder is {{path}}. Business data was not migrated and no process was started.",
+    "discardPendingDescription": "開始新請求會清除本機記住的舊請求。伺服器上的回執與既有檔案會保留。確定繼續嗎？"
+  },
+  "recovery": {
+    "local": "未提交的編輯已保留在本機，點選儲存后才會提交到產品專案。",
+    "restored": "已恢復本機尚未提交的編輯。",
+    "leave": "目前有未提交的編輯。離開會保留本機草稿，點選儲存后才會提交到產品專案。",
+    "conflict": "產品「{{name}}」的伺服器版本已有變化。本機草稿已單獨保留，未覆蓋目前專案。下方僅供預覽；請先匯出草稿，再決定保留哪些編輯。",
+    "discard": "放弃本機編輯",
+    "discardTitle": "放弃本機編輯？",
+    "discardDescription": "将保留目前伺服器版本，僅移除此產品尚未提交的本機編輯。",
+    "saveError": "無法保留本機編輯，請先儲存或匯出后再離開。"
   }
 }

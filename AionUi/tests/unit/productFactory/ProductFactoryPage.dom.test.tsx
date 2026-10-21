@@ -49,6 +49,9 @@ const translations: Record<string, string> = {
   'productFactory.form.validation.nameRequired': 'Enter a product name',
   'productFactory.form.validation.ideaRequired': 'Describe the product idea',
   'productFactory.status.draft': 'Draft',
+  'productFactory.handoff.statuses.taskDraftReady': 'Task plan ready',
+  'common.status': 'Status',
+  'productFactory.home.localDraft': 'Local unsubmitted draft',
 };
 
 vi.mock('react-i18next', () => ({
@@ -58,6 +61,9 @@ vi.mock('react-i18next', () => ({
 }));
 
 import ProductFactoryPage from '@/renderer/pages/product-factory';
+import FactoryHome from '@/renderer/pages/product-factory/components/FactoryHome';
+import type { ProductFactoryRun } from '@/renderer/pages/product-factory/types';
+import * as client from '@/renderer/pages/product-factory/client';
 
 const renderPage = (path = '/product-factory') =>
   render(
@@ -69,10 +75,123 @@ const renderPage = (path = '/product-factory') =>
 describe('ProductFactoryPage', () => {
   beforeEach(() => {
     window.localStorage.clear();
+    vi.spyOn(client, 'listProductFactoryRuns').mockResolvedValue([]);
   });
 
   afterEach(() => {
     cleanup();
+    vi.restoreAllMocks();
+  });
+
+  it('keeps invalid budget input and blocks saving it as an unset budget', async () => {
+    const create = vi.spyOn(client, 'createProductFactoryRun');
+    renderPage('/product-factory/new');
+    fireEvent.change(screen.getByTestId('product-factory-name'), { target: { value: 'Budget example' } });
+    fireEvent.change(screen.getByTestId('product-factory-idea'), { target: { value: 'Build a tool' } });
+    fireEvent.change(screen.getByTestId('product-factory-budget'), { target: { value: '-5' } });
+    fireEvent.click(screen.getByRole('button', { name: 'Save draft' }));
+    expect(screen.getByTestId('product-factory-budget')).toHaveValue('-5');
+    expect(await screen.findByText('productFactory.form.validation.budgetInvalid')).toBeInTheDocument();
+    expect(create).not.toHaveBeenCalled();
+  });
+
+  it('retains an unfinished idea across unmount without requiring a manual save', async () => {
+    const first = renderPage('/product-factory/new');
+    fireEvent.change(screen.getByTestId('product-factory-name'), { target: { value: 'Unsubmitted idea' } });
+    fireEvent.change(screen.getByTestId('product-factory-idea'), { target: { value: 'Keep my input' } });
+    first.unmount();
+    renderPage('/product-factory/new');
+    expect(screen.getByTestId('product-factory-name')).toHaveValue('Unsubmitted idea');
+    expect(screen.getByTestId('product-factory-idea')).toHaveValue('Keep my input');
+  });
+  it('offers recovery even when only an optional field was entered', async () => {
+    const first = renderPage('/product-factory/new');
+    fireEvent.change(screen.getByPlaceholderText('For example: product managers'), {
+      target: { value: 'Researchers only' },
+    });
+    first.unmount();
+    renderPage();
+    expect(screen.getByTestId('product-idea-draft-card')).toBeInTheDocument();
+    fireEvent.click(screen.getByRole('button', { name: 'Continue draft' }));
+    expect(await screen.findByPlaceholderText('For example: product managers')).toHaveValue('Researchers only');
+  });
+
+  it('locks the idea inputs while a save is pending and retains them after failure', async () => {
+    let rejectSave!: (reason: Error) => void;
+    vi.spyOn(client, 'createProductFactoryRun').mockImplementation(
+      () =>
+        new Promise((_resolve, reject) => {
+          rejectSave = reject;
+        })
+    );
+    renderPage('/product-factory/new');
+    fireEvent.change(screen.getByTestId('product-factory-name'), { target: { value: 'Pending save' } });
+    fireEvent.change(screen.getByTestId('product-factory-idea'), { target: { value: 'Keep the current input' } });
+    fireEvent.click(screen.getByRole('button', { name: 'Save draft' }));
+    expect(screen.getByTestId('product-factory-name')).toBeDisabled();
+    expect(screen.getByTestId('product-factory-budget')).toBeDisabled();
+    rejectSave(new Error('offline'));
+    await waitFor(() => expect(screen.getByTestId('product-factory-name')).toBeEnabled());
+    expect(screen.getByTestId('product-factory-name')).toHaveValue('Pending save');
+    expect(JSON.parse(localStorage.getItem('product-factory:idea-draft') ?? '').draft.name).toBe('Pending save');
+  });
+
+  it('lists older products without replacing a separate local idea draft', async () => {
+    const draft = {
+      name: 'Local idea',
+      idea: 'Unsubmitted text',
+      targetUser: '',
+      problem: '',
+      expectedOutput: '',
+      workspacePath: '',
+    };
+    localStorage.setItem('product-factory:idea-draft', JSON.stringify({ version: 1, draft }));
+    vi.mocked(client.listProductFactoryRuns).mockResolvedValue([
+      {
+        ...draft,
+        id: 'newer',
+        name: 'Recent product',
+        status: 'running',
+        createdAt: 2,
+        updatedAt: 2,
+      } as ProductFactoryRun,
+      {
+        ...draft,
+        id: 'older',
+        name: 'Older product',
+        status: 'completed',
+        createdAt: 1,
+        updatedAt: 1,
+      } as ProductFactoryRun,
+    ]);
+    renderPage();
+    expect(await screen.findByText('Older product')).toBeInTheDocument();
+    expect(screen.getByText('Local idea')).toBeInTheDocument();
+    expect(JSON.parse(localStorage.getItem('product-factory:idea-draft') ?? '').draft.name).toBe('Local idea');
+  });
+
+  it('describes the product state with localized copy instead of backend identifiers', () => {
+    const draft = {
+      name: 'Research Copilot',
+      idea: 'Create a research brief',
+      targetUser: '',
+      problem: '',
+      expectedOutput: '',
+      workspacePath: '',
+    };
+    render(
+      <FactoryHome
+        draft={draft}
+        runs={[{ ...draft, status: 'task_draft_ready' } as ProductFactoryRun]}
+        loadingRuns={false}
+        apiUnavailable={false}
+        onRetry={vi.fn()}
+        onCreate={vi.fn()}
+        onContinue={vi.fn()}
+      />
+    );
+    expect(screen.getByText('Task plan ready')).toBeInTheDocument();
+    expect(screen.queryByText('task_draft_ready')).toBeNull();
   });
 
   it('shows the pipeline and an actionable empty state for a first-time user', () => {
@@ -108,6 +227,43 @@ describe('ProductFactoryPage', () => {
     expect(stored.draft.name).toBe('Research Copilot');
     expect(stored.draft.idea).toBe('Turn interview notes into a research brief');
     await waitFor(() => expect(screen.getByText('Draft saved')).toBeInTheDocument());
+  });
+
+  it('does not hide a committed run when remembering its navigation id fails', async () => {
+    const created: ProductFactoryRun = {
+      id: 'created-run',
+      name: 'Committed product',
+      idea: 'Keep the committed run',
+      targetUser: '',
+      problem: '',
+      expectedOutput: '',
+      workspacePath: '/workspace/committed',
+      status: 'draft',
+      createdAt: 1,
+      updatedAt: 1,
+    };
+    vi.spyOn(client, 'createProductFactoryRun').mockResolvedValue(created);
+    vi.spyOn(client, 'getProductFactoryRun').mockResolvedValue(created);
+    const original = Storage.prototype.setItem;
+    const storage = vi.spyOn(Storage.prototype, 'setItem').mockImplementation(function (
+      this: Storage,
+      key: string,
+      value: string
+    ) {
+      if (key === 'product-factory:run-id') throw new DOMException('quota', 'QuotaExceededError');
+      original.call(this, key, value);
+    });
+    try {
+      renderPage('/product-factory/new');
+      fireEvent.change(screen.getByTestId('product-factory-name'), { target: { value: created.name } });
+      fireEvent.change(screen.getByTestId('product-factory-idea'), { target: { value: created.idea } });
+      fireEvent.click(screen.getByRole('button', { name: 'Start requirement analysis' }));
+      await screen.findByRole('heading', { name: created.name });
+      expect(client.createProductFactoryRun).toHaveBeenCalledTimes(1);
+      expect(screen.queryByText('productFactory.form.startError')).not.toBeInTheDocument();
+    } finally {
+      storage.mockRestore();
+    }
   });
 
   it('restores the saved draft when the form is reopened', () => {
@@ -155,7 +311,7 @@ describe('ProductFactoryPage', () => {
 
     expect(screen.getByText('Research Copilot')).toBeInTheDocument();
     expect(screen.getByText('Turn interview notes into a research brief')).toBeInTheDocument();
-    expect(screen.getByText('Draft')).toBeInTheDocument();
+    expect(screen.getByText('Local unsubmitted draft')).toBeInTheDocument();
     expect(screen.getByRole('button', { name: 'Continue draft' })).toBeInTheDocument();
     expect(screen.queryByText('No product runs yet')).not.toBeInTheDocument();
   });

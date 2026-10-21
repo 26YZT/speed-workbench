@@ -505,6 +505,16 @@ export async function getProductFactoryExecution(runId: string): Promise<Factory
   return parseExecution(body.execution);
 }
 
+/** Reconcile a saved reservation without starting or automatically resending work. */
+export async function recoverProductFactoryExecution(runId: string): Promise<FactoryExecution | undefined> {
+  const body = await request<{ execution: unknown }>(
+    `/api/product-factory/runs/${encodeURIComponent(runId)}/execution/recover`,
+    { method: 'POST', body: '{}' }
+  );
+  if (!Object.hasOwn(body, 'execution')) throw new Error('PRODUCT_FACTORY_INVALID_EXECUTION_RESPONSE');
+  return parseExecution(body.execution);
+}
+
 export async function startProductFactoryRun(runId: string, revision: number): Promise<FactoryExecution> {
   const body = await request<{ execution: unknown }>(`/api/product-factory/runs/${encodeURIComponent(runId)}/start`, {
     method: 'POST',
@@ -705,6 +715,13 @@ export async function checkProductFactoryWorkspace(path: string): Promise<Handof
 }
 
 export async function createProductFactoryRun(draft: ProductIdeaDraft): Promise<ProductFactoryRun> {
+  const budgetText = draft.budgetInput?.trim();
+  if (
+    (draft.budgetUsd !== undefined && (!Number.isFinite(draft.budgetUsd) || draft.budgetUsd <= 0)) ||
+    (budgetText && (!Number.isFinite(Number(budgetText)) || Number(budgetText) <= 0))
+  ) {
+    throw new Error('PRODUCT_FACTORY_INVALID_BUDGET');
+  }
   const run = await request<ApiRun>('/api/product-factory/runs', {
     method: 'POST',
     body: JSON.stringify({

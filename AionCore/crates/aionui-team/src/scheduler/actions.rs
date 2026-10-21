@@ -27,13 +27,19 @@ impl TeammateManager {
         use crate::types::TaskStatus;
 
         let update = TaskUpdate {
-            status: status.and_then(TaskStatus::parse),
+            status: status
+                .map(|value| {
+                    TaskStatus::parse(value).ok_or_else(|| TeamError::InvalidRequest("unknown task status".into()))
+                })
+                .transpose()?,
             description,
             owner,
             blocked_by,
             ..Default::default()
         };
-        self.task_board.update_task(&self.team_id, task_id, &update).await
+        self.task_board
+            .update_task_from_agent(&self.team_id, task_id, &update)
+            .await
     }
 
     /// Finalizes an agent turn by marking the slot idle. The leader re-wake and

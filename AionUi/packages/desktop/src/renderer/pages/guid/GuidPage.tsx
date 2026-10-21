@@ -5,6 +5,7 @@
  */
 
 import { ipcBridge } from '@/common';
+import { replaceUpstreamBrand } from '@/common/branding';
 import { buildGuidSlashCommands } from '@/common/chat/slash/guidSlashCommands';
 import type { SlashCommandItem } from '@/common/chat/slash/types';
 import type { IMcpServer, TProviderWithModel } from '@/common/config/storage';
@@ -339,7 +340,9 @@ const GuidPage: React.FC = () => {
       [];
 
     if (resolvedPrompts.length > 0) {
-      return resolvedPrompts;
+      return selectedAssistantRecord?.source === 'builtin' || selectedAssistantRecord?.source === 'generated'
+        ? resolvedPrompts.map(replaceUpstreamBrand)
+        : resolvedPrompts;
     }
 
     return [t('guid.defaultPrompts.understand'), t('guid.defaultPrompts.cleanup'), t('guid.defaultPrompts.create')];

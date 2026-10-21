@@ -6,16 +6,22 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Alert, Button, Modal, Spin } from '@arco-design/web-react';
 import { useTranslation } from 'react-i18next';
-import { getProductFactoryExecution, ProductFactoryHttpError, startProductFactoryRun } from '../client';
+import {
+  getProductFactoryExecution,
+  ProductFactoryHttpError,
+  recoverProductFactoryExecution,
+  startProductFactoryRun,
+} from '../client';
 import type { FactoryExecution, ProductFactoryRun, TaskDraftArtifact } from '../types';
 
-const ExecutionStart: React.FC<{ run: ProductFactoryRun }> = ({ run }) => {
+const ExecutionStart: React.FC<{ run: ProductFactoryRun; onChanged?: () => void }> = ({ run, onChanged }) => {
   const { t } = useTranslation();
   const [execution, setExecution] = useState<FactoryExecution>();
   const [readable, setReadable] = useState(false);
   const [loading, setLoading] = useState(true);
   const [starting, setStarting] = useState(false);
   const [confirming, setConfirming] = useState(false);
+  const [recovering, setRecovering] = useState(false);
   const [error, setError] = useState<string>();
   const active = useRef(true);
   const busy = useRef(false);
@@ -78,6 +84,28 @@ const ExecutionStart: React.FC<{ run: ProductFactoryRun }> = ({ run }) => {
       }
     }
   };
+  const recover = async () => {
+    if (busy.current || execution?.state !== 'pending') return;
+    busy.current = true;
+    setStarting(true);
+    setError(undefined);
+    try {
+      const receipt = await recoverProductFactoryExecution(run.id);
+      if (receipt && receipt.teamId !== run.teamId) throw new Error('PRODUCT_FACTORY_INVALID_EXECUTION_RESPONSE');
+      if (active.current) {
+        setExecution(receipt);
+        onChanged?.();
+      }
+    } catch {
+      if (active.current) setError(t('productFactory.execution.recoverError'));
+    } finally {
+      busy.current = false;
+      if (active.current) {
+        setStarting(false);
+        setRecovering(false);
+      }
+    }
+  };
   const stateCopy = {
     pending: 'productFactory.execution.pending',
     enqueued: 'productFactory.execution.enqueued',
@@ -111,6 +139,11 @@ const ExecutionStart: React.FC<{ run: ProductFactoryRun }> = ({ run }) => {
             </p>
           )}
           <p>{t('productFactory.execution.disclaimer')}</p>
+          {execution.state === 'pending' && run.status !== 'failed' && run.status !== 'completed' && (
+            <Button disabled={starting} onClick={() => setRecovering(true)}>
+              {t('productFactory.execution.recover')}
+            </Button>
+          )}
         </>
       ) : run.status === 'handed_off' ? (
         <Button
@@ -121,6 +154,19 @@ const ExecutionStart: React.FC<{ run: ProductFactoryRun }> = ({ run }) => {
           {t('productFactory.execution.start')}
         </Button>
       ) : null}
+      <Modal
+        visible={recovering}
+        title={t('productFactory.execution.recover')}
+        okText={t('productFactory.execution.recover')}
+        cancelText={t('common.cancel')}
+        confirmLoading={starting}
+        onOk={recover}
+        onCancel={() => {
+          if (!starting) setRecovering(false);
+        }}
+      >
+        <p>{t('productFactory.execution.recoverDescription')}</p>
+      </Modal>
       <Modal
         visible={confirming}
         title={t('productFactory.execution.confirmTitle')}

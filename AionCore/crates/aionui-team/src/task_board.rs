@@ -101,11 +101,56 @@ impl TaskBoard {
     }
 
     pub async fn update_task(&self, team_id: &str, task_id: &str, update: &TaskUpdate) -> Result<TeamTask, TeamError> {
+        self.update_task_guarded(team_id, task_id, update, None, false).await
+    }
+
+    pub async fn update_task_from_agent(
+        &self,
+        team_id: &str,
+        task_id: &str,
+        update: &TaskUpdate,
+    ) -> Result<TeamTask, TeamError> {
+        self.update_task_guarded(team_id, task_id, update, None, true).await
+    }
+
+    pub async fn update_task_if_unchanged(
+        &self,
+        team_id: &str,
+        task_id: &str,
+        update: &TaskUpdate,
+        expected: &TeamTaskRow,
+    ) -> Result<TeamTask, TeamError> {
+        self.update_task_guarded(team_id, task_id, update, Some(expected), false)
+            .await
+    }
+
+    async fn update_task_guarded(
+        &self,
+        team_id: &str,
+        task_id: &str,
+        update: &TaskUpdate,
+        expected: Option<&TeamTaskRow>,
+        from_agent: bool,
+    ) -> Result<TeamTask, TeamError> {
         let existing = self
             .repo
             .find_task_by_id(&self.user_id, team_id, task_id)
             .await?
             .ok_or_else(|| TeamError::TaskNotFound(task_id.to_owned()))?;
+
+        let current_status = TaskStatus::parse(&existing.status)
+            .ok_or_else(|| TeamError::InvalidRequest("stored task status is invalid".into()))?;
+        if from_agent
+            && (update.status == Some(TaskStatus::Completed)
+                || matches!(
+                    current_status,
+                    TaskStatus::InReview | TaskStatus::Completed | TaskStatus::Deleted
+                ))
+        {
+            return Err(TeamError::InvalidRequest(
+                "only the user can change a task awaiting review or a terminal task".into(),
+            ));
+        }
 
         let params = UpdateTaskParams {
             status: update.status.map(|s| s.to_string()),
@@ -113,6 +158,7 @@ impl TaskBoard {
             owner: update.owner.clone(),
             blocked_by: update.blocked_by.as_ref().map(serde_json::to_string).transpose()?,
             metadata: update.metadata.as_ref().map(serde_json::to_string).transpose()?,
+            expected: Some(expected.unwrap_or(&existing).clone()),
         };
 
         self.repo.update_task(&self.user_id, team_id, task_id, &params).await?;

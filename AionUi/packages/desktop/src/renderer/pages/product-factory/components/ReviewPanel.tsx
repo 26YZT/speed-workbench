@@ -3,11 +3,12 @@
  * Copyright 2026 AionUi (aionui.com)
  * SPDX-License-Identifier: Apache-2.0
  */
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Alert, Button, Input, Spin, Tag } from '@arco-design/web-react';
 import { useTranslation } from 'react-i18next';
 import type { ProductFactoryReview } from '../types';
 import styles from '../ProductFactory.module.css';
+import { formatUsdCost } from './Delivery/costReport';
 
 type Props = {
   review?: ProductFactoryReview;
@@ -15,7 +16,7 @@ type Props = {
   busy: boolean;
   error?: string;
   onReload: () => void;
-  onApprove: () => Promise<void>;
+  onApprove: (feedback?: string) => Promise<void>;
   onRequestChanges: (feedback: string) => Promise<void>;
   onContinue: () => Promise<void>;
 };
@@ -32,6 +33,7 @@ const ReviewPanel: React.FC<Props> = ({
 }) => {
   const { t } = useTranslation();
   const [feedback, setFeedback] = useState('');
+  useEffect(() => setFeedback(''), [review?.task.id]);
   if (loading)
     return (
       <section className={styles.reviewPanel}>
@@ -47,9 +49,13 @@ const ReviewPanel: React.FC<Props> = ({
         </Button>
       </section>
     );
-  const taskInReview = review.task.status === 'in_review';
-  const canContinue = Boolean(review.nextTask) && review.task.status === 'completed';
-  const canResume = review.task.status === 'in_progress' && review.execution?.state === 'enqueued';
+  const activeRun = ['handed_off', 'running', 'in_review'].includes(review.run.status);
+  const taskInReview = activeRun && review.task.status === 'in_review';
+  const canContinue =
+    activeRun &&
+    ((Boolean(review.nextTask) && review.task.status === 'completed') ||
+      (review.task.status === 'pending' && !review.task.owner && review.execution?.state === 'uncertain'));
+  const canResume = activeRun && review.task.status === 'in_progress' && review.execution?.state === 'enqueued';
   const unknown = review.usageSummary.costUnknown || review.usageSummary.costEst == null;
   return (
     <section className={styles.reviewPanel} aria-label={t('productFactory.review.title')}>
@@ -60,7 +66,9 @@ const ReviewPanel: React.FC<Props> = ({
         </div>
         <div className='flex items-center gap-8px'>
           <Tag color={taskInReview ? 'orange' : review.task.status === 'completed' ? 'green' : 'arcoblue'}>
-            {t(`productFactory.review.status.${review.task.status}`, { defaultValue: review.task.status })}
+            {['pending', 'in_progress', 'in_review', 'completed'].includes(review.task.status)
+              ? t(`productFactory.review.status.${review.task.status}`)
+              : t('productFactory.review.unknown')}
           </Tag>
           <Button onClick={onReload} disabled={busy}>
             {t('productFactory.review.reload')}
@@ -94,12 +102,12 @@ const ReviewPanel: React.FC<Props> = ({
         </div>
         <div className='rounded-8px bg-2 p-10px'>
           <div className='text-11px text-t-tertiary'>{t('productFactory.review.cost')}</div>
-          <strong>
-            {unknown ? t('productFactory.review.unknown') : `$${review.usageSummary.costEst!.toFixed(4)}`}
-          </strong>
+          <strong>{unknown ? t('productFactory.review.unknown') : formatUsdCost(review.usageSummary.costEst!)}</strong>
         </div>
       </div>
-      {taskInReview ? (
+      {review.run.status === 'failed' ? (
+        <Alert className='mt-18px' type='error' content={t('productFactory.review.failedHint')} />
+      ) : taskInReview ? (
         <div className='mt-18px flex flex-col gap-10px'>
           <Input.TextArea
             value={feedback}
@@ -109,7 +117,12 @@ const ReviewPanel: React.FC<Props> = ({
             aria-label={t('productFactory.review.feedback')}
           />
           <div className='flex flex-wrap gap-8px'>
-            <Button type='primary' loading={busy} disabled={busy} onClick={() => void onApprove()}>
+            <Button
+              type='primary'
+              loading={busy}
+              disabled={busy}
+              onClick={() => void onApprove(feedback.trim() || undefined)}
+            >
               {t('productFactory.review.approve')}
             </Button>
             <Button
@@ -124,9 +137,16 @@ const ReviewPanel: React.FC<Props> = ({
         </div>
       ) : canContinue ? (
         <div className='mt-18px flex flex-col gap-10px'>
-          <Alert type='success' content={t('productFactory.review.approvedNext')} />
+          <Alert
+            type='success'
+            content={t(
+              review.task.status === 'pending'
+                ? 'productFactory.review.undispatchedHint'
+                : 'productFactory.review.approvedNext'
+            )}
+          />
           <Button type='primary' loading={busy} disabled={busy} onClick={() => void onContinue()}>
-            {t('productFactory.review.continue')}
+            {t(review.task.status === 'pending' ? 'productFactory.review.resume' : 'productFactory.review.continue')}
           </Button>
         </div>
       ) : canResume ? (

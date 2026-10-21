@@ -1243,17 +1243,6 @@ async fn exec_task_update(
         maybe_notify_task_owner(scheduler, service, team_id, caller_slot_id, &task, "reassign").await;
     }
 
-    // Completing a task can unblock downstream tasks; wake each downstream owner
-    // whose task is now fully unblocked and actionable.
-    if completed
-        && !task.blocks.is_empty()
-        && let Ok(all_tasks) = scheduler.list_tasks().await
-    {
-        for downstream in all_tasks.iter().filter(|t| task.blocks.contains(&t.id)) {
-            maybe_notify_task_owner(scheduler, service, team_id, caller_slot_id, downstream, "unblock").await;
-        }
-    }
-
     json_text(&json!({ "status": "ok", "task": task_json(&task) }))
 }
 

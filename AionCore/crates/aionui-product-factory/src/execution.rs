@@ -58,6 +58,46 @@ impl ProductFactoryService {
         })
     }
 
+    /// Recover a reservation that a crash left in `pending`, which otherwise has
+    /// no legal exit: `start_run` reads an existing receipt back, `retry_execution`
+    /// only accepts `enqueued`/`uncertain`, and clients cannot write execution
+    /// state. Safe because the repository proves from the Team task whether the
+    /// dispatch could have been sent at all.
+    pub async fn recover_execution(
+        &self,
+        user_id: &str,
+        run_id: &str,
+    ) -> Result<ProductFactoryExecutionResponse, ProductFactoryError> {
+        self.ensure_version_mutable(user_id, run_id).await?;
+        let row = self
+            .repository
+            .get_run(user_id, run_id)
+            .await?
+            .ok_or_else(|| ProductFactoryError::NotFound(run_id.into()))?;
+        let team_id = row
+            .team_id
+            .clone()
+            .ok_or_else(|| blocked("run has not been handed off to Team"))?;
+        let outcome = self
+            .repository
+            .recover_pending_execution(user_id, run_id, now_ms())
+            .await?;
+        match outcome {
+            Some("released") => tracing::info!(
+                run_id,
+                team_id,
+                "product factory pending reservation released; task was never dispatched"
+            ),
+            Some(_) => tracing::warn!(
+                run_id,
+                team_id,
+                "product factory pending reservation reconciled to uncertain; automatic resend blocked"
+            ),
+            None => {}
+        }
+        self.get_execution(user_id, run_id).await
+    }
+
     pub async fn start_run(
         &self,
         user_id: &str,

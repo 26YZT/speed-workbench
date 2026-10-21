@@ -88,7 +88,9 @@ vi.mock('@arco-design/web-react', async () => {
   const Modal = ({ children }: { children?: React.ReactNode }) => ReactModule.createElement('div', null, children);
   Modal.confirm = vi.fn();
 
+  const actual = await vi.importActual<typeof import('@arco-design/web-react')>('@arco-design/web-react');
   return {
+    Button: actual.Button,
     Input: () => null,
     Message: { success: vi.fn(), error: vi.fn() },
     Modal,

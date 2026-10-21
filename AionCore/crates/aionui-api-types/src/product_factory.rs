@@ -113,15 +113,18 @@ pub enum TaskDraftEffort {
 }
 
 #[derive(Debug, Clone, Deserialize)]
+#[serde(deny_unknown_fields)]
 pub struct GenerateTaskDraftRequest {}
 
 #[derive(Debug, Clone, Deserialize)]
+#[serde(deny_unknown_fields)]
 pub struct SaveTaskDraftRequest {
     pub expected_revision: u64,
     pub tasks: Vec<TaskDraftTask>,
 }
 
 #[derive(Debug, Clone, Deserialize)]
+#[serde(deny_unknown_fields)]
 pub struct ConfirmTaskDraftRequest {
     pub expected_revision: u64,
 }
@@ -183,6 +186,7 @@ impl std::str::FromStr for ProductFactoryRunStatus {
 }
 
 #[derive(Debug, Clone, Deserialize)]
+#[serde(deny_unknown_fields)]
 pub struct CreateProductFactoryRunRequest {
     pub name: String,
     pub idea: String,
@@ -199,16 +203,19 @@ pub struct CreateProductFactoryRunRequest {
 }
 
 #[derive(Debug, Clone, Deserialize)]
+#[serde(deny_unknown_fields)]
 pub struct TransitionProductFactoryRunRequest {
     pub status: ProductFactoryRunStatus,
 }
 
 #[derive(Debug, Clone, Deserialize)]
+#[serde(deny_unknown_fields)]
 pub struct SaveProductFactoryInterviewRequest {
     pub interview: serde_json::Value,
 }
 
 #[derive(Debug, Clone, Deserialize)]
+#[serde(deny_unknown_fields)]
 pub struct SaveProductFactoryBlueprintRequest {
     pub blueprint: serde_json::Value,
 }
@@ -365,3 +372,39 @@ pub struct ProductFactoryRepriceResponse {
 #[derive(Debug, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct RepriceProductFactoryRequest {}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn create_rejects_misspelled_optional_fields_instead_of_using_defaults() {
+        for field in ["workspacePath", "budgetUsd", "targetUser"] {
+            let mut input = serde_json::json!({"name":"Product","idea":"Build it"});
+            input[field] = serde_json::json!("unexpected");
+            let error = serde_json::from_value::<CreateProductFactoryRunRequest>(input).unwrap_err();
+            assert!(error.to_string().contains("unknown field"));
+        }
+        assert!(
+            serde_json::from_value::<CreateProductFactoryRunRequest>(
+                serde_json::json!({"name":"Product","idea":"Build it"})
+            )
+            .is_ok()
+        );
+    }
+
+    #[test]
+    fn draft_mutations_reject_unknown_options() {
+        let error = serde_json::from_value::<SaveTaskDraftRequest>(
+            serde_json::json!({"expected_revision":1,"tasks":[],"force":true}),
+        )
+        .unwrap_err();
+        assert!(error.to_string().contains("unknown field"));
+        assert!(
+            serde_json::from_value::<ConfirmTaskDraftRequest>(serde_json::json!({"expected_revision":1,"force":true}))
+                .unwrap_err()
+                .to_string()
+                .contains("unknown field")
+        );
+    }
+}

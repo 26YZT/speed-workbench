@@ -33,9 +33,42 @@ struct Fixture {
 }
 impl Fixture {
     async fn new() -> Self {
+        Self::new_in_mode(false).await
+    }
+    async fn new_in_mode(isolated: bool) -> Self {
         let root = tempfile::tempdir().unwrap();
         let workspace = root.path().join("source");
         std::fs::create_dir(&workspace).unwrap();
+        let db = aionui_db::init_database_memory().await.unwrap();
+        sqlx::query("INSERT INTO users (id,username,password_hash,created_at,updated_at) VALUES ('u','u','fixture-hash',0,0),('foreign','foreign','fixture-hash',0,0)").execute(db.pool()).await.unwrap();
+        let repository = Arc::new(SqliteProductFactoryRepository::new(db.pool().clone()));
+        let versions = Arc::new(SqliteProductFactoryVersionsRepository::new(db.pool().clone()));
+        let snapshots = root.path().join("snapshots");
+        let service = ProductFactoryService::new(repository.clone())
+            .with_managed_workspace_root(root.path().join("runs"))
+            .with_versioning(versions.clone(), snapshots.clone())
+            .with_version_activity_port(Arc::new(IdleFixture));
+        let service = if isolated {
+            service.with_user_workspace_isolation()
+        } else {
+            service
+        };
+        let run = service
+            .create_run(
+                "u",
+                CreateProductFactoryRunRequest {
+                    name: "Version fixture".into(),
+                    idea: "Local code lineage fixture".into(),
+                    target_user: None,
+                    problem: None,
+                    expected_output: None,
+                    workspace_path: (!isolated).then(|| workspace.to_string_lossy().into_owned()),
+                    budget_usd: Some(10.0),
+                },
+            )
+            .await
+            .unwrap();
+        let workspace = PathBuf::from(&run.workspace_path);
         std::fs::write(
             workspace.join("START.md"),
             "Run python3 server.py; runtime data stays separate.",
@@ -59,30 +92,6 @@ impl Fixture {
             "{\"api_key\":\"fixture_private_value\"}",
         )
         .unwrap();
-        let db = aionui_db::init_database_memory().await.unwrap();
-        sqlx::query("INSERT INTO users (id,username,password_hash,created_at,updated_at) VALUES ('u','u','fixture-hash',0,0),('foreign','foreign','fixture-hash',0,0)").execute(db.pool()).await.unwrap();
-        let repository = Arc::new(SqliteProductFactoryRepository::new(db.pool().clone()));
-        let versions = Arc::new(SqliteProductFactoryVersionsRepository::new(db.pool().clone()));
-        let snapshots = root.path().join("snapshots");
-        let service = ProductFactoryService::new(repository.clone())
-            .with_managed_workspace_root(root.path().join("runs"))
-            .with_versioning(versions.clone(), snapshots.clone())
-            .with_version_activity_port(Arc::new(IdleFixture));
-        let run = service
-            .create_run(
-                "u",
-                CreateProductFactoryRunRequest {
-                    name: "Version fixture".into(),
-                    idea: "Local code lineage fixture".into(),
-                    target_user: None,
-                    problem: None,
-                    expected_output: None,
-                    workspace_path: Some(workspace.to_string_lossy().into_owned()),
-                    budget_usd: Some(10.0),
-                },
-            )
-            .await
-            .unwrap();
         let fixture = Self {
             _root: root,
             db,
@@ -173,6 +182,28 @@ impl Fixture {
 }
 fn digest(path: &Path) -> String {
     format!("{:x}", Sha256::digest(std::fs::read(path).unwrap()))
+}
+
+#[tokio::test]
+async fn isolated_snapshots_and_iterations_stay_in_the_same_full_identity_namespace() {
+    let fixture = Fixture::new_in_mode(true).await;
+    let namespace = fixture.workspace.parent().unwrap().file_name().unwrap();
+    let sealed = fixture.seal().await;
+    let snapshot = PathBuf::from(sealed.version.snapshot_path.as_ref().unwrap());
+    assert!(snapshot.starts_with(fixture.snapshots.canonicalize().unwrap().join(namespace)));
+    let next = fixture
+        .iterate(&sealed.version.id, sealed.product.revision, "remote-iteration")
+        .await;
+    let next_path = PathBuf::from(&next.run.workspace_path);
+    assert_eq!(next_path.parent(), fixture.workspace.parent());
+    assert_ne!(next_path, fixture.workspace);
+    assert_eq!(
+        std::fs::read(next_path.join("server.py")).unwrap(),
+        std::fs::read(snapshot.join("server.py")).unwrap()
+    );
+    assert!(!next_path.join("history.sqlite").exists());
+    assert!(fixture.service.get_run("u", &next.run.id).await.is_ok());
+    assert!(fixture.service.get_run("foreign", &next.run.id).await.is_err());
 }
 
 #[tokio::test]

@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import React, { useMemo, useState } from 'react';
+import React, { useState } from 'react';
 import { Button, Card, Input, Select, Space, Tag } from '@arco-design/web-react';
 import { Add, Delete, Down, Save, Up } from '@icon-park/react';
 import { useTranslation } from 'react-i18next';
@@ -18,6 +18,7 @@ type TaskDraftReviewProps = {
   onSave: () => void;
   onConfirm: () => void;
   saving: boolean;
+  hasUnsavedChanges?: boolean;
 };
 
 const emptyTask = (index: number): TaskDraftTask => ({
@@ -40,6 +41,7 @@ const TaskDraftReview: React.FC<TaskDraftReviewProps> = ({
   onSave,
   onConfirm,
   saving,
+  hasUnsavedChanges = false,
 }) => {
   const { t } = useTranslation();
   const [selectedId, setSelectedId] = useState(artifact.tasks[0]?.id);
@@ -49,7 +51,6 @@ const TaskDraftReview: React.FC<TaskDraftReviewProps> = ({
   );
   const selected = artifact.tasks[selectedIndex];
   const editingDisabled = saving || artifact.confirmed;
-  const hasUnsavedChanges = useMemo(() => false, [artifact]);
   const updateTask = (patch: Partial<TaskDraftTask>) => {
     if (!selected) return;
     const tasks = artifact.tasks.map((task, index) => (index === selectedIndex ? { ...task, ...patch } : task));
@@ -100,16 +101,16 @@ const TaskDraftReview: React.FC<TaskDraftReviewProps> = ({
       <div className={styles.taskDraftLayout}>
         <div className={styles.taskDraftList} aria-label={t('productFactory.taskDraft.list')}>
           {artifact.tasks.map((task, index) => (
-            <div
+            <Button
+              type='text'
               className={`${styles.taskDraftItem} ${task.id === selected?.id ? styles.taskDraftItemActive : ''}`}
               key={task.id}
               onClick={() => setSelectedId(task.id)}
-              role='button'
-              tabIndex={0}
+              aria-pressed={task.id === selected?.id}
             >
               <span className='truncate'>{task.title || t('productFactory.taskDraft.untitled')}</span>
               <Tag size='small'>{index + 1}</Tag>
-            </div>
+            </Button>
           ))}
           {!artifact.confirmed && (
             <Button
@@ -226,9 +227,15 @@ const TaskDraftReview: React.FC<TaskDraftReviewProps> = ({
               />
               {!artifact.confirmed && (
                 <Space>
-                  <Button icon={<Up />} onClick={() => move(-1)} disabled={saving || selectedIndex === 0} />
+                  <Button
+                    icon={<Up />}
+                    aria-label={t('productFactory.taskDraft.moveUp')}
+                    onClick={() => move(-1)}
+                    disabled={saving || selectedIndex === 0}
+                  />
                   <Button
                     icon={<Down />}
+                    aria-label={t('productFactory.taskDraft.moveDown')}
                     onClick={() => move(1)}
                     disabled={saving || selectedIndex === artifact.tasks.length - 1}
                   />

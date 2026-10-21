@@ -296,6 +296,8 @@ describe('explicit code versions and iteration', () => {
     };
     failSnapshot = false;
     fireEvent.click(screen.getByRole('button', { name: 'productFactory.versions.newRequest' }));
+    expect(localStorage.getItem('product-factory.version-write.run-1')).not.toBeNull();
+    fireEvent.click(await screen.findByRole('button', { name: 'common.confirm' }));
     fireEvent.click(review);
     fireEvent.click(await screen.findByRole('button', { name: 'productFactory.versions.saveSnapshot' }));
     await screen.findByText('productFactory.versions.states.sealed');

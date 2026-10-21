@@ -3,6 +3,7 @@ use aionui_api_types::{
     ProductFactoryDeliveryTaskCounts,
 };
 use aionui_common::{now_ms, validate_workspace_path_availability};
+use std::io::Read;
 use std::path::Path;
 
 use crate::service::{parse_task_draft, to_response};
@@ -50,13 +51,7 @@ impl ProductFactoryService {
                     .get_handoff_task(user_id, team_id, &task_id)
                     .await?
                     .ok_or_else(|| ProductFactoryError::ReviewBlocked("handoff task is unavailable".into()))?;
-                match task_row.status.as_str() {
-                    "pending" => task_counts.pending += 1,
-                    "in_progress" => task_counts.in_progress += 1,
-                    "in_review" => task_counts.in_review += 1,
-                    "completed" => task_counts.completed += 1,
-                    _ => task_counts.failed += 1,
-                }
+                count_task_status(&mut task_counts, &task_row.status);
                 usage.extend(ledger.list_by_task(user_id, &task_id).await?.into_iter().map(|row| {
                     aionui_api_types::TeamTaskUsageResponse {
                         id: row.id,
@@ -137,19 +132,15 @@ impl ProductFactoryService {
                 .get_handoff_task(user_id, team_id, &task_id)
                 .await?
                 .ok_or_else(|| ProductFactoryError::ReviewBlocked("handoff task is unavailable".into()))?;
-            match task.status.as_str() {
-                "pending" => task_counts.pending += 1,
-                "in_progress" => task_counts.in_progress += 1,
-                "in_review" => task_counts.in_review += 1,
-                "completed" => task_counts.completed += 1,
-                "failed" => task_counts.failed += 1,
-                _ => {}
-            }
+            count_task_status(&mut task_counts, &task.status);
         }
 
         let workspace_available = validate_workspace_path_availability(&row.workspace_path).is_ok();
-        let start_guide_exists = Path::new(&row.workspace_path).join("START.md").is_file();
-        let acceptance_evidence_exists = Path::new(&row.workspace_path).join("ACCEPTANCE.md").is_file();
+        // Existence alone is not evidence: an empty START.md satisfies `is_file`
+        // but delivers nothing, and version snapshots already reject blank
+        // copies of the same two files.
+        let start_guide_exists = delivered_document(&row.workspace_path, "START.md");
+        let acceptance_evidence_exists = delivered_document(&row.workspace_path, "ACCEPTANCE.md");
         let all_tasks_completed = task_counts.total > 0 && task_counts.completed == task_counts.total;
         let run_completed = row.status == "completed";
         let usage_recorded = review.usage_summary.input_tokens > 0
@@ -210,5 +201,88 @@ fn check(code: &str, passed: bool, detail: &str) -> ProductFactoryDeliveryCheck 
         code: code.to_owned(),
         passed,
         detail: detail.to_owned(),
+    }
+}
+
+/// Count one Team task status for the delivery and cost reports.
+///
+/// Both reports must agree: the cost report used to fold every unknown status
+/// into `failed` while the delivery gate ignored it, so the two screens could
+/// disagree about whether all tasks were completed.
+fn count_task_status(counts: &mut ProductFactoryDeliveryTaskCounts, status: &str) {
+    match status {
+        "pending" => counts.pending += 1,
+        "in_progress" => counts.in_progress += 1,
+        "in_review" => counts.in_review += 1,
+        "completed" => counts.completed += 1,
+        // `deleted` is the only other status Team defines; anything else is a
+        // status this build does not know, which cannot count as delivered.
+        _ => counts.failed += 1,
+    }
+}
+
+/// Whether a required delivery document exists and carries content.
+///
+/// Read in bounded chunks. Leading whitespace is valid, while symlinks and
+/// non-regular files cannot certify delivery or block the request on a FIFO.
+fn delivered_document(workspace_path: &str, name: &str) -> bool {
+    let path = Path::new(workspace_path).join(name);
+    let mut options = std::fs::OpenOptions::new();
+    options.read(true);
+    #[cfg(unix)]
+    {
+        use std::os::unix::fs::OpenOptionsExt;
+        options.custom_flags(libc::O_NOFOLLOW | libc::O_NONBLOCK);
+    }
+    if !std::fs::symlink_metadata(&path).is_ok_and(|metadata| metadata.is_file()) {
+        return false;
+    }
+    let Ok(mut file) = options.open(path) else {
+        return false;
+    };
+    if !file.metadata().is_ok_and(|metadata| metadata.is_file()) {
+        return false;
+    }
+    let mut chunk = [0; 4096];
+    loop {
+        match file.read(&mut chunk) {
+            Ok(0) | Err(_) => return false,
+            Ok(length) if chunk[..length].iter().any(|byte| !byte.is_ascii_whitespace()) => return true,
+            Ok(_) => {}
+        }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn delivery_requires_a_regular_document_with_content() {
+        let workspace = tempfile::tempdir().unwrap();
+        let root = workspace.path().to_str().unwrap();
+        assert!(!delivered_document(root, "START.md"));
+        for text in ["", " \n\t"] {
+            std::fs::write(workspace.path().join("START.md"), text).unwrap();
+            assert!(!delivered_document(root, "START.md"));
+        }
+        std::fs::write(
+            workspace.path().join("START.md"),
+            format!("{}# Start", " ".repeat(5000)),
+        )
+        .unwrap();
+        assert!(delivered_document(root, "START.md"));
+        std::fs::create_dir(workspace.path().join("ACCEPTANCE.md")).unwrap();
+        assert!(!delivered_document(root, "ACCEPTANCE.md"));
+    }
+
+    #[cfg(unix)]
+    #[test]
+    fn delivery_rejects_a_symlink_instead_of_following_it() {
+        let workspace = tempfile::tempdir().unwrap();
+        let outside = tempfile::NamedTempFile::new().unwrap();
+        std::fs::write(outside.path(), "# Evidence").unwrap();
+        std::os::unix::fs::symlink(outside.path(), workspace.path().join("START.md")).unwrap();
+        assert!(!delivered_document(workspace.path().to_str().unwrap(), "START.md"));
     }
 }

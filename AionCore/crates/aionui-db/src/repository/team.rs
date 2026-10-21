@@ -40,6 +40,9 @@ pub struct UpdateTaskParams {
     pub owner: Option<String>,
     pub blocked_by: Option<String>,
     pub metadata: Option<String>,
+    /// Compare the observed task before writing a review or assignment.
+    /// A stale writer must not overwrite a human decision or claim work twice.
+    pub expected: Option<TeamTaskRow>,
 }
 
 /// Data access abstraction for team collaboration tables.

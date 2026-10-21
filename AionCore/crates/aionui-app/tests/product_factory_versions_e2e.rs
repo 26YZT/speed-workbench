@@ -30,8 +30,21 @@ impl Fixture {
         let services = AppServices::from_config(db, &config).await.unwrap();
         let mut app = aionui_app::create_router(&services).await.unwrap();
         let (token, csrf) = setup_and_login(&mut app, &services, "admin", "StrongP@ss1").await;
-        let workspace = root.path().join("source");
-        std::fs::create_dir(&workspace).unwrap();
+        let response = app
+            .clone()
+            .oneshot(json_with_token(
+                "POST",
+                "/api/product-factory/runs",
+                json!({"name":"Version security fixture","idea":"Local code snapshot"}),
+                &token,
+                &csrf,
+            ))
+            .await
+            .unwrap();
+        assert_eq!(response.status(), StatusCode::CREATED);
+        let created = body_json(response).await;
+        let id = created["data"]["id"].as_str().unwrap().to_owned();
+        let workspace = std::path::PathBuf::from(created["data"]["workspace_path"].as_str().unwrap());
         std::fs::write(workspace.join("START.md"), "Local test fixture launch guide").unwrap();
         std::fs::write(
             workspace.join("ACCEPTANCE.md"),
@@ -39,19 +52,6 @@ impl Fixture {
         )
         .unwrap();
         std::fs::write(workspace.join("app.py"), "print('source fixture')").unwrap();
-        let response = app
-            .clone()
-            .oneshot(json_with_token(
-                "POST",
-                "/api/product-factory/runs",
-                json!({"name":"Version security fixture","idea":"Local code snapshot","workspace_path":workspace}),
-                &token,
-                &csrf,
-            ))
-            .await
-            .unwrap();
-        assert_eq!(response.status(), StatusCode::CREATED);
-        let id = body_json(response).await["data"]["id"].as_str().unwrap().to_owned();
         if completed {
             let owner = services.user_repo.find_by_username("admin").await.unwrap().unwrap().id;
             let team = format!("team-{id}");
@@ -336,7 +336,12 @@ async fn copying_run_rejects_planning_handoff_and_execution_without_a_model_send
         .unwrap();
     assert_eq!(count, 0);
     assert_eq!(fixture.services.worker_task_manager.active_count(), 0);
-    assert!(!fixture.root.path().join("source").join(".tasks").exists());
+    let run = sqlx::query_scalar::<_, String>("SELECT workspace_path FROM product_factory_runs WHERE id=?")
+        .bind(&fixture.id)
+        .fetch_one(fixture.services.database.pool())
+        .await
+        .unwrap();
+    assert!(!std::path::Path::new(&run).join(".tasks").exists());
     fixture.services.database.close().await;
 }
 

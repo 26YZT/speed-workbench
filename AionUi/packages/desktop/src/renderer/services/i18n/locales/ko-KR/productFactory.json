@@ -110,7 +110,26 @@
     "createProduct": "Create product",
     "continueDraft": "Continue draft",
     "emptyTitle": "No product runs yet",
-    "emptyDescription": "Start with one sentence. The factory will help turn it into a blueprint and an executable task graph."
+    "emptyDescription": "Start with one sentence. The factory will help turn it into a blueprint and an executable task graph.",
+    "localDraft": "Unsubmitted local draft",
+    "productsTitle": "Product projects",
+    "updatedAt": "Updated {{time}}",
+    "replaceTitle": "Start a new idea?",
+    "replaceDescription": "This will replace the unsubmitted idea draft on this device. Existing product projects are kept.",
+    "newIdea": "Start new idea",
+    "actions": {
+      "draft": "Start requirement clarification",
+      "interviewing": "Continue requirement clarification",
+      "blueprint_generating": "View blueprint generation",
+      "blueprint_ready": "Review blueprint",
+      "task_draft_generating": "View task plan",
+      "task_draft_ready": "Review tasks",
+      "handed_off": "View handoff",
+      "running": "View execution",
+      "in_review": "Review deliverable",
+      "completed": "View delivery",
+      "failed": "View failure details"
+    }
   },
   "pipeline": {
     "title": "Product pipeline",
@@ -147,11 +166,14 @@
     "startingAnalysis": "Creating run...",
     "startError": "Could not create the run. Try again later.",
     "back": "Back to projects",
-    "saved": "Draft saved",
+    "saved": "Draft saved on this device",
     "validation": {
       "nameRequired": "Enter a product name",
-      "ideaRequired": "Describe the product idea"
-    }
+      "ideaRequired": "Describe the product idea",
+      "budgetInvalid": "Enter a finite number greater than zero, or leave the budget empty."
+    },
+    "autoSaved": "Draft kept on this device",
+    "saveError": "Draft could not be saved. Your input is still on this page."
   },
   "status": {
     "draft": "Draft"
@@ -203,7 +225,10 @@
     "requestError": "The start response could not be confirmed. Re-reading the dispatch record; no automatic retry will be sent.",
     "blocked": "Execution is blocked. Check the single-Leader configuration, workspace, task state, and remaining budget in Team.",
     "revisionError": "The confirmed task revision changed. Reload the product before starting.",
-    "costUnknown": "Execution is blocked because a budget is configured but the model cost cannot be verified. Do not start until a trusted cost is available."
+    "costUnknown": "Execution is blocked because a budget is configured but the model cost cannot be verified. Do not start until a trusted cost is available.",
+    "recover": "Check and recover",
+    "recoverDescription": "This only reconciles the saved dispatch receipt. It does not start a task. Inspect the Team if the outcome remains uncertain.",
+    "recoverError": "The receipt could not be checked. Please retry."
   },
   "taskDraft": {
     "title": "Task draft review",
@@ -233,7 +258,9 @@
     "scopes": {
       "taskWorkspace": "Task workspace",
       "projectIntegration": "Final integration in product root"
-    }
+    },
+    "moveUp": "Move task up",
+    "moveDown": "Move task down"
   },
   "review": {
     "title": "Human review",
@@ -261,7 +288,9 @@
       "failed": "Failed"
     },
     "resume": "Resume current task",
-    "resumeHint": "Use this after requesting changes or an interrupted task. Existing work is preserved. The backend refuses to dispatch while an Agent turn is already active."
+    "resumeHint": "Use this after requesting changes or an interrupted task. Existing work is preserved. The backend refuses to dispatch while an Agent turn is already active.",
+    "failedHint": "This run has failed. Inspect the Team and saved outputs, then return to the product list to start another run.",
+    "undispatchedHint": "This task has not been dispatched. Continuing starts a new AI invocation and can incur costs."
   },
   "delivery": {
     "ready": "Delivery checks passed",
@@ -394,6 +423,17 @@
     "fileCount": "Manifest files",
     "noSnapshot": "No sealed snapshot yet",
     "savedManifest": "Saved file manifest",
-    "activationResult": "The selected code folder is {{path}}. Business data was not migrated and no process was started."
+    "activationResult": "The selected code folder is {{path}}. Business data was not migrated and no process was started.",
+    "discardPendingDescription": "Starting a new request clears the remembered request on this device. Server receipts and existing files are retained. Continue?"
+  },
+  "recovery": {
+    "local": "Unsubmitted edits are kept on this device. Save to submit them to the product project.",
+    "restored": "Unsubmitted edits have been restored from this device.",
+    "leave": "There are unsubmitted edits. Leaving will keep the local draft; save to submit them to the project.",
+    "conflict": "The server version of \"{{name}}\" changed. The local draft is kept separately. The current project is read-only below; export the draft before deciding which edits to keep.",
+    "discard": "Discard local edits",
+    "discardTitle": "Discard the local edits?",
+    "discardDescription": "The current server version will be kept. This removes only the unsubmitted local edits for this product.",
+    "saveError": "Local recovery could not be saved. Save or export the edits before leaving."
   }
 }

@@ -292,7 +292,7 @@ describe('explicit Product Factory Team handoff', () => {
     fireEvent.change(screen.getByTestId('product-factory-name'), { target: { value: 'Retry Product' } });
     fireEvent.change(screen.getByTestId('product-factory-idea'), { target: { value: 'Keep the idea' } });
     fireEvent.click(screen.getByRole('button', { name: 'productFactory.form.startAnalysis' }));
-    expect(await screen.findByRole('alert')).toHaveTextContent('Cannot create new run');
+    expect(await screen.findByRole('alert')).toHaveTextContent('productFactory.form.startError');
     expect(screen.getByTestId('product-factory-name')).toHaveValue('Retry Product');
     expect(run.name).toBe('Product');
     createFailure = false;

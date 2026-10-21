@@ -50,6 +50,10 @@ pub fn product_factory_routes(state: ProductFactoryRouterState) -> Router {
         .route("/api/product-factory/runs/{id}/status", post(transition_status))
         .route("/api/product-factory/runs/{id}/handoff", post(handoff))
         .route("/api/product-factory/runs/{id}/execution", get(get_execution))
+        .route(
+            "/api/product-factory/runs/{id}/execution/recover",
+            post(recover_execution),
+        )
         .route("/api/product-factory/runs/{id}/start", post(start_run))
         .route("/api/product-factory/runs/{id}/continue", post(continue_run))
         .route("/api/product-factory/runs/{id}/delivery", get(get_delivery))
@@ -194,6 +198,20 @@ async fn start_run(
         state
             .service
             .start_run(&user.id, &id, request)
+            .await
+            .map_err(map_error)?,
+    )))
+}
+
+async fn recover_execution(
+    State(state): State<ProductFactoryRouterState>,
+    Extension(user): Extension<CurrentUser>,
+    Path(id): Path<String>,
+) -> Result<Json<ApiResponse<ProductFactoryExecutionResponse>>, ApiError> {
+    Ok(Json(ApiResponse::ok(
+        state
+            .service
+            .recover_execution(&user.id, &id)
             .await
             .map_err(map_error)?,
     )))

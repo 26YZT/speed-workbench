@@ -958,6 +958,51 @@ async fn ttu1_update_task_status() {
 }
 
 #[tokio::test]
+async fn task_update_rejects_unknown_fields_status_and_review_bypass() {
+    let env = setup().await;
+    let mut stream = connect_and_init(env.server.port(), "test-token-123", "lead-1").await;
+    call_tool(&mut stream, 2, "team_task_create", json!({"subject":"Review evidence"})).await;
+    let response = call_tool(&mut stream, 3, "team_task_list", json!({})).await;
+    let tasks: Vec<Value> = serde_json::from_str(&extract_text(&response)).unwrap();
+    let id = tasks[0]["id"].as_str().unwrap();
+    for args in [
+        json!({"task_id":id,"status":"typo"}),
+        json!({"task_id":id,"stats":"pending"}),
+    ] {
+        let rejected = call_tool(&mut stream, 4, "team_task_update", args).await;
+        assert!(
+            is_error_response(&rejected),
+            "invalid update must be rejected: {rejected}"
+        );
+        let message = extract_text(&rejected);
+        assert!(
+            message.contains("unknown task status") || message.contains("unknown field"),
+            "{message}"
+        );
+    }
+    let submitted = call_tool(
+        &mut stream,
+        5,
+        "team_task_update",
+        json!({"task_id":id,"status":"in_review"}),
+    )
+    .await;
+    assert!(!is_error_response(&submitted));
+    for status in ["pending", "in_progress", "deleted"] {
+        let rejected = call_tool(
+            &mut stream,
+            6,
+            "team_task_update",
+            json!({"task_id":id,"status":status}),
+        )
+        .await;
+        assert!(is_error_response(&rejected), "review cannot be bypassed: {rejected}");
+        assert!(extract_text(&rejected).contains("only the user"));
+    }
+    env.server.stop();
+}
+
+#[tokio::test]
 async fn ttu2_agent_cannot_approve_task_in_review() {
     let env = setup().await;
     let mut stream = connect_and_init(env.server.port(), "test-token-123", "lead-1").await;

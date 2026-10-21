@@ -85,14 +85,14 @@ export function useVersions(runId: string) {
       }
       return loaded;
     } catch {
-      if (mounted.current) {
+      if (mounted.current && started === generation.current) {
         setReadFailed(true);
         setError('readError');
       }
       return undefined;
     } finally {
       reads.current = false;
-      if (mounted.current) setLoading(false);
+      if (mounted.current && started === generation.current) setLoading(false);
     }
   }, [runId]);
 

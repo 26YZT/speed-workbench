@@ -1,5 +1,4 @@
 import classNames from 'classnames';
-import { Button, Tooltip } from '@arco-design/web-react';
 import { useTranslation } from 'react-i18next';
 import { Experiment } from '@icon-park/react';
 import React, { Suspense, useCallback, useEffect, useRef, useState } from 'react';
@@ -20,6 +19,7 @@ import {
 import SiderFooter from './SiderFooter';
 import TeamSiderSection from './TeamSiderSection';
 import siderStyles from './Sider.module.css';
+import SiderNavEntry from './SiderNav/SiderNavEntry';
 
 const WorkspaceGroupedHistory = React.lazy(() => import('@renderer/pages/conversation/GroupedHistory'));
 const SettingsSider = React.lazy(() => import('@renderer/pages/settings/components/SettingsSider'));
@@ -221,27 +221,21 @@ const Sider: React.FC<SiderProps> = ({ onSessionClick, collapsed = false }) => {
                 onSessionClick={onSessionClick}
               />
             )}
-            {/* Assistant nav entry - fixed above Scheduled */}
-            <SiderAssistantEntry
-              isMobile={isMobile}
-              isActive={pathname.startsWith('/assistants')}
-              collapsed={collapsed}
-              siderTooltipProps={siderTooltipProps}
-              onClick={handleAssistantClick}
-            />
-            <SiderProductFactoryEntry
-              isActive={pathname.startsWith('/product-factory')}
-              collapsed={collapsed}
-              siderTooltipProps={siderTooltipProps}
-              onClick={handleProductFactoryClick}
-            />
-            {/* Scheduled tasks nav entry - fixed above scroll */}
-            <Tooltip content={t('common.modelBench.title')} position='right'>
-              <Button
-                type={pathname === '/model-bench' ? 'secondary' : 'text'}
-                className='w-full min-h-34px text-t-primary'
-                aria-label={t('common.modelBench.title')}
-                icon={<Experiment size={18} />}
+            <nav className='flex shrink-0 flex-col gap-2px' data-testid='workspace-primary-navigation'>
+              <SiderProductFactoryEntry
+                isActive={pathname === '/product-factory' || pathname.startsWith('/product-factory/')}
+                collapsed={collapsed}
+                isMobile={isMobile}
+                siderTooltipProps={siderTooltipProps}
+                onClick={handleProductFactoryClick}
+              />
+              <SiderNavEntry
+                label={t('common.modelBench.title')}
+                isActive={pathname === '/model-bench'}
+                collapsed={collapsed}
+                isMobile={isMobile}
+                siderTooltipProps={siderTooltipProps}
+                icon={<Experiment theme='outline' size={collapsed ? 20 : 16} fill='currentColor' />}
                 onClick={() => {
                   cleanupSiderTooltips();
                   blurActiveElement();
@@ -250,17 +244,22 @@ const Sider: React.FC<SiderProps> = ({ onSessionClick, collapsed = false }) => {
                   void navigate('/model-bench');
                   onSessionClick?.();
                 }}
-              >
-                {!collapsed && t('common.modelBench.title')}
-              </Button>
-            </Tooltip>
-            <SiderScheduledEntry
-              isMobile={isMobile}
-              isActive={pathname === '/scheduled'}
-              collapsed={collapsed}
-              siderTooltipProps={siderTooltipProps}
-              onClick={handleScheduledClick}
-            />
+              />
+              <SiderAssistantEntry
+                isMobile={isMobile}
+                isActive={pathname === '/assistants' || pathname.startsWith('/assistants/')}
+                collapsed={collapsed}
+                siderTooltipProps={siderTooltipProps}
+                onClick={handleAssistantClick}
+              />
+              <SiderScheduledEntry
+                isMobile={isMobile}
+                isActive={pathname === '/scheduled'}
+                collapsed={collapsed}
+                siderTooltipProps={siderTooltipProps}
+                onClick={handleScheduledClick}
+              />
+            </nav>
             {/* Divider between fixed top nav and scrollable content area */}
             <div
               className={classNames(

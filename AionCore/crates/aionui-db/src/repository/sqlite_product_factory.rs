@@ -417,6 +417,89 @@ impl IProductFactoryRepository for SqliteProductFactoryRepository {
         Ok(result.rows_affected() == 1)
     }
 
+    async fn recover_pending_execution(
+        &self,
+        user_id: &str,
+        run_id: &str,
+        now: i64,
+    ) -> Result<Option<&'static str>, DbError> {
+        // Team dispatch moves the task to `in_progress` and assigns an owner
+        // before it sends anything (aionui-team/service.rs dispatch is
+        // update_task -> prepare_workspace -> send_message_to_agent). A task
+        // still `pending` with no owner therefore proves nothing was sent.
+        //
+        // When every task is still `pending` and ownerless nothing in this run
+        // ever reached an Agent, so the reservation can be dropped and the
+        // first-task dispatch rebuilt from scratch.
+        let released = sqlx::query(
+            "DELETE FROM product_factory_execution \
+             WHERE user_id = ? AND run_id = ? AND state = 'pending' \
+             AND EXISTS (SELECT 1 FROM team_tasks task \
+                 WHERE task.id = product_factory_execution.task_id \
+                 AND task.team_id = product_factory_execution.team_id \
+                 AND task.status = 'pending' AND task.owner IS NULL) \
+             AND NOT EXISTS (SELECT 1 FROM team_tasks other \
+                 WHERE other.team_id = product_factory_execution.team_id \
+                 AND (other.status != 'pending' OR other.owner IS NOT NULL))",
+        )
+        .bind(user_id)
+        .bind(run_id)
+        .execute(&self.pool)
+        .await?;
+        if released.rows_affected() == 1 {
+            return Ok(Some("released"));
+        }
+        // Part of the run has already run, so dropping the receipt would strand
+        // the pointer. Reconcile to `uncertain` instead: that state is never
+        // resent automatically, and an explicit continuation may dispatch the
+        // still-pending task below.
+        let reconciled = sqlx::query(
+            "UPDATE product_factory_execution SET state = 'uncertain', updated_at = ? \
+             WHERE user_id = ? AND run_id = ? AND state = 'pending'",
+        )
+        .bind(now)
+        .bind(user_id)
+        .bind(run_id)
+        .execute(&self.pool)
+        .await?;
+        if reconciled.rows_affected() == 1 {
+            return Ok(Some("uncertain"));
+        }
+        Ok(None)
+    }
+
+    async fn release_undispatched_execution(
+        &self,
+        user_id: &str,
+        run_id: &str,
+        team_id: &str,
+        task_id: &str,
+        now: i64,
+    ) -> Result<bool, DbError> {
+        // Same proof as `recover_pending_execution`: a task that is still
+        // `pending` with no owner was claimed by nobody, and every dispatch
+        // claims the task before it sends. Only an `uncertain` receipt is
+        // accepted, so a reservation still in flight cannot be stolen.
+        let result = sqlx::query(
+            "UPDATE product_factory_execution SET state = 'pending', message_id = NULL, team_run_id = NULL, \
+                requested_at = ?, updated_at = ? \
+             WHERE user_id = ? AND run_id = ? AND team_id = ? AND task_id = ? AND state = 'uncertain' \
+             AND EXISTS (SELECT 1 FROM team_tasks task WHERE task.id = ? AND task.team_id = ? \
+                 AND task.status = 'pending' AND task.owner IS NULL)",
+        )
+        .bind(now)
+        .bind(now)
+        .bind(user_id)
+        .bind(run_id)
+        .bind(team_id)
+        .bind(task_id)
+        .bind(task_id)
+        .bind(team_id)
+        .execute(&self.pool)
+        .await?;
+        Ok(result.rows_affected() == 1)
+    }
+
     async fn set_execution_run_status(
         &self,
         user_id: &str,

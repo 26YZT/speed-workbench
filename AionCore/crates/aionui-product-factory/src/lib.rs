@@ -12,6 +12,7 @@ mod routes;
 mod service;
 mod task_draft;
 mod versions;
+mod workspace;
 
 pub use execution::{ProductFactoryDispatchReceipt, ProductFactoryExecutionPort};
 pub use handoff::ProductFactoryTeamPort;
